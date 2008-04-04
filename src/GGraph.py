@@ -1,14 +1,50 @@
 class Record:
-    "Record of a mathematician in the graph."
+    """
+    Container class storing record of a mathematician in the graph.
+    """
     def __init__(self, name, institution, year, id):
+        """
+        Construct a Record object.
+        
+        Parameters:
+            name: string containing mathematician's name
+            institution: string containing mathematician's instituion (empty if
+                none)
+            year: integer containing year degree was earned
+            id: integer containing Math Genealogy Project id value.
+        """
         self.name = name
         self.institution = institution
         self.year = year
         self.id = id
+        
+        # Verify we got the types wanted.
+        if type(self.name) is not type('str'):
+            raise TypeError("Unexpected parameter type: expected string value for 'name'")
+        if type(self.institution) is not type('str'):
+            raise TypeError("Unexpected parameter type: expected string value for 'institution'")
+        if type(self.year) is not type(1):
+            raise TypeError("Unexpected parameter type: expected integer value for 'year'")
+        if type(self.id) is not type(1):
+            raise TypeError("Unexpected parameter type: expected integer value for 'id'")
 
     def __cmp__(self, r2):
+        """
+        Compare a pair of mathematician records based on ids.
+        """
         return self.id.__cmp__(r2.id)
-
+    
+    def hasInstitution(self):
+        """
+        Return True if this record has an institution associated with it, else False.
+        """
+        return self.institution != ""
+    
+    def hasYear(self):
+        """
+        Return True if this record has a year associated with it, else False.
+        """
+        return self.year != -1
     
 
 class Node:
