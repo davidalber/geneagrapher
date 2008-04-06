@@ -4,7 +4,7 @@ class Record:
     """
     def __init__(self, name, institution, year, id):
         """
-        Construct a Record object.
+        Record class constructor.
         
         Parameters:
             name: string containing mathematician's name
@@ -19,13 +19,13 @@ class Record:
         self.id = id
         
         # Verify we got the types wanted.
-        if type(self.name) is not type('str'):
+        if not isinstance(self.name, str):
             raise TypeError("Unexpected parameter type: expected string value for 'name'")
-        if type(self.institution) is not type('str'):
+        if not isinstance(self.institution, str):
             raise TypeError("Unexpected parameter type: expected string value for 'institution'")
-        if type(self.year) is not type(1):
+        if not isinstance(self.year, int):
             raise TypeError("Unexpected parameter type: expected integer value for 'year'")
-        if type(self.id) is not type(1):
+        if not isinstance(self.id, int):
             raise TypeError("Unexpected parameter type: expected integer value for 'id'")
 
     def __cmp__(self, r2):
@@ -48,20 +48,36 @@ class Record:
     
 
 class Node:
-    "Node in the graph."
+    """
+    Container class storing a node in the graph.
+    """
     def __init__(self, record, ancestors):
+        """
+        Node class constructor.
+        
+        Parameters:
+            record: instance of the Record class
+            ancestors: list of Node objects containing this node's genealogical ancestors
+        """
+        
         self.record = record
         self.ancestors = ancestors
         self.already_printed = False
 
+        # Verify parameter types.
+        if not isinstance(self.record, Record):
+            raise TypeError("Unexpected parameter type: expected Record object for 'record'")
+        if not isinstance(self.ancestors, list):
+            raise TypeError("Unexpected parameter type: expected list object for 'ancestors'")
+        
     def __str__(self):
-        if self.record.institution != '':
-            if self.record.year > -1:
+        if self.record.hasInstitution():
+            if self.record.hasYear():
                 return self.record.name.encode('iso-8859-1', 'replace') + ' \\n' + self.record.institution.encode('iso-8859-1', 'replace') + ' (' + str(self.record.year) + ')'
             else:
                 return self.record.name.encode('iso-8859-1', 'replace') + ' \\n' + self.record.institution.encode('iso-8859-1', 'replace')
         else:
-            if self.record.year > -1:
+            if self.record.hasYear():
                 return self.record.name.encode('iso-8859-1', 'replace') + ' \\n(' + str(self.record.year) + ')'
             else:
                 return self.record.name.encode('iso-8859-1', 'replace')
@@ -70,9 +86,18 @@ class Node:
         return self.record.__cmp__(n2.record)
 
     def addAncestor(self, ancestor):
+        """
+        Append an ancestor id to the ancestor list.
+        """
+        # Verify we were passed an int.
+        if not isinstance(ancestor, int):
+            raise TypeError("Unexpected parameter type: expected int for 'ancestor'")
         self.ancestors.append(ancestor)
 
     def id(self):
+        """
+        Accessor method to retrieve the id of this node's record.
+        """
         return self.record.id
 
 
