@@ -147,6 +147,119 @@ class TestNodeMethods(unittest.TestCase):
         node = GGraph.Node(self.record, [])
         self.assertEquals(node.id(), 18231)
 
+class TestGraphMethods(unittest.TestCase):
+    """
+    Unit tests for the GGraph.Graph class.
+    """
+    def setUp(self):
+        self.record1 = GGraph.Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
+        self.node1 = GGraph.Node(self.record1, [])
+        self.graph1 = GGraph.Graph(self.node1)
+    
+    def test001_init_empty(self):
+        # Test the constructor.
+        graph = GGraph.Graph()
+        self.assertEquals(graph.head, None)
+        
+    def test002_init(self):
+        # Test the constructor.
+        self.assert_(self.graph1.head == self.node1)
+        self.assertEquals(self.graph1.nodes.keys(), [18231])
+        self.assertEquals(self.graph1.nodes[18231], self.node1)
+        
+    def test003_init_bad_head(self):
+        # Test the constructor when passed a bad type for the head parameter.
+        self.assertRaises(TypeError, GGraph.Graph, 3)
+        
+    def test004_has_node_true(self):
+        # Test the hasNode() method for a True case.
+        self.assertEquals(self.graph1.hasNode(18231), True)
+        
+    def test005_has_node_false(self):
+        # Test the hasNode() method for a False case.
+        self.assertEquals(self.graph1.hasNode(1), False)
+        
+    def test006_get_node(self):
+        # Test the getNode() method.
+        node = self.graph1.getNode(18231)
+        self.assert_(node == self.node1)
+        
+    def test007_get_node_not_found(self):
+        # Test the getNode() method for a case where the node does not exist.
+        node = self.graph1.getNode(1)
+        self.assertEquals(node, None)
+        
+    def test008_get_node_list(self):
+        # Test the getNodeList() method.
+        self.assertEquals(self.graph1.getNodeList(), [18231])
+        
+    def test008_get_node_list_empty(self):
+        # Test the getNodeList() method for an empty graph.
+        graph = GGraph.Graph()
+        self.assertEquals(graph.getNodeList(), [])
+        
+    def test009_add_node(self):
+        # Test the addNode() method.
+        self.graph1.addNode("Leonhard Euler", "Universitaet Basel", 1726, 38586, [])
+        self.assertEquals([38586, 18231], self.graph1.getNodeList())
+
+    def test010_add_node_head(self):
+        # Test the addNode() method when no head exists.
+        graph = GGraph.Graph()
+        self.assertEquals(graph.head, None)
+        graph.addNode("Leonhard Euler", "Universitaet Basel", 1726, 38586, [])
+        self.assertEquals(graph.head, graph.getNode(38586))
+
+    def test011_add_node_already_present(self):
+        self.graph1.addNode("Leonhard Euler", "Universitaet Basel", 1726, 38586, [])
+        self.assertEquals([38586, 18231], self.graph1.getNodeList())
+        self.assertRaises(GGraph.DuplicateNodeError, self.graph1.addNode, "Leonhard Euler", "Universitaet Basel", 1726, 38586, [])
+
+    def test012_generate_dot_file(self):
+        # Test the generateDotFile() method.
+        dotfileexpt = """digraph genealogy {
+    graph [charset="iso-8859-1"];
+    node [shape=plaintext];
+    edge [style=bold];
+
+    18231 [label="Carl Friedrich Gauss \\nUniversitaet Helmstedt (1799)"];
+
+}
+"""    
+        dotfile = self.graph1.generateDotFile()
+        self.assertEquals(dotfile, dotfileexpt)
+        
+    def test013_generate_dot_file(self):
+        # Test the generateDotFile() method.
+        graph = GGraph.Graph()
+        graph.addNode("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231, [18230])
+        graph.addNode("Johann Friedrich Pfaff", "Georg-August-Universitaet Goettingen", 1786, 18230, [66476])
+        graph.addNode("Abraham Gotthelf Kaestner", "Universitaet Leipzig", 1739, 66476, [57670])
+        graph.addNode("Christian August Hausen", "Martin-Luther-Universitaet Halle-Wittenberg", 1713, 57670, [72669])
+        graph.addNode("Johann Christoph Wichmannshausen", "Universitaet Leipzig", 1685, 72669, [21235])
+        graph.addNode("Otto Mencke", "Universitaet Leipzig", 1665, 21235, [])
+        
+        dotfileexpt = """digraph genealogy {
+    graph [charset="iso-8859-1"];
+    node [shape=plaintext];
+    edge [style=bold];
+
+    18231 [label="Carl Friedrich Gauss \\nUniversitaet Helmstedt (1799)"];
+    18230 [label="Johann Friedrich Pfaff \\nGeorg-August-Universitaet Goettingen (1786)"];
+    66476 [label="Abraham Gotthelf Kaestner \\nUniversitaet Leipzig (1739)"];
+    57670 [label="Christian August Hausen \\nMartin-Luther-Universitaet Halle-Wittenberg (1713)"];
+    72669 [label="Johann Christoph Wichmannshausen \\nUniversitaet Leipzig (1685)"];
+    21235 [label="Otto Mencke \\nUniversitaet Leipzig (1665)"];
+
+    18230 -> 18231;
+    66476 -> 18230;
+    57670 -> 66476;
+    72669 -> 57670;
+    21235 -> 72669;
+}
+"""
+        dotfile = graph.generateDotFile()
+        self.assertEquals(dotfile, dotfileexpt)
 
 if __name__ == '__main__':
     unittest.main()

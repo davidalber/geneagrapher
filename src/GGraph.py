@@ -1,3 +1,9 @@
+class DuplicateNodeError(Exception):
+    def __init__(self, value):
+        self.value = value
+        def __str__(self):
+            return repr(self.value)
+
 class Record:
     """
     Container class storing record of a mathematician in the graph.
@@ -8,10 +14,10 @@ class Record:
         
         Parameters:
             name: string containing mathematician's name
-            institution: string containing mathematician's instituion (empty if
-                none)
+            institution: string containing mathematician's institution
+                (empty if none)
             year: integer containing year degree was earned
-            id: integer containing Math Genealogy Project id value.
+            id: integer containing Math Genealogy Project id value
         """
         self.name = name
         self.institution = institution
@@ -36,13 +42,15 @@ class Record:
     
     def hasInstitution(self):
         """
-        Return True if this record has an institution associated with it, else False.
+        Return True if this record has an institution associated with it,
+        else False.
         """
         return self.institution != ""
     
     def hasYear(self):
         """
-        Return True if this record has a year associated with it, else False.
+        Return True if this record has a year associated with it, else
+        False.
         """
         return self.year != -1
     
@@ -57,7 +65,8 @@ class Node:
         
         Parameters:
             record: instance of the Record class
-            ancestors: list of Node objects containing this node's genealogical ancestors
+            ancestors: list of Node objects containing this node's
+                genealogical ancestors
         """
         
         self.record = record
@@ -102,37 +111,81 @@ class Node:
 
 
 class Graph:
-    def __init__(self, head, displayHead=True):
-        self.head = head
-        self.nodes = {head.id(): head}
-        self.displayHead = displayHead
+    """
+    Class storing the representation of a genealogy graph.
+    """
+    def __init__(self, head=None):
+        """
+        Graph class constructor.
         
+        Parameters:
+            head: a Node object representing the tree head (can be
+                omitted to create an empty graph)
+        """
+        self.head = head
+        
+        # Verify type of head is what we expect.
+        if self.head is not None and not isinstance(self.head, Node):
+            raise TypeError("Unexpected parameter type: expected Node object for 'head'")
+
+        if self.head is not None:
+            self.nodes = {head.id(): head}
+        else:
+            self.nodes = {}
+
     def hasNode(self, id):
+        """
+        Check if the graph contains a node with the given id.
+        """
         return self.nodes.has_key(id)
 
     def getNode(self, id):
-        return self.nodes[id]
+        """
+        Return the node in the graph with given id. Returns
+        None if no such node exists.
+        """
+        if self.hasNode(id):
+            return self.nodes[id]
+        else:
+            return None
 
     def getNodeList(self):
+        """
+        Return a list of the nodes in the graph.
+        """
         return self.nodes.keys()
 
     def addNode(self, name, institution, year, id, ancestors):
-        record = Record(name, institution, year, id)
-        node = Node(record, ancestors)
-        self.nodes[id] = node
+        """
+        Add a new node to the graph if a matching node is not already
+        present.
+        """
+        if not self.hasNode(id):
+            record = Record(name, institution, year, id)
+            node = Node(record, ancestors)
+            self.nodes[id] = node
+            if self.head is None:
+                self.head = node
+        else:
+            msg = "node with id %d already exists" % (id)
+            raise DuplicateNodeError(msg)
 
     def generateDotFile(self):
-        if self.displayHead:
-            queue = [self.head.id()]
-        else:
-            queue = self.head.ancestors
+        """
+        Return a string that contains the content of the Graphviz dotfile
+        format for this graph.
+        """
+        if self.head is None:
+            return ""
+
+        queue = [self.head.id()]
         edges = ""
         dotfile = ""
         
         dotfile += """digraph genealogy {
-        graph [charset="iso-8859-1"];
-        node [shape=plaintext];
-	edge [style=bold];\n\n"""
+    graph [charset="iso-8859-1"];
+    node [shape=plaintext];
+    edge [style=bold];\n\n"""
 
         while len(queue) > 0:
             node_id = queue.pop()
@@ -147,22 +200,18 @@ class Graph:
             queue += node.ancestors
         
             # Print this node's information.
-            dotfile += "\t" + str(node_id) + " [label=\" " + str(node) + "\"];\n"
+            nodestr = "    %d [label=\"%s\"];" % (node_id, node)
+            dotfile += nodestr
 
             # Store the connection information for this node.
             for advisor in node.ancestors:
-                edges += "\n\t" + str(advisor) + " -> " + str(node_id) + ";"
+                edgestr = "\n    %s -> %d;" % (advisor, node_id)
+                edges += edgestr
+                
+            dotfile += "\n"
 
         # Now print the connections between the nodes.
         dotfile += edges
 
         dotfile += "\n}\n"
         return dotfile
-
-    def printDotFile(self):
-        print self.generateDotFile()
-
-    def writeDotFile(self, filename):
-        outfile = open(filename, 'w')
-        outfile.write(self.generateDotFile())
-        outfile.close()
