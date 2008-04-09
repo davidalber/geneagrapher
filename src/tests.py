@@ -1,5 +1,6 @@
 import unittest
 import GGraph
+import grab
 
 # Unit tests for GGraph.
 class TestRecordMethods(unittest.TestCase):
@@ -260,6 +261,73 @@ class TestGraphMethods(unittest.TestCase):
 """
         dotfile = graph.generateDotFile()
         self.assertEquals(dotfile, dotfileexpt)
+
+class TestGrabberMethods(unittest.TestCase):
+    """
+    Unit tests for the grab.Grabber class.
+    """
+    def setUp(self):
+        self.grabber = grab.Grabber(18231)
+        
+    def test001_init(self):
+        # Test constructor.
+        self.assertEquals(self.grabber.id, 18231)
+        self.assertEquals(self.grabber.pagestr, None)
+        self.assertEquals(self.grabber.name, None)
+        self.assertEquals(self.grabber.institution, None)
+        self.assertEquals(self.grabber.year, None)
+        self.assertEquals(self.grabber.advisors, [])
+
+    def test002_get_page(self):
+        # Test getPage() method.
+        self.grabber.getPage()
+        self.assert_(self.grabber.pagestr is not None)
+        self.assert_(u"<title>The Mathematics Genealogy Project - Carl Gau\xdf</title>" in self.grabber.pagestr)
+        # Get page again and test for adverse affects.
+        self.grabber.getPage()
+        self.assert_(u"<title>The Mathematics Genealogy Project - Carl Gau\xdf</title>" in self.grabber.pagestr)
+
+    def test003_extract_info_bad(self):
+        # Verify exception thrown for bad id.
+        grabber = grab.Grabber(999999999)
+        self.assertRaises(ValueError, grabber.extractNodeInformation)
+        
+    def test004_extract_info_all_fields(self):
+        # Test the extractNodeInformation() method for a record containing all fields.
+        self.grabber.extractNodeInformation()
+        self.assertEquals(self.grabber.name, u"Carl Friedrich Gau\xdf")
+        self.assertEquals(self.grabber.institution, u"Universit\xe4t Helmstedt")
+        self.assertEquals(self.grabber.year, 1799)
+        self.assertEquals(self.grabber.advisors, [18230])
+        
+    def test005_extract_info_no_advisor(self):
+        # Test the extractNodeInformation() method for a record with no advisor.
+        grabber = grab.Grabber(21235)
+        grabber.extractNodeInformation()
+        self.assertEquals(grabber.name, u"Otto  Mencke")
+        self.assertEquals(grabber.institution, u"Universit\xe4t Leipzig")
+        self.assertEquals(grabber.year, 1665)
+        self.assertEquals(grabber.advisors, [])
+        
+    def test006_extract_info_no_year(self):
+        # Test the extractNodeInformation() method for a record with no year.
+        grabber = grab.Grabber(53658)
+        grabber.extractNodeInformation()
+        self.assertEquals(grabber.name, u"S.  Cingolani")
+        self.assertEquals(grabber.institution, u"Universit\xe0 di Pisa")
+        self.assertEquals(grabber.year, None)
+        self.assertEquals(grabber.advisors, [51261])
+        
+    def test007_extract_info_no_inst(self):
+        # Test the extractNodeInformation() method for a record with no institution.
+        # This test is also missing additional information already tested.
+        grabber = grab.Grabber(52965)
+        grabber.extractNodeInformation()
+        self.assertEquals(grabber.name, u"Walter  Mayer")
+        self.assertEquals(grabber.institution, None)
+        self.assertEquals(grabber.year, None)
+        self.assertEquals(grabber.advisors, [])
+        
 
 if __name__ == '__main__':
     unittest.main()

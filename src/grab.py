@@ -1,57 +1,71 @@
 import urllib
+import re
+from htmlentitydefs import name2codepoint
 from GGraph import *
 
-#id = 7401
+class Grabber:
+    """
+    Class for grabbing and parsing mathematician information from
+    Math Genealogy Database.
+    """
+    def __init__(self, id):
+        self.id = id
+        self.pagestr = None
+        self.name = None
+        self.institution = None
+        self.year = None
+        self.advisors = []
 
-def extractNodeInformation(id, graph):
-    search_list = [id]
+    def unescape(self, s):
+        return re.sub('&(%s);' % '|'.join(name2codepoint),\
+                      lambda m: unichr(name2codepoint[m.group(1)]), s)
 
-    while len(search_list) > 0:
-        id = search_list.pop()
-        #url = 'http://genealogy.math.ndsu.nodak.edu/html/id.phtml?id=' + str(id)
-        url = 'http://genealogy.math.ndsu.nodak.edu/id.php?id=' + str(id)
-        #url = 'http://www.genealogy.ams.org/html/id.phtml?id=' + str(id)
-        page = urllib.urlopen(url)
+    def getPage(self):
+        """
+        Grab the page for self.id from the Math Genealogy Database.
+        """
+        if self.pagestr is None:
+            url = 'http://genealogy.math.ndsu.nodak.edu/id.php?id=' + str(self.id)
+            page = urllib.urlopen(url)
+            self.pagestr = page.read()
+            self.pagestr = self.pagestr.decode('utf-8')
+            
+    def extractNodeInformation(self):
+        """
+        For the mathematician in this object, extract the list of
+        advisor ids, the mathematician name, the mathematician
+        institution, and the year of the mathematician's degree.
+        """
+        if self.pagestr is None:
+            self.getPage()
 
-        advisors = []
-        name = ''
-        institution = ''
-        year = -1
-
-        line = page.readline()
-        if line.find("<html>An error occurred in the forwarding block") > -1:
+        # Split the page string at newline characters.
+        psarray = self.pagestr.split('\n')
+        
+        if psarray[0].find("An error occurred in the forwarding block") > -1:
             # Then a bad URL was given. Throw an exception.
-            raise ValueError("Invalid address given: " + url)
+            msg = "Invalid page address for id %d" % (self.id)
+            raise ValueError(msg)
 
-
-        while line != '':
-            line = page.readline()
-            line = line.decode('utf-8')
+        lines = iter(psarray)
+        for line in lines:
             if line.find('h2 style=') > -1:
-            	line = page.readline()
-            	line = line.decode('utf-8')
-                name = line.split('</h2>')[0].strip()
+                line = lines.next()
+                self.name = self.unescape(line.split('</h2>')[0].strip())
 
-            if line.find('#006633; margin-left: 0.5em">') > -1:
+            if '#006633; margin-left: 0.5em">' in line:
                 inst_year = line.split('#006633; margin-left: 0.5em">')[1].split("</span>")[:2]
-                institution = inst_year[0].strip()
-                if inst_year[1].strip().isdigit():
-                    year = int(inst_year[1].strip())
+                self.institution = self.unescape(inst_year[0].strip())
+                if self.institution == u"":
+                    self.institution = None
+                if inst_year[1].split(',')[0].strip().isdigit():
+                    self.year = int(inst_year[1].split(',')[0].strip())
 
-            if line.find('Advisor') > -1:
-                if line.find('a href=\"id.php?id=') > -1:
+            if 'Advisor' in line:
+                if 'a href=\"id.php?id=' in line:
                     # Extract link to advisor page.
                     advisor_id = int(line.split('a href=\"id.php?id=')[1].split('\">')[0])
-                    advisors.append(advisor_id)
-                    if not graph.hasNode(advisor_id) and search_list.count(advisor_id) == 0:
-                        search_list.append(advisor_id)
-            elif line.find('Student(s)') > -1 or line.find('No students known') > -1:
+                    self.advisors.append(advisor_id)
+
+            elif 'Student(s)' in line or 'No students known' in line:
                 break
-
-        #    print name.encode('iso-8859-1', 'replace')
-        #    print institution.encode('iso-8859-1', 'replace'), year
-        #    print advisors
-
-        if not graph.hasNode(id):
-            # Add node to graph.
-            graph.addNode(name, institution, year, id, advisors)
