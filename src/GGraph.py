@@ -25,9 +25,9 @@ class Record:
         self.id = id
         
         # Verify we got the types wanted.
-        if not isinstance(self.name, str):
+        if not isinstance(self.name, basestring):
             raise TypeError("Unexpected parameter type: expected string value for 'name'")
-        if not isinstance(self.institution, str):
+        if not isinstance(self.institution, basestring):
             raise TypeError("Unexpected parameter type: expected string value for 'institution'")
         if not isinstance(self.year, int):
             raise TypeError("Unexpected parameter type: expected integer value for 'year'")
