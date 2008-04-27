@@ -1,7 +1,6 @@
 import urllib
 import re
 from htmlentitydefs import name2codepoint
-from GGraph import *
 
 class Grabber:
     """
@@ -38,12 +37,14 @@ class Grabber:
         """
         if self.pagestr is None:
             self.getPage()
+            
+        self.advisors = []
 
         # Split the page string at newline characters.
         psarray = self.pagestr.split('\n')
         
         if psarray[0].find("An error occurred in the forwarding block") > -1:
-            # Then a bad URL was given. Throw an exception.
+            # Then a bad URL (e.g., a bad record id) was given. Throw an exception.
             msg = "Invalid page address for id %d" % (self.id)
             raise ValueError(msg)
 
@@ -69,3 +70,4 @@ class Grabber:
 
             elif 'Student(s)' in line or 'No students known' in line:
                 break
+        return [self.name, self.institution, self.year, self.advisors]

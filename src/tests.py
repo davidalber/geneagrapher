@@ -1,6 +1,8 @@
+import sys
 import unittest
 import GGraph
 import grab
+import geneagrapher
 
 # Unit tests for GGraph.
 class TestRecordMethods(unittest.TestCase):
@@ -294,40 +296,97 @@ class TestGrabberMethods(unittest.TestCase):
         
     def test004_extract_info_all_fields(self):
         # Test the extractNodeInformation() method for a record containing all fields.
-        self.grabber.extractNodeInformation()
-        self.assertEquals(self.grabber.name, u"Carl Friedrich Gau\xdf")
-        self.assertEquals(self.grabber.institution, u"Universit\xe4t Helmstedt")
-        self.assertEquals(self.grabber.year, 1799)
-        self.assertEquals(self.grabber.advisors, [18230])
+        [name, institution, year, advisors] = self.grabber.extractNodeInformation()
+        self.assertEquals(name, self.grabber.name)
+        self.assertEquals(institution, self.grabber.institution)
+        self.assertEquals(year, self.grabber.year)
+        self.assertEquals(advisors, self.grabber.advisors)
+        self.assertEquals(name, u"Carl Friedrich Gau\xdf")
+        self.assertEquals(institution, u"Universit\xe4t Helmstedt")
+        self.assertEquals(year, 1799)
+        self.assertEquals(advisors, [18230])
+        
+        # Verify calling extractNodeInformation() twice does not have side effect.
+        [name, institution, year, advisors] = self.grabber.extractNodeInformation()
+        self.assertEquals(name, u"Carl Friedrich Gau\xdf")
+        self.assertEquals(institution, u"Universit\xe4t Helmstedt")
+        self.assertEquals(year, 1799)
+        self.assertEquals(advisors, [18230])
         
     def test005_extract_info_no_advisor(self):
         # Test the extractNodeInformation() method for a record with no advisor.
         grabber = grab.Grabber(21235)
-        grabber.extractNodeInformation()
-        self.assertEquals(grabber.name, u"Otto  Mencke")
-        self.assertEquals(grabber.institution, u"Universit\xe4t Leipzig")
-        self.assertEquals(grabber.year, 1665)
-        self.assertEquals(grabber.advisors, [])
+        [name, institution, year, advisors] = grabber.extractNodeInformation()
+        self.assertEquals(name, u"Otto  Mencke")
+        self.assertEquals(institution, u"Universit\xe4t Leipzig")
+        self.assertEquals(year, 1665)
+        self.assertEquals(advisors, [])
         
     def test006_extract_info_no_year(self):
         # Test the extractNodeInformation() method for a record with no year.
         grabber = grab.Grabber(53658)
-        grabber.extractNodeInformation()
-        self.assertEquals(grabber.name, u"S.  Cingolani")
-        self.assertEquals(grabber.institution, u"Universit\xe0 di Pisa")
-        self.assertEquals(grabber.year, None)
-        self.assertEquals(grabber.advisors, [51261])
+        [name, institution, year, advisors] = grabber.extractNodeInformation()
+        self.assertEquals(name, u"S.  Cingolani")
+        self.assertEquals(institution, u"Universit\xe0 di Pisa")
+        self.assertEquals(year, None)
+        self.assertEquals(advisors, [51261])
         
     def test007_extract_info_no_inst(self):
         # Test the extractNodeInformation() method for a record with no institution.
         # This test is also missing additional information already tested.
         grabber = grab.Grabber(52965)
-        grabber.extractNodeInformation()
-        self.assertEquals(grabber.name, u"Walter  Mayer")
-        self.assertEquals(grabber.institution, None)
-        self.assertEquals(grabber.year, None)
-        self.assertEquals(grabber.advisors, [])
+        [name, institution, year, advisors] = grabber.extractNodeInformation()
+        self.assertEquals(name, u"Walter  Mayer")
+        self.assertEquals(institution, None)
+        self.assertEquals(year, None)
+        self.assertEquals(advisors, [])
         
+class TestGeneagrapherMethods(unittest.TestCase):
+    """
+    Unit tests for the geneagrapher.Geneagrapher class.
+    """
+    def setUp(self):
+        self.ggrapher = geneagrapher.Geneagrapher()
+        
+    def test001_init(self):
+        # Test constructor.
+        self.assertEquals(isinstance(self.ggrapher.graph, GGraph.Graph), True)
+        self.assertEquals(self.ggrapher.leaf_ids, [])
+        self.assertEquals(self.ggrapher.get_ancestors, True)
+        self.assertEquals(self.ggrapher.get_descendents, False)
+        self.assertEquals(self.ggrapher.write_filename, None)
+        
+    def test002_parse_empty(self):
+        # Test parseInput() with no arguments.
+        sys.argv = ['geneagrapher']
+        self.assertRaises(SyntaxError, self.ggrapher.parseInput)
+        
+    def test003_parse_default(self):
+        # Test parseInput() with no options.
+        sys.argv = ['geneagrapher', '3']
+        self.ggrapher.get_ancestors = False
+        self.ggrapher.get_descendents = True
+        self.ggrapher.write_filename = "filler"
+        self.ggrapher.parseInput()
+        self.assertEquals(self.ggrapher.get_ancestors, True)
+        self.assertEquals(self.ggrapher.get_descendents, False)
+        self.assertEquals(self.ggrapher.write_filename, None)
+        self.assertEquals(self.ggrapher.leaf_ids, [3])
+
+    def test004_parse_options(self):
+        # Test parseInput() with options.
+        sys.argv = ['geneagrapher', '--without-ancestors', '--with-descendents', '--file=filler', '3', '43']
+        self.ggrapher.parseInput()
+        self.assertEquals(self.ggrapher.get_ancestors, False)
+        self.assertEquals(self.ggrapher.get_descendents, True)
+        self.assertEquals(self.ggrapher.write_filename, "filler")
+        self.assertEquals(self.ggrapher.leaf_ids, [3, 43])
 
 if __name__ == '__main__':
-    unittest.main()
+    suite = unittest.TestSuite()
+    #suite.addTest(unittest.makeSuite(TestRecordMethods))
+    #suite.addTest(unittest.makeSuite(TestNodeMethods))
+    #suite.addTest(unittest.makeSuite(TestGraphMethods))
+    suite.addTest(unittest.makeSuite(TestGrabberMethods))
+    suite.addTest(unittest.makeSuite(TestGeneagrapherMethods))
+    unittest.TextTestRunner(verbosity=1).run(suite)
