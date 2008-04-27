@@ -221,7 +221,7 @@ class TestGraphMethods(unittest.TestCase):
     def test012_generate_dot_file(self):
         # Test the generateDotFile() method.
         dotfileexpt = """digraph genealogy {
-    graph [charset="iso-8859-1"];
+    graph [charset="utf-8"];
     node [shape=plaintext];
     edge [style=bold];
 
@@ -243,7 +243,7 @@ class TestGraphMethods(unittest.TestCase):
         graph.addNode("Otto Mencke", "Universitaet Leipzig", 1665, 21235, [])
         
         dotfileexpt = """digraph genealogy {
-    graph [charset="iso-8859-1"];
+    graph [charset="utf-8"];
     node [shape=plaintext];
     edge [style=bold];
 
@@ -340,6 +340,18 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEquals(institution, None)
         self.assertEquals(year, None)
         self.assertEquals(advisors, [])
+
+    # Tests for special (from my point of view) characters:
+    def test008_slash_l(self):
+        # Test the extractNodeInformation() method for a record
+        # containing a slash l character. Example:
+        # http://www.genealogy.math.ndsu.nodak.edu/id.php?id=7383.
+        grabber = grab.Grabber(7383)
+        [name, institution, year, advisors] = grabber.extractNodeInformation()
+        self.assertEquals(name, u"W\u0142adys\u0142aw Hugo Dyonizy Steinhaus")
+        self.assertEquals(institution, u"Georg-August-Universit\xe4t G\xf6ttingen")
+        self.assertEquals(year, 1911)
+        self.assertEquals(advisors, [7298])
         
 class TestGeneagrapherMethods(unittest.TestCase):
     """
@@ -384,9 +396,9 @@ class TestGeneagrapherMethods(unittest.TestCase):
 
 if __name__ == '__main__':
     suite = unittest.TestSuite()
-    #suite.addTest(unittest.makeSuite(TestRecordMethods))
-    #suite.addTest(unittest.makeSuite(TestNodeMethods))
-    #suite.addTest(unittest.makeSuite(TestGraphMethods))
+    suite.addTest(unittest.makeSuite(TestRecordMethods))
+    suite.addTest(unittest.makeSuite(TestNodeMethods))
+    suite.addTest(unittest.makeSuite(TestGraphMethods))
     suite.addTest(unittest.makeSuite(TestGrabberMethods))
     suite.addTest(unittest.makeSuite(TestGeneagrapherMethods))
     unittest.TextTestRunner(verbosity=1).run(suite)

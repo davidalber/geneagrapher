@@ -82,14 +82,14 @@ class Node:
     def __str__(self):
         if self.record.hasInstitution():
             if self.record.hasYear():
-                return self.record.name.encode('iso-8859-1', 'replace') + ' \\n' + self.record.institution.encode('iso-8859-1', 'replace') + ' (' + str(self.record.year) + ')'
+                return self.record.name.encode('utf-8', 'replace') + ' \\n' + self.record.institution.encode('utf-8', 'replace') + ' (' + str(self.record.year) + ')'
             else:
-                return self.record.name.encode('iso-8859-1', 'replace') + ' \\n' + self.record.institution.encode('iso-8859-1', 'replace')
+                return self.record.name.encode('utf-8', 'replace') + ' \\n' + self.record.institution.encode('utf-8', 'replace')
         else:
             if self.record.hasYear():
-                return self.record.name.encode('iso-8859-1', 'replace') + ' \\n(' + str(self.record.year) + ')'
+                return self.record.name.encode('utf-8', 'replace') + ' \\n(' + str(self.record.year) + ')'
             else:
-                return self.record.name.encode('iso-8859-1', 'replace')
+                return self.record.name.encode('utf-8', 'replace')
 
     def __cmp__(self, n2):
         return self.record.__cmp__(n2.record)
@@ -183,7 +183,7 @@ class Graph:
         dotfile = ""
         
         dotfile += """digraph genealogy {
-    graph [charset="iso-8859-1"];
+    graph [charset="utf-8"];
     node [shape=plaintext];
     edge [style=bold];\n\n"""
 
