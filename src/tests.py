@@ -52,9 +52,9 @@ class TestRecordMethods(unittest.TestCase):
         record = GGraph.Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
         self.assert_(record.hasInstitution())
 
-    def test009_hasInstitution_yes(self):
+    def test009_hasInstitution_no(self):
         # Verify hasInstitution() method returns False when the conditions are right.
-        record = GGraph.Record("Carl Friedrich Gauss", "", 1799, 18231)
+        record = GGraph.Record("Carl Friedrich Gauss", None, 1799, 18231)
         self.assert_(not record.hasInstitution())
 
     def test010_hasYear_yes(self):
@@ -64,7 +64,7 @@ class TestRecordMethods(unittest.TestCase):
 
     def test011_hasYear_no(self):
         # Verify hasYear() method returns False when the conditions are right.
-        record = GGraph.Record("Carl Friedrich Gauss", "Universitaet Helmstedt", -1, 18231)
+        record = GGraph.Record("Carl Friedrich Gauss", "Universitaet Helmstedt", None, 18231)
         self.assert_(not record.hasYear())
 
 class TestNodeMethods(unittest.TestCase):
@@ -98,7 +98,7 @@ class TestNodeMethods(unittest.TestCase):
 
     def test005_str_no_year(self):
         # Test __str__() method for Node containing record without year.
-        record = GGraph.Record("Carl Friedrich Gauss", "Universitaet Helmstedt", -1, 18231)
+        record = GGraph.Record("Carl Friedrich Gauss", "Universitaet Helmstedt", None, 18231)
         node = GGraph.Node(record, [])
         nodestr = node.__str__()
         nodestrexpt = "Carl Friedrich Gauss \\nUniversitaet Helmstedt"
@@ -106,7 +106,7 @@ class TestNodeMethods(unittest.TestCase):
 
     def test006_str_no_inst(self):
         # Test __str__() method for Node containing record without institution.
-        record = GGraph.Record("Carl Friedrich Gauss", "", 1799, 18231)
+        record = GGraph.Record("Carl Friedrich Gauss", None, 1799, 18231)
         node = GGraph.Node(record, [])
         nodestr = node.__str__()
         nodestrexpt = "Carl Friedrich Gauss \\n(1799)"
@@ -115,7 +115,7 @@ class TestNodeMethods(unittest.TestCase):
     def test007_str_no_inst_no_id(self):
         # Test __str__() method for Node containing record without institution
         # or year.
-        record = GGraph.Record("Carl Friedrich Gauss", "", -1, 18231)
+        record = GGraph.Record("Carl Friedrich Gauss", None, None, 18231)
         node = GGraph.Node(record, [])
         nodestr = node.__str__()
         nodestrexpt = "Carl Friedrich Gauss"
@@ -157,21 +157,21 @@ class TestGraphMethods(unittest.TestCase):
     def setUp(self):
         self.record1 = GGraph.Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
         self.node1 = GGraph.Node(self.record1, [])
-        self.graph1 = GGraph.Graph(self.node1)
+        self.graph1 = GGraph.Graph([self.node1])
     
     def test001_init_empty(self):
         # Test the constructor.
         graph = GGraph.Graph()
-        self.assertEquals(graph.head, None)
+        self.assertEquals(graph.heads, None)
         
     def test002_init(self):
         # Test the constructor.
-        self.assert_(self.graph1.head == self.node1)
+        self.assert_(self.graph1.heads == [self.node1])
         self.assertEquals(self.graph1.nodes.keys(), [18231])
         self.assertEquals(self.graph1.nodes[18231], self.node1)
         
-    def test003_init_bad_head(self):
-        # Test the constructor when passed a bad type for the head parameter.
+    def test003_init_bad_heads(self):
+        # Test the constructor when passed a bad type for the heads parameter.
         self.assertRaises(TypeError, GGraph.Graph, 3)
         
     def test004_has_node_true(self):
@@ -205,20 +205,28 @@ class TestGraphMethods(unittest.TestCase):
         # Test the addNode() method.
         self.graph1.addNode("Leonhard Euler", "Universitaet Basel", 1726, 38586, [])
         self.assertEquals([38586, 18231], self.graph1.getNodeList())
+        self.assertEquals(self.graph1.heads, [self.node1])
 
-    def test010_add_node_head(self):
-        # Test the addNode() method when no head exists.
+    def test010_add_second_node_head(self):
+        # Test the addNode() method when adding a second node and
+        # marking it as a head node.
+        self.graph1.addNode("Leonhard Euler", "Universitaet Basel", 1726, 38586, [], True)
+        self.assertEquals([38586, 18231], self.graph1.getNodeList())
+        self.assertEquals(self.graph1.heads, [self.node1, self.graph1.getNode(38586)])
+
+    def test011_add_node_head(self):
+        # Test the addNode() method when no heads exist.
         graph = GGraph.Graph()
-        self.assertEquals(graph.head, None)
+        self.assertEquals(graph.heads, None)
         graph.addNode("Leonhard Euler", "Universitaet Basel", 1726, 38586, [])
-        self.assertEquals(graph.head, graph.getNode(38586))
+        self.assertEquals(graph.heads, [graph.getNode(38586)])
 
-    def test011_add_node_already_present(self):
+    def test012_add_node_already_present(self):
         self.graph1.addNode("Leonhard Euler", "Universitaet Basel", 1726, 38586, [])
         self.assertEquals([38586, 18231], self.graph1.getNodeList())
         self.assertRaises(GGraph.DuplicateNodeError, self.graph1.addNode, "Leonhard Euler", "Universitaet Basel", 1726, 38586, [])
 
-    def test012_generate_dot_file(self):
+    def test013_generate_dot_file(self):
         # Test the generateDotFile() method.
         dotfileexpt = """digraph genealogy {
     graph [charset="utf-8"];
@@ -232,7 +240,7 @@ class TestGraphMethods(unittest.TestCase):
         dotfile = self.graph1.generateDotFile()
         self.assertEquals(dotfile, dotfileexpt)
         
-    def test013_generate_dot_file(self):
+    def test014_generate_dot_file(self):
         # Test the generateDotFile() method.
         graph = GGraph.Graph()
         graph.addNode("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231, [18230])

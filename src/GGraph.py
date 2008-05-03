@@ -27,9 +27,9 @@ class Record:
         # Verify we got the types wanted.
         if not isinstance(self.name, basestring):
             raise TypeError("Unexpected parameter type: expected string value for 'name'")
-        if not isinstance(self.institution, basestring):
+        if not isinstance(self.institution, basestring) and self.institution is not None:
             raise TypeError("Unexpected parameter type: expected string value for 'institution'")
-        if not isinstance(self.year, int):
+        if not isinstance(self.year, int) and self.year is not None:
             raise TypeError("Unexpected parameter type: expected integer value for 'year'")
         if not isinstance(self.id, int):
             raise TypeError("Unexpected parameter type: expected integer value for 'id'")
@@ -45,14 +45,14 @@ class Record:
         Return True if this record has an institution associated with it,
         else False.
         """
-        return self.institution != ""
+        return self.institution is not None
     
     def hasYear(self):
         """
         Return True if this record has a year associated with it, else
         False.
         """
-        return self.year != -1
+        return self.year is not None
     
 
 class Node:
@@ -114,24 +114,28 @@ class Graph:
     """
     Class storing the representation of a genealogy graph.
     """
-    def __init__(self, head=None):
+    def __init__(self, heads=None):
         """
         Graph class constructor.
         
         Parameters:
-            head: a Node object representing the tree head (can be
-                omitted to create an empty graph)
+            heads: a list of Node objects representing the tree head
+                (can be omitted to create an empty graph)
         """
-        self.head = head
+        self.heads = heads
         
-        # Verify type of head is what we expect.
-        if self.head is not None and not isinstance(self.head, Node):
-            raise TypeError("Unexpected parameter type: expected Node object for 'head'")
+        # Verify type of heads is what we expect.
+        if self.heads is not None:
+            if not isinstance(self.heads, list):
+                raise TypeError("Unexpected parameter type: expected list of Node objects for 'heads'")
+            for head in self.heads:
+                if not isinstance(head, Node):
+                    raise TypeError("Unexpected parameter type: expected list of Node objects for 'heads'")
 
-        if self.head is not None:
-            self.nodes = {head.id(): head}
-        else:
-            self.nodes = {}
+        self.nodes = {}
+        if self.heads is not None:
+            for head in self.heads:
+                self.nodes[head.id()] = head
 
     def hasNode(self, id):
         """
@@ -155,7 +159,7 @@ class Graph:
         """
         return self.nodes.keys()
 
-    def addNode(self, name, institution, year, id, ancestors):
+    def addNode(self, name, institution, year, id, ancestors, isHead=False):
         """
         Add a new node to the graph if a matching node is not already
         present.
@@ -164,8 +168,10 @@ class Graph:
             record = Record(name, institution, year, id)
             node = Node(record, ancestors)
             self.nodes[id] = node
-            if self.head is None:
-                self.head = node
+            if self.heads is None:
+                self.heads = [node]
+            elif isHead:
+                self.heads.append(node)
         else:
             msg = "node with id %d already exists" % (id)
             raise DuplicateNodeError(msg)
@@ -175,10 +181,12 @@ class Graph:
         Return a string that contains the content of the Graphviz dotfile
         format for this graph.
         """
-        if self.head is None:
+        if self.heads is None:
             return ""
 
-        queue = [self.head.id()]
+        queue = []
+        for head in self.heads:
+            queue.append(head.id())
         edges = ""
         dotfile = ""
         
