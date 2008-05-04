@@ -10,7 +10,7 @@ class Geneagrapher:
 	def __init__(self):
 		self.graph = GGraph.Graph()
 		self.leaf_ids = []
-		self.get_ancestors = True
+		self.get_ancestors = False
 		self.get_descendents = False
 		self.verbose = False
 		self.write_filename = None
@@ -26,9 +26,9 @@ class Geneagrapher:
 
 		self.parser.add_option("-f", "--file", dest="filename",
 				       help="write report to FILE [default: stdout]", metavar="FILE", default=None)
-		self.parser.add_option("--without-ancestors", action="store_false", dest="get_ancestors",
-				       default=True, help="do not get ancestors of any input IDs")
-		self.parser.add_option("--with-descendents", action="store_true", dest="get_descendents",
+		self.parser.add_option("-a", "--with-ancestors", action="store_true", dest="get_ancestors",
+				       default=False, help="do not get ancestors of any input IDs")
+		self.parser.add_option("-d", "--with-descendents", action="store_true", dest="get_descendents",
 				       default=False, help="do not get ancestors of any input IDs")
 		self.parser.add_option("--verbose", "-v", action="store_true", dest="verbose", default=False,
 				       help="print information showing progress")
@@ -56,28 +56,65 @@ class Geneagrapher:
 		Populate the graph member by grabbing the mathematician
 		pages and extracting relevant data.
 		"""
-		grab_queue = list(self.leaf_ids)
-		while len(grab_queue) != 0:
-			id = grab_queue.pop()
+		leaf_grab_queue = list(self.leaf_ids)
+		ancestor_grab_queue = []
+		descendent_grab_queue = []
+		
+		# Grab "leaf" nodes.
+		while len(leaf_grab_queue) != 0:
+			id = leaf_grab_queue.pop()
 			if not self.graph.hasNode(id):
 				# Then this information has not yet been grabbed.
 				grabber = grab.Grabber(id)
 				if self.verbose:
 					print "Grabbing record #%d" % (id)
 				try:
-					[name, institution, year, advisors] = grabber.extractNodeInformation()
+					[name, institution, year, advisors, descendents] = grabber.extractNodeInformation()
 				except ValueError:
 					# The given id does not exist in the Math Genealogy Project's database.
 					raise
-				if id in self.leaf_ids:
-					self.graph.addNode(name, institution, year, id, advisors, True)
-				else:
-					self.graph.addNode(name, institution, year, id, advisors)
+				self.graph.addNode(name, institution, year, id, advisors, descendents, True)
 				if self.get_ancestors:
-					grab_queue += advisors
+					ancestor_grab_queue += advisors
+				if self.get_descendents:
+					descendent_grab_queue += descendents
+
+		# Grab ancestors of leaf nodes.
+		if self.get_ancestors:
+			while len(ancestor_grab_queue) != 0:
+				id = ancestor_grab_queue.pop()
+				if not self.graph.hasNode(id):
+					# Then this information has not yet been grabbed.
+					grabber = grab.Grabber(id)
+					if self.verbose:
+						print "Grabbing record #%d" % (id)
+					try:
+						[name, institution, year, advisors, descendents] = grabber.extractNodeInformation()
+					except ValueError:
+						# The given id does not exist in the Math Genealogy Project's database.
+						raise
+					self.graph.addNode(name, institution, year, id, advisors, descendents)
+					ancestor_grab_queue += advisors
+						
+		# Grab descendents of leaf nodes.
+		if self.get_descendents:
+			while len(descendent_grab_queue) != 0:
+				id = descendent_grab_queue.pop()
+				if not self.graph.hasNode(id):
+					# Then this information has not yet been grabbed.
+					grabber = grab.Grabber(id)
+					if self.verbose:
+						print "Grabbing record #%d" % (id)
+					try:
+						[name, institution, year, advisors, descendents] = grabber.extractNodeInformation()
+					except ValueError:
+						# The given id does not exist in the Math Genealogy Project's database.
+						raise
+					self.graph.addNode(name, institution, year, id, advisors, descendents)
+					descendent_grab_queue += descendents
 					
 	def generateDotFile(self):
-		dotfile = self.graph.generateDotFile()
+		dotfile = self.graph.generateDotFile(self.get_ancestors, self.get_descendents)
 		if self.write_filename is not None:
 			outfile = open(self.write_filename, "w")
 			outfile.write(dotfile)

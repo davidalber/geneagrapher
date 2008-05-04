@@ -14,6 +14,7 @@ class Grabber:
         self.institution = None
         self.year = None
         self.advisors = []
+        self.descendents = []
 
     def unescape(self, s):
         return re.sub('&(%s);' % '|'.join(name2codepoint),\
@@ -39,6 +40,7 @@ class Grabber:
             self.getPage()
             
         self.advisors = []
+        self.descendents = []
 
         # Split the page string at newline characters.
         psarray = self.pagestr.split('\n')
@@ -68,6 +70,10 @@ class Grabber:
                     advisor_id = int(line.split('a href=\"id.php?id=')[1].split('\">')[0])
                     self.advisors.append(advisor_id)
 
-            elif 'Student(s)' in line or 'No students known' in line:
+            if '<tr ' in line:
+                descendent_id = int(line.split('a href=\"id.php?id=')[1].split('\">')[0])
+                self.descendents.append(descendent_id)
+                
+            if 'According to our current on-line database' in line:
                 break
-        return [self.name, self.institution, self.year, self.advisors]
+        return [self.name, self.institution, self.year, self.advisors, self.descendents]

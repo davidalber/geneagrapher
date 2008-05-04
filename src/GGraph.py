@@ -59,18 +59,21 @@ class Node:
     """
     Container class storing a node in the graph.
     """
-    def __init__(self, record, ancestors):
+    def __init__(self, record, ancestors, descendents):
         """
         Node class constructor.
         
         Parameters:
             record: instance of the Record class
-            ancestors: list of Node objects containing this node's
-                genealogical ancestors
+            ancestors: list of the record's genealogical ancestors's
+                IDs
+            descendents: list of this records genealogical
+                descendent's IDs
         """
         
         self.record = record
         self.ancestors = ancestors
+        self.descendents = descendents
         self.already_printed = False
 
         # Verify parameter types.
@@ -78,6 +81,8 @@ class Node:
             raise TypeError("Unexpected parameter type: expected Record object for 'record'")
         if not isinstance(self.ancestors, list):
             raise TypeError("Unexpected parameter type: expected list object for 'ancestors'")
+        if not isinstance(self.descendents, list):
+            raise TypeError("Unexpected parameter type: expected list object for 'descendents'")
         
     def __str__(self):
         if self.record.hasInstitution():
@@ -159,14 +164,14 @@ class Graph:
         """
         return self.nodes.keys()
 
-    def addNode(self, name, institution, year, id, ancestors, isHead=False):
+    def addNode(self, name, institution, year, id, ancestors, descendents, isHead=False):
         """
         Add a new node to the graph if a matching node is not already
         present.
         """
         if not self.hasNode(id):
             record = Record(name, institution, year, id)
-            node = Node(record, ancestors)
+            node = Node(record, ancestors, descendents)
             self.nodes[id] = node
             if self.heads is None:
                 self.heads = [node]
@@ -176,7 +181,7 @@ class Graph:
             msg = "node with id %d already exists" % (id)
             raise DuplicateNodeError(msg)
 
-    def generateDotFile(self):
+    def generateDotFile(self, include_ancestors, include_descendents):
         """
         Return a string that contains the content of the Graphviz dotfile
         format for this graph.
@@ -197,6 +202,9 @@ class Graph:
 
         while len(queue) > 0:
             node_id = queue.pop()
+            if not self.hasNode(node_id):
+                # Skip this id if a corresponding node is not present.
+                continue
             node = self.getNode(node_id)
 
             if node.already_printed:
@@ -204,8 +212,13 @@ class Graph:
             else:
                 node.already_printed = True
             
-            # Add this node's advisors to queue.
-            queue += node.ancestors
+            if include_ancestors:
+                # Add this node's advisors to queue.
+                queue += node.ancestors
+                
+            if include_descendents:
+                # Add this node's descendents to queue.
+                queue += node.descendents
         
             # Print this node's information.
             nodestr = "    %d [label=\"%s\"];" % (node_id, node)
@@ -213,8 +226,9 @@ class Graph:
 
             # Store the connection information for this node.
             for advisor in node.ancestors:
-                edgestr = "\n    %s -> %d;" % (advisor, node_id)
-                edges += edgestr
+                if self.hasNode(advisor):
+                    edgestr = "\n    %d -> %d;" % (advisor, node_id)
+                    edges += edgestr
                 
             dotfile += "\n"
 

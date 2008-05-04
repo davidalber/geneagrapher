@@ -76,22 +76,27 @@ class TestNodeMethods(unittest.TestCase):
     
     def test001_init(self):
         # Test the constructor.
-        node = GGraph.Node(self.record, [])
+        node = GGraph.Node(self.record, [], [])
         self.assertEquals(node.record, self.record)
         self.assertEquals(node.ancestors, [])
+        self.assertEquals(node.descendents, [])
         
     def test002_init_bad_record(self):
         # Test the constructor for a case where the record passed is not a Record
         # object.
-        self.assertRaises(TypeError, GGraph.Node, 1, [])
+        self.assertRaises(TypeError, GGraph.Node, 1, [], [])
         
     def test003_init_bad_ancestor_list(self):
         # Test the constructor for a case where the ancestor list is not a list.
-        self.assertRaises(TypeError, GGraph.Node, self.record, 1)
+        self.assertRaises(TypeError, GGraph.Node, self.record, 1, [])
+
+    def test003_2_init_bad_descendent_list(self):
+        # Test the constructor for a case where the descendent list is not a list.
+        self.assertRaises(TypeError, GGraph.Node, self.record, [], 1)
         
     def test004_str_full(self):
         # Test __str__() method for Node with complete record.
-        node = GGraph.Node(self.record, [])
+        node = GGraph.Node(self.record, [], [])
         nodestr = node.__str__()
         nodestrexpt = "Carl Friedrich Gauss \\nUniversitaet Helmstedt (1799)"
         self.assertEquals(nodestr, nodestrexpt)
@@ -99,7 +104,7 @@ class TestNodeMethods(unittest.TestCase):
     def test005_str_no_year(self):
         # Test __str__() method for Node containing record without year.
         record = GGraph.Record("Carl Friedrich Gauss", "Universitaet Helmstedt", None, 18231)
-        node = GGraph.Node(record, [])
+        node = GGraph.Node(record, [], [])
         nodestr = node.__str__()
         nodestrexpt = "Carl Friedrich Gauss \\nUniversitaet Helmstedt"
         self.assertEquals(nodestr, nodestrexpt)
@@ -107,7 +112,7 @@ class TestNodeMethods(unittest.TestCase):
     def test006_str_no_inst(self):
         # Test __str__() method for Node containing record without institution.
         record = GGraph.Record("Carl Friedrich Gauss", None, 1799, 18231)
-        node = GGraph.Node(record, [])
+        node = GGraph.Node(record, [], [])
         nodestr = node.__str__()
         nodestrexpt = "Carl Friedrich Gauss \\n(1799)"
         self.assertEquals(nodestr, nodestrexpt)
@@ -116,7 +121,7 @@ class TestNodeMethods(unittest.TestCase):
         # Test __str__() method for Node containing record without institution
         # or year.
         record = GGraph.Record("Carl Friedrich Gauss", None, None, 18231)
-        node = GGraph.Node(record, [])
+        node = GGraph.Node(record, [], [])
         nodestr = node.__str__()
         nodestrexpt = "Carl Friedrich Gauss"
         self.assertEquals(nodestr, nodestrexpt)
@@ -124,30 +129,30 @@ class TestNodeMethods(unittest.TestCase):
     def test008_cmp_equal(self):
         # Test comparison method for Nodes with identical records.
         record2 = GGraph.Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
-        node1 = GGraph.Node(self.record, [])
-        node2 = GGraph.Node(record2, [])
+        node1 = GGraph.Node(self.record, [], [])
+        node2 = GGraph.Node(record2, [], [])
         self.assert_(node1 == node2)
 
     def test009_cmp_unequal(self):
         # Test comparison method for Nodes with different records.
         record2 = GGraph.Record("Leonhard Euler", "Universitaet Basel", 1726, 38586)
-        node1 = GGraph.Node(self.record, [])
-        node2 = GGraph.Node(record2, [])
+        node1 = GGraph.Node(self.record, [], [])
+        node2 = GGraph.Node(record2, [], [])
         self.assert_(node1 < node2)
 
     def test010_add_ancestor(self):
         # Test the addAncestor() method.
-        node = GGraph.Node(self.record, [])
+        node = GGraph.Node(self.record, [], [])
         node.addAncestor(5)
         self.assertEquals(node.ancestors, [5])
 
     def test011_add_ancestor_bad_type(self):
         # Test the addAncestor() method for a case where the parameter type is incorrect.
-        node = GGraph.Node(self.record, [])
+        node = GGraph.Node(self.record, [], [])
         self.assertRaises(TypeError, node.addAncestor, '5')
         
     def test012_get_id(self):
-        node = GGraph.Node(self.record, [])
+        node = GGraph.Node(self.record, [], [])
         self.assertEquals(node.id(), 18231)
 
 class TestGraphMethods(unittest.TestCase):
@@ -156,7 +161,7 @@ class TestGraphMethods(unittest.TestCase):
     """
     def setUp(self):
         self.record1 = GGraph.Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
-        self.node1 = GGraph.Node(self.record1, [])
+        self.node1 = GGraph.Node(self.record1, [], [])
         self.graph1 = GGraph.Graph([self.node1])
     
     def test001_init_empty(self):
@@ -203,14 +208,14 @@ class TestGraphMethods(unittest.TestCase):
         
     def test009_add_node(self):
         # Test the addNode() method.
-        self.graph1.addNode("Leonhard Euler", "Universitaet Basel", 1726, 38586, [])
+        self.graph1.addNode("Leonhard Euler", "Universitaet Basel", 1726, 38586, [], [])
         self.assertEquals([38586, 18231], self.graph1.getNodeList())
         self.assertEquals(self.graph1.heads, [self.node1])
 
     def test010_add_second_node_head(self):
         # Test the addNode() method when adding a second node and
         # marking it as a head node.
-        self.graph1.addNode("Leonhard Euler", "Universitaet Basel", 1726, 38586, [], True)
+        self.graph1.addNode("Leonhard Euler", "Universitaet Basel", 1726, 38586, [], [], True)
         self.assertEquals([38586, 18231], self.graph1.getNodeList())
         self.assertEquals(self.graph1.heads, [self.node1, self.graph1.getNode(38586)])
 
@@ -218,13 +223,13 @@ class TestGraphMethods(unittest.TestCase):
         # Test the addNode() method when no heads exist.
         graph = GGraph.Graph()
         self.assertEquals(graph.heads, None)
-        graph.addNode("Leonhard Euler", "Universitaet Basel", 1726, 38586, [])
+        graph.addNode("Leonhard Euler", "Universitaet Basel", 1726, 38586, [], [])
         self.assertEquals(graph.heads, [graph.getNode(38586)])
 
     def test012_add_node_already_present(self):
-        self.graph1.addNode("Leonhard Euler", "Universitaet Basel", 1726, 38586, [])
+        self.graph1.addNode("Leonhard Euler", "Universitaet Basel", 1726, 38586, [], [])
         self.assertEquals([38586, 18231], self.graph1.getNodeList())
-        self.assertRaises(GGraph.DuplicateNodeError, self.graph1.addNode, "Leonhard Euler", "Universitaet Basel", 1726, 38586, [])
+        self.assertRaises(GGraph.DuplicateNodeError, self.graph1.addNode, "Leonhard Euler", "Universitaet Basel", 1726, 38586, [], [])
 
     def test013_generate_dot_file(self):
         # Test the generateDotFile() method.
@@ -237,18 +242,18 @@ class TestGraphMethods(unittest.TestCase):
 
 }
 """    
-        dotfile = self.graph1.generateDotFile()
+        dotfile = self.graph1.generateDotFile(True, False)
         self.assertEquals(dotfile, dotfileexpt)
         
     def test014_generate_dot_file(self):
         # Test the generateDotFile() method.
         graph = GGraph.Graph()
-        graph.addNode("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231, [18230])
-        graph.addNode("Johann Friedrich Pfaff", "Georg-August-Universitaet Goettingen", 1786, 18230, [66476])
-        graph.addNode("Abraham Gotthelf Kaestner", "Universitaet Leipzig", 1739, 66476, [57670])
-        graph.addNode("Christian August Hausen", "Martin-Luther-Universitaet Halle-Wittenberg", 1713, 57670, [72669])
-        graph.addNode("Johann Christoph Wichmannshausen", "Universitaet Leipzig", 1685, 72669, [21235])
-        graph.addNode("Otto Mencke", "Universitaet Leipzig", 1665, 21235, [])
+        graph.addNode("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231, [18230], [])
+        graph.addNode("Johann Friedrich Pfaff", "Georg-August-Universitaet Goettingen", 1786, 18230, [66476], [])
+        graph.addNode("Abraham Gotthelf Kaestner", "Universitaet Leipzig", 1739, 66476, [57670], [])
+        graph.addNode("Christian August Hausen", "Martin-Luther-Universitaet Halle-Wittenberg", 1713, 57670, [72669], [])
+        graph.addNode("Johann Christoph Wichmannshausen", "Universitaet Leipzig", 1685, 72669, [21235], [])
+        graph.addNode("Otto Mencke", "Universitaet Leipzig", 1665, 21235, [], [])
         
         dotfileexpt = """digraph genealogy {
     graph [charset="utf-8"];
@@ -269,7 +274,7 @@ class TestGraphMethods(unittest.TestCase):
     21235 -> 72669;
 }
 """
-        dotfile = graph.generateDotFile()
+        dotfile = graph.generateDotFile(True, False)
         self.assertEquals(dotfile, dotfileexpt)
 
 class TestGrabberMethods(unittest.TestCase):
@@ -287,6 +292,7 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEquals(self.grabber.institution, None)
         self.assertEquals(self.grabber.year, None)
         self.assertEquals(self.grabber.advisors, [])
+        self.assertEquals(self.grabber.descendents, [])
 
     def test002_get_page(self):
         # Test getPage() method.
@@ -304,7 +310,7 @@ class TestGrabberMethods(unittest.TestCase):
         
     def test004_extract_info_all_fields(self):
         # Test the extractNodeInformation() method for a record containing all fields.
-        [name, institution, year, advisors] = self.grabber.extractNodeInformation()
+        [name, institution, year, advisors, descendents] = self.grabber.extractNodeInformation()
         self.assertEquals(name, self.grabber.name)
         self.assertEquals(institution, self.grabber.institution)
         self.assertEquals(year, self.grabber.year)
@@ -313,41 +319,47 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEquals(institution, u"Universit\xe4t Helmstedt")
         self.assertEquals(year, 1799)
         self.assertEquals(advisors, [18230])
+        self.assertEquals(descendents, [18603, 18233, 62547, 29642, 55175, 29458, 19953, 18232])
         
         # Verify calling extractNodeInformation() twice does not have side effect.
-        [name, institution, year, advisors] = self.grabber.extractNodeInformation()
+        [name, institution, year, advisors, descendents] = self.grabber.extractNodeInformation()
         self.assertEquals(name, u"Carl Friedrich Gau\xdf")
         self.assertEquals(institution, u"Universit\xe4t Helmstedt")
         self.assertEquals(year, 1799)
         self.assertEquals(advisors, [18230])
+        self.assertEquals(descendents, [18603, 18233, 62547, 29642, 55175, 29458, 19953, 18232])
         
     def test005_extract_info_no_advisor(self):
         # Test the extractNodeInformation() method for a record with no advisor.
         grabber = grab.Grabber(21235)
-        [name, institution, year, advisors] = grabber.extractNodeInformation()
+        [name, institution, year, advisors, descendents] = grabber.extractNodeInformation()
         self.assertEquals(name, u"Otto  Mencke")
         self.assertEquals(institution, u"Universit\xe4t Leipzig")
         self.assertEquals(year, 1665)
         self.assertEquals(advisors, [])
+        self.assertEquals(descendents, [77909, 72669])
         
     def test006_extract_info_no_year(self):
         # Test the extractNodeInformation() method for a record with no year.
+        # This example also has no descendents.
         grabber = grab.Grabber(53658)
-        [name, institution, year, advisors] = grabber.extractNodeInformation()
+        [name, institution, year, advisors, descendents] = grabber.extractNodeInformation()
         self.assertEquals(name, u"S.  Cingolani")
         self.assertEquals(institution, u"Universit\xe0 di Pisa")
         self.assertEquals(year, None)
         self.assertEquals(advisors, [51261])
+        self.assertEquals(descendents, [])
         
     def test007_extract_info_no_inst(self):
         # Test the extractNodeInformation() method for a record with no institution.
         # This test is also missing additional information already tested.
         grabber = grab.Grabber(52965)
-        [name, institution, year, advisors] = grabber.extractNodeInformation()
+        [name, institution, year, advisors, descendents] = grabber.extractNodeInformation()
         self.assertEquals(name, u"Walter  Mayer")
         self.assertEquals(institution, None)
         self.assertEquals(year, None)
         self.assertEquals(advisors, [])
+        self.assertEquals(descendents, [52996])
 
     # Tests for special (from my point of view) characters:
     def test008_slash_l(self):
@@ -355,12 +367,13 @@ class TestGrabberMethods(unittest.TestCase):
         # containing a slash l character. Example:
         # http://www.genealogy.math.ndsu.nodak.edu/id.php?id=7383.
         grabber = grab.Grabber(7383)
-        [name, institution, year, advisors] = grabber.extractNodeInformation()
+        [name, institution, year, advisors, descendents] = grabber.extractNodeInformation()
         self.assertEquals(name, u"W\u0142adys\u0142aw Hugo Dyonizy Steinhaus")
         self.assertEquals(institution, u"Georg-August-Universit\xe4t G\xf6ttingen")
         self.assertEquals(year, 1911)
         self.assertEquals(advisors, [7298])
-        
+        self.assertEquals(descendents, [12681, 28292, 10275, 79297, 36991, 17851, 51907, 15165, 89841, 84016])
+
 class TestGeneagrapherMethods(unittest.TestCase):
     """
     Unit tests for the geneagrapher.Geneagrapher class.
@@ -372,7 +385,7 @@ class TestGeneagrapherMethods(unittest.TestCase):
         # Test constructor.
         self.assertEquals(isinstance(self.ggrapher.graph, GGraph.Graph), True)
         self.assertEquals(self.ggrapher.leaf_ids, [])
-        self.assertEquals(self.ggrapher.get_ancestors, True)
+        self.assertEquals(self.ggrapher.get_ancestors, False)
         self.assertEquals(self.ggrapher.get_descendents, False)
         self.assertEquals(self.ggrapher.write_filename, None)
         
@@ -388,16 +401,16 @@ class TestGeneagrapherMethods(unittest.TestCase):
         self.ggrapher.get_descendents = True
         self.ggrapher.write_filename = "filler"
         self.ggrapher.parseInput()
-        self.assertEquals(self.ggrapher.get_ancestors, True)
+        self.assertEquals(self.ggrapher.get_ancestors, False)
         self.assertEquals(self.ggrapher.get_descendents, False)
         self.assertEquals(self.ggrapher.write_filename, None)
         self.assertEquals(self.ggrapher.leaf_ids, [3])
 
     def test004_parse_options(self):
         # Test parseInput() with options.
-        sys.argv = ['geneagrapher', '--without-ancestors', '--with-descendents', '--file=filler', '3', '43']
+        sys.argv = ['geneagrapher', '--with-ancestors', '--with-descendents', '--file=filler', '3', '43']
         self.ggrapher.parseInput()
-        self.assertEquals(self.ggrapher.get_ancestors, False)
+        self.assertEquals(self.ggrapher.get_ancestors, True)
         self.assertEquals(self.ggrapher.get_descendents, True)
         self.assertEquals(self.ggrapher.write_filename, "filler")
         self.assertEquals(self.ggrapher.leaf_ids, [3, 43])
