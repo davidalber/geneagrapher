@@ -8,7 +8,7 @@ class Record:
     """
     Container class storing record of a mathematician in the graph.
     """
-    def __init__(self, name, institution, year, id):
+    def __init__(self, name, institution=None, year=None, id=None):
         """
         Record class constructor.
         
@@ -31,7 +31,7 @@ class Record:
             raise TypeError("Unexpected parameter type: expected string value for 'institution'")
         if not isinstance(self.year, int) and self.year is not None:
             raise TypeError("Unexpected parameter type: expected integer value for 'year'")
-        if not isinstance(self.id, int):
+        if not isinstance(self.id, int) and self.id is not None:
             raise TypeError("Unexpected parameter type: expected integer value for 'id'")
 
     def __cmp__(self, r2):
@@ -114,6 +114,12 @@ class Node:
         """
         return self.record.id
 
+    def setId(self, id):
+        """
+        Sets the record id.
+        """
+        self.record.id = id
+
 
 class Graph:
     """
@@ -128,6 +134,7 @@ class Graph:
                 (can be omitted to create an empty graph)
         """
         self.heads = heads
+        self.supp_id = -1
         
         # Verify type of heads is what we expect.
         if self.heads is not None:
@@ -169,17 +176,27 @@ class Graph:
         Add a new node to the graph if a matching node is not already
         present.
         """
-        if not self.hasNode(id):
-            record = Record(name, institution, year, id)
-            node = Node(record, ancestors, descendents)
-            self.nodes[id] = node
-            if self.heads is None:
-                self.heads = [node]
-            elif isHead:
-                self.heads.append(node)
-        else:
-            msg = "node with id %d already exists" % (id)
+        record = Record(name, institution, year, id)
+        node = Node(record, ancestors, descendents)
+        self.addNodeObject(node, isHead)
+
+    def addNodeObject(self, node, isHead=False):
+        """
+        Add a new node object to the graph if a node with the same id
+        is not already present.
+        """
+        if node.id() is not None and self.hasNode(node.id()):
+            msg = "node with id %d already exists" % (node.id())
             raise DuplicateNodeError(msg)
+        if node.id() is None:
+            # Assign a "dummy" id.
+            node.setId(self.supp_id)
+            self.supp_id -= 1
+        self.nodes[node.id()] = node
+        if self.heads is None:
+            self.heads = [node]
+        elif isHead:
+            self.heads.append(node)
 
     def generateDotFile(self, include_ancestors, include_descendents):
         """

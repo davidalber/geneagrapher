@@ -13,6 +13,7 @@ class Geneagrapher:
 		self.get_ancestors = False
 		self.get_descendents = False
 		self.verbose = False
+		self.supp_node_filename = None
 		self.write_filename = None
 
 	def parseInput(self):
@@ -34,6 +35,8 @@ class Geneagrapher:
 				       help="print information showing progress")
 		self.parser.add_option("--version", "-V", action="store_true", dest="print_version", default=False,
 				       help="print geneagrapher version and exit")
+		self.parser.add_option("-n", "--attach-node-file", dest="supp_node_filename", metavar="FILE",
+				       help="attach supplementary nodes returned by function 'define_supp_nodes()' in FILE to the graph", default=None)
 
 		(options, args) = self.parser.parse_args()
 		
@@ -47,6 +50,7 @@ class Geneagrapher:
 		self.get_ancestors = options.get_ancestors
 		self.get_descendents = options.get_descendents
 		self.verbose = options.verbose
+		self.supp_node_filename = options.supp_node_filename
 		self.write_filename = options.filename
 		for arg in args:
 			self.leaf_ids.append(int(arg))
@@ -59,6 +63,18 @@ class Geneagrapher:
 		leaf_grab_queue = list(self.leaf_ids)
 		ancestor_grab_queue = []
 		descendent_grab_queue = []
+
+		# Grab "supplementary" nodes from file.
+		if self.supp_node_filename is not None:
+			supp_node_modname = self.supp_node_filename.split('.')[0]
+			importstr = "import %s" % (supp_node_modname)
+			exec(importstr)
+			if "define_supp_nodes" not in dir(eval(supp_node_modname)):
+				errstr = "'%s' module has no function 'define_supp_nodes'" % (supp_node_modname)
+				raise AttributeError(errstr)
+			supp_nodes = eval(supp_node_modname).define_supp_nodes()
+			for node in supp_nodes:
+				self.graph.addNodeObject(node, True)
 		
 		# Grab "leaf" nodes.
 		while len(leaf_grab_queue) != 0:

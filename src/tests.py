@@ -155,6 +155,14 @@ class TestNodeMethods(unittest.TestCase):
         node = GGraph.Node(self.record, [], [])
         self.assertEquals(node.id(), 18231)
 
+    def test013_set_id(self):
+        # Test the setId() method.
+        node = GGraph.Node(self.record, [], [])
+        self.assertEquals(node.id(), 18231)
+        node.setId(15)
+        self.assertEquals(node.id(), 15)
+        
+
 class TestGraphMethods(unittest.TestCase):
     """
     Unit tests for the GGraph.Graph class.
@@ -231,7 +239,15 @@ class TestGraphMethods(unittest.TestCase):
         self.assertEquals([38586, 18231], self.graph1.getNodeList())
         self.assertRaises(GGraph.DuplicateNodeError, self.graph1.addNode, "Leonhard Euler", "Universitaet Basel", 1726, 38586, [], [])
 
-    def test013_generate_dot_file(self):
+    def test013_add_node_object(self):
+        # Test the addNodeObject() method.
+        record = GGraph.Record("Leonhard Euler", "Universitaet Basel", 1726, 38586)
+        node = GGraph.Node(record, [], [])
+        self.graph1.addNodeObject(node)
+        self.assertEquals([38586, 18231], self.graph1.getNodeList())
+        self.assertEquals(self.graph1.heads, [self.node1])
+
+    def test014_generate_dot_file(self):
         # Test the generateDotFile() method.
         dotfileexpt = """digraph genealogy {
     graph [charset="utf-8"];
@@ -245,7 +261,7 @@ class TestGraphMethods(unittest.TestCase):
         dotfile = self.graph1.generateDotFile(True, False)
         self.assertEquals(dotfile, dotfileexpt)
         
-    def test014_generate_dot_file(self):
+    def test015_generate_dot_file(self):
         # Test the generateDotFile() method.
         graph = GGraph.Graph()
         graph.addNode("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231, [18230], [])
@@ -387,6 +403,8 @@ class TestGeneagrapherMethods(unittest.TestCase):
         self.assertEquals(self.ggrapher.leaf_ids, [])
         self.assertEquals(self.ggrapher.get_ancestors, False)
         self.assertEquals(self.ggrapher.get_descendents, False)
+        self.assertEquals(self.ggrapher.verbose, False)
+        self.assertEquals(self.ggrapher.supp_node_filename, None)
         self.assertEquals(self.ggrapher.write_filename, None)
         
     def test002_parse_empty(self):
@@ -403,23 +421,34 @@ class TestGeneagrapherMethods(unittest.TestCase):
         self.ggrapher.parseInput()
         self.assertEquals(self.ggrapher.get_ancestors, False)
         self.assertEquals(self.ggrapher.get_descendents, False)
+        self.assertEquals(self.ggrapher.verbose, False)
+        self.assertEquals(self.ggrapher.supp_node_filename, None)
         self.assertEquals(self.ggrapher.write_filename, None)
         self.assertEquals(self.ggrapher.leaf_ids, [3])
 
     def test004_parse_options(self):
         # Test parseInput() with options.
-        sys.argv = ['geneagrapher', '--with-ancestors', '--with-descendents', '--file=filler', '3', '43']
+        sys.argv = ['geneagrapher', '--with-ancestors', '--with-descendents', '--file=filler', '--verbose', '-n', 'suppfiller', '3', '43']
         self.ggrapher.parseInput()
         self.assertEquals(self.ggrapher.get_ancestors, True)
         self.assertEquals(self.ggrapher.get_descendents, True)
+        self.assertEquals(self.ggrapher.verbose, True)
+        self.assertEquals(self.ggrapher.supp_node_filename, "suppfiller")
         self.assertEquals(self.ggrapher.write_filename, "filler")
         self.assertEquals(self.ggrapher.leaf_ids, [3, 43])
+
+    def test005_bad_supp_node_file(self):
+        # Test buildGraph() method when given bad supplementary node
+        # file.
+        sys.argv = ['geneagrapher', '--attach-node-file=tests.py', '3', '43']
+        self.ggrapher.parseInput()
+        self.assertRaises(AttributeError, self.ggrapher.buildGraph)
 
 if __name__ == '__main__':
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(TestRecordMethods))
     suite.addTest(unittest.makeSuite(TestNodeMethods))
     suite.addTest(unittest.makeSuite(TestGraphMethods))
-    suite.addTest(unittest.makeSuite(TestGrabberMethods))
+    #suite.addTest(unittest.makeSuite(TestGrabberMethods))
     suite.addTest(unittest.makeSuite(TestGeneagrapherMethods))
     unittest.TextTestRunner(verbosity=1).run(suite)
