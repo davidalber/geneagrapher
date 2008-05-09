@@ -1,6 +1,6 @@
 from optparse import OptionParser
-import GGraph
-import grab
+from . import GGraph
+from . import grab
 
 class Geneagrapher:
 	"""
