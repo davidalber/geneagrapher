@@ -15,6 +15,7 @@ genealogies using data from the Math Genealogy Project's website.
       packages=find_packages(exclude='tests'),
       #package_data={'': '*.xml'},
       install_requires=[],
+      scripts=['geneagrapher/ggrapher.py'],
       test_suite = "tests.tests"
       )
 
