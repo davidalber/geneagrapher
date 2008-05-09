@@ -1,8 +1,6 @@
 import sys
 import unittest
-import GGraph
-import grab
-import geneagrapher
+from geneagrapher import GGraph, grab, geneagrapher
 
 # Unit tests for GGraph.
 class TestRecordMethods(unittest.TestCase):
