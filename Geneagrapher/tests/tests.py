@@ -442,11 +442,14 @@ class TestGeneagrapherMethods(unittest.TestCase):
         self.ggrapher.parseInput()
         self.assertRaises(AttributeError, self.ggrapher.buildGraph)
 
-if __name__ == '__main__':
+def runTests():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(TestRecordMethods))
     suite.addTest(unittest.makeSuite(TestNodeMethods))
     suite.addTest(unittest.makeSuite(TestGraphMethods))
-    #suite.addTest(unittest.makeSuite(TestGrabberMethods))
+    suite.addTest(unittest.makeSuite(TestGrabberMethods))
     suite.addTest(unittest.makeSuite(TestGeneagrapherMethods))
     unittest.TextTestRunner(verbosity=1).run(suite)
+
+if __name__ == '__main__':
+    runTests()
