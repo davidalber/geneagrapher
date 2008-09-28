@@ -1,4 +1,4 @@
-#!/bin/python
+#!python
 
 from geneagrapher.geneagrapher import *
 
