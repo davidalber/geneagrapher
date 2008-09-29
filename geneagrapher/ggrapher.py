@@ -1,11 +1,11 @@
-from geneagrapher import *
+import geneagrapher
 
 def ggrapher():
-	geneagrapher = Geneagrapher()
+	ggrapher = geneagrapher.Geneagrapher()
 	try:
-		geneagrapher.parseInput()
+		ggrapher.parseInput()
 	except SyntaxError, e:
-		print geneagrapher.parser.get_usage()
+		print ggrapher.parser.get_usage()
 		print e
-	geneagrapher.buildGraph()
-	geneagrapher.generateDotFile()
+	ggrapher.buildGraph()
+	ggrapher.generateDotFile()
