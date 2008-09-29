@@ -1,3 +1,4 @@
+# $Author$
 # $License$
 
 from optparse import OptionParser
