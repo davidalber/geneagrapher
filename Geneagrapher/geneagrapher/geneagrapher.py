@@ -1,3 +1,5 @@
+# $license$
+
 from optparse import OptionParser
 import GGraph
 import grab
