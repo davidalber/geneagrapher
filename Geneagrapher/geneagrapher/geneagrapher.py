@@ -1,4 +1,5 @@
 # $license$
+# $Author$
 
 from optparse import OptionParser
 import GGraph
