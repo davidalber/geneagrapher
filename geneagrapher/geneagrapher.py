@@ -1,7 +1,4 @@
-/*
-# $Author$
-# $License$
-*/
+# $license$
 
 from optparse import OptionParser
 import GGraph
