@@ -1,3 +1,5 @@
+"""A set of classes for storing the genealogy graph."""
+
 class DuplicateNodeError(Exception):
     def __init__(self, value):
         self.value = value
