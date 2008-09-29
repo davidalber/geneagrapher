@@ -1,6 +1,8 @@
 import geneagrapher
 
 def ggrapher():
+	"""Function to run the Geneagrapher. This is the function called when
+	the ggrapher script is run."""
 	ggrapher = geneagrapher.Geneagrapher()
 	try:
 		ggrapher.parseInput()
