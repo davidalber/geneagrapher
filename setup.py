@@ -14,7 +14,7 @@ genealogies using data from the Math Genealogy Project's website.
       url="http://www.davidalber.net/",
       packages=find_packages(exclude='tests'),
       install_requires=[],
-      scripts=['geneagrapher/ggrapher.py'],
+      scripts=['geneagrapher/ggrapher.py', 'geneagrapher/ggrapher'],
       test_suite = "tests.tests"
 )
 
