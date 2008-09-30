@@ -12,6 +12,7 @@ genealogies using data from the Math Genealogy Project's website.
       author="David Alber",
       author_email="alber.david@gmail.com",
       url="http://www.davidalber.net/",
+      license="MIT",
       packages=find_packages(exclude='tests'),
       install_requires=[],
       entry_points = {
