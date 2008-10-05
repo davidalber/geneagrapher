@@ -402,7 +402,6 @@ class TestGeneagrapherMethods(unittest.TestCase):
         self.assertEquals(self.ggrapher.get_ancestors, False)
         self.assertEquals(self.ggrapher.get_descendants, False)
         self.assertEquals(self.ggrapher.verbose, False)
-        self.assertEquals(self.ggrapher.supp_node_filename, None)
         self.assertEquals(self.ggrapher.write_filename, None)
         
     def test002_parse_empty(self):
@@ -420,27 +419,18 @@ class TestGeneagrapherMethods(unittest.TestCase):
         self.assertEquals(self.ggrapher.get_ancestors, False)
         self.assertEquals(self.ggrapher.get_descendants, False)
         self.assertEquals(self.ggrapher.verbose, False)
-        self.assertEquals(self.ggrapher.supp_node_filename, None)
         self.assertEquals(self.ggrapher.write_filename, None)
         self.assertEquals(self.ggrapher.leaf_ids, [3])
 
     def test004_parse_options(self):
         # Test parseInput() with options.
-        sys.argv = ['geneagrapher', '--with-ancestors', '--with-descendants', '--file=filler', '--verbose', '-n', 'suppfiller', '3', '43']
+        sys.argv = ['geneagrapher', '--with-ancestors', '--with-descendants', '--file=filler', '--verbose', '3', '43']
         self.ggrapher.parseInput()
         self.assertEquals(self.ggrapher.get_ancestors, True)
         self.assertEquals(self.ggrapher.get_descendants, True)
         self.assertEquals(self.ggrapher.verbose, True)
-        self.assertEquals(self.ggrapher.supp_node_filename, "suppfiller")
         self.assertEquals(self.ggrapher.write_filename, "filler")
         self.assertEquals(self.ggrapher.leaf_ids, [3, 43])
-
-    def test005_bad_supp_node_file(self):
-        # Test buildGraph() method when given bad supplementary node
-        # file.
-        sys.argv = ['geneagrapher', '--attach-node-file=tests.py', '3', '43']
-        self.ggrapher.parseInput()
-        self.assertRaises(AttributeError, self.ggrapher.buildGraph)
 
 def runTests():
     suite = unittest.TestSuite()
