@@ -4,8 +4,6 @@
 
 This script is meant to be called before packaging."""
 
-import sys
-
 def prependLicense(file, license):
     res = ''
 
