@@ -61,21 +61,21 @@ class Node:
     """
     Container class storing a node in the graph.
     """
-    def __init__(self, record, ancestors, descendents):
+    def __init__(self, record, ancestors, descendants):
         """
         Node class constructor.
         
         Parameters:
             record: instance of the Record class
-            ancestors: list of the record's genealogical ancestors's
+            ancestors: list of the record's genealogical ancestors'
                 IDs
-            descendents: list of this records genealogical
-                descendent's IDs
+            descendants: list of this record's genealogical
+                descendants' IDs
         """
         
         self.record = record
         self.ancestors = ancestors
-        self.descendents = descendents
+        self.descendants = descendants
         self.already_printed = False
 
         # Verify parameter types.
@@ -83,8 +83,8 @@ class Node:
             raise TypeError("Unexpected parameter type: expected Record object for 'record'")
         if not isinstance(self.ancestors, list):
             raise TypeError("Unexpected parameter type: expected list object for 'ancestors'")
-        if not isinstance(self.descendents, list):
-            raise TypeError("Unexpected parameter type: expected list object for 'descendents'")
+        if not isinstance(self.descendants, list):
+            raise TypeError("Unexpected parameter type: expected list object for 'descendants'")
         
     def __str__(self):
         if self.record.hasInstitution():
@@ -173,13 +173,13 @@ class Graph:
         """
         return self.nodes.keys()
 
-    def addNode(self, name, institution, year, id, ancestors, descendents, isHead=False):
+    def addNode(self, name, institution, year, id, ancestors, descendants, isHead=False):
         """
         Add a new node to the graph if a matching node is not already
         present.
         """
         record = Record(name, institution, year, id)
-        node = Node(record, ancestors, descendents)
+        node = Node(record, ancestors, descendants)
         self.addNodeObject(node, isHead)
 
     def addNodeObject(self, node, isHead=False):
@@ -200,7 +200,7 @@ class Graph:
         elif isHead:
             self.heads.append(node)
 
-    def generateDotFile(self, include_ancestors, include_descendents):
+    def generateDotFile(self, include_ancestors, include_descendants):
         """
         Return a string that contains the content of the Graphviz dotfile
         format for this graph.
@@ -235,9 +235,9 @@ class Graph:
                 # Add this node's advisors to queue.
                 queue += node.ancestors
                 
-            if include_descendents:
-                # Add this node's descendents to queue.
-                queue += node.descendents
+            if include_descendants:
+                # Add this node's descendants to queue.
+                queue += node.descendants
         
             # Print this node's information.
             nodestr = "    %d [label=\"%s\"];" % (node_id, node)

@@ -11,7 +11,7 @@ class Geneagrapher:
 		self.graph = GGraph.Graph()
 		self.leaf_ids = []
 		self.get_ancestors = False
-		self.get_descendents = False
+		self.get_descendants = False
 		self.verbose = False
 		self.supp_node_filename = None
 		self.write_filename = None
@@ -28,9 +28,9 @@ class Geneagrapher:
 		self.parser.add_option("-f", "--file", dest="filename",
 				       help="write report to FILE [default: stdout]", metavar="FILE", default=None)
 		self.parser.add_option("-a", "--with-ancestors", action="store_true", dest="get_ancestors",
-				       default=False, help="do not get ancestors of any input IDs")
-		self.parser.add_option("-d", "--with-descendents", action="store_true", dest="get_descendents",
-				       default=False, help="do not get ancestors of any input IDs")
+				       default=False, help="retrieve ancestors of IDs and include in graph")
+		self.parser.add_option("-d", "--with-descendants", action="store_true", dest="get_descendants",
+				       default=False, help="retrieve descendants of IDs and include in graph")
 		self.parser.add_option("--verbose", "-v", action="store_true", dest="verbose", default=False,
 				       help="print information showing progress")
 		self.parser.add_option("--version", "-V", action="store_true", dest="print_version", default=False,
@@ -48,7 +48,7 @@ class Geneagrapher:
 			raise SyntaxError("%s: error: no record IDs passed" % (self.parser.get_prog_name()))
 
 		self.get_ancestors = options.get_ancestors
-		self.get_descendents = options.get_descendents
+		self.get_descendants = options.get_descendants
 		self.verbose = options.verbose
 		self.supp_node_filename = options.supp_node_filename
 		self.write_filename = options.filename
@@ -62,7 +62,7 @@ class Geneagrapher:
 		"""
 		leaf_grab_queue = list(self.leaf_ids)
 		ancestor_grab_queue = []
-		descendent_grab_queue = []
+		descendant_grab_queue = []
 
 		# Grab "supplementary" nodes from file.
 		if self.supp_node_filename is not None:
@@ -85,15 +85,15 @@ class Geneagrapher:
 				if self.verbose:
 					print "Grabbing record #%d" % (id)
 				try:
-					[name, institution, year, advisors, descendents] = grabber.extractNodeInformation()
+					[name, institution, year, advisors, descendants] = grabber.extractNodeInformation()
 				except ValueError:
 					# The given id does not exist in the Math Genealogy Project's database.
 					raise
-				self.graph.addNode(name, institution, year, id, advisors, descendents, True)
+				self.graph.addNode(name, institution, year, id, advisors, descendants, True)
 				if self.get_ancestors:
 					ancestor_grab_queue += advisors
-				if self.get_descendents:
-					descendent_grab_queue += descendents
+				if self.get_descendants:
+					descendant_grab_queue += descendants
 
 		# Grab ancestors of leaf nodes.
 		if self.get_ancestors:
@@ -105,32 +105,32 @@ class Geneagrapher:
 					if self.verbose:
 						print "Grabbing record #%d" % (id)
 					try:
-						[name, institution, year, advisors, descendents] = grabber.extractNodeInformation()
+						[name, institution, year, advisors, descendants] = grabber.extractNodeInformation()
 					except ValueError:
 						# The given id does not exist in the Math Genealogy Project's database.
 						raise
-					self.graph.addNode(name, institution, year, id, advisors, descendents)
+					self.graph.addNode(name, institution, year, id, advisors, descendants)
 					ancestor_grab_queue += advisors
 						
-		# Grab descendents of leaf nodes.
-		if self.get_descendents:
-			while len(descendent_grab_queue) != 0:
-				id = descendent_grab_queue.pop()
+		# Grab descendants of leaf nodes.
+		if self.get_descendants:
+			while len(descendant_grab_queue) != 0:
+				id = descendant_grab_queue.pop()
 				if not self.graph.hasNode(id):
 					# Then this information has not yet been grabbed.
 					grabber = grab.Grabber(id)
 					if self.verbose:
 						print "Grabbing record #%d" % (id)
 					try:
-						[name, institution, year, advisors, descendents] = grabber.extractNodeInformation()
+						[name, institution, year, advisors, descendants] = grabber.extractNodeInformation()
 					except ValueError:
 						# The given id does not exist in the Math Genealogy Project's database.
 						raise
-					self.graph.addNode(name, institution, year, id, advisors, descendents)
-					descendent_grab_queue += descendents
+					self.graph.addNode(name, institution, year, id, advisors, descendants)
+					descendant_grab_queue += descendants
 					
 	def generateDotFile(self):
-		dotfile = self.graph.generateDotFile(self.get_ancestors, self.get_descendents)
+		dotfile = self.graph.generateDotFile(self.get_ancestors, self.get_descendants)
 		if self.write_filename is not None:
 			outfile = open(self.write_filename, "w")
 			outfile.write(dotfile)
