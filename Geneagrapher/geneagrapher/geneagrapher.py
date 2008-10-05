@@ -26,15 +26,15 @@ class Geneagrapher:
 		self.parser.set_description('Create a Graphviz "dot" file for a mathematics genealogy, where ID is a record identifier from the Mathematics Genealogy Project. Multiple IDs may be passed.')
 
 		self.parser.add_option("-f", "--file", dest="filename",
-				       help="write report to FILE [default: stdout]", metavar="FILE", default=None)
+				       help="write output to FILE [default: stdout]", metavar="FILE", default=None)
 		self.parser.add_option("-a", "--with-ancestors", action="store_true", dest="get_ancestors",
 				       default=False, help="retrieve ancestors of IDs and include in graph")
 		self.parser.add_option("-d", "--with-descendants", action="store_true", dest="get_descendants",
 				       default=False, help="retrieve descendants of IDs and include in graph")
 		self.parser.add_option("--verbose", "-v", action="store_true", dest="verbose", default=False,
-				       help="print information showing progress")
+				       help="list nodes being retrieved")
 		self.parser.add_option("--version", "-V", action="store_true", dest="print_version", default=False,
-				       help="print geneagrapher version and exit")
+				       help="print version and exit")
 		self.parser.add_option("-n", "--attach-node-file", dest="supp_node_filename", metavar="FILE",
 				       help="attach supplementary nodes returned by function 'define_supp_nodes()' in FILE to the graph", default=None)
 
