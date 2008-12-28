@@ -320,9 +320,15 @@ class TestGrabberMethods(unittest.TestCase):
     def test003_extract_info_bad(self):
         # Verify exception thrown for bad id.
         grabber = grab.Grabber(999999999)
-        self.assertRaises(ValueError, grabber.extractNodeInformation)
+        self.assertRaises(grab.BadIdError, grabber.extractNodeInformation)
         
-    def test004_extract_info_all_fields(self):
+    def test004_extract_info_bad2(self):
+        # Verify exception thrown for bad id that is so large that the
+        # Math Genealogy Project returns a different message.
+        grabber = grab.Grabber(9999999999)
+        self.assertRaises(grab.BadIdError, grabber.extractNodeInformation)
+        
+    def test005_extract_info_all_fields(self):
         # Test the extractNodeInformation() method for a record containing all fields.
         [name, institution, year, advisors, descendents] = self.grabber.extractNodeInformation()
         self.assertEquals(name, self.grabber.name)
@@ -343,7 +349,7 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEquals(advisors, [18230])
         self.assertEquals(descendents, [18603, 18233, 62547, 29642, 55175, 29458, 19953, 18232])
         
-    def test005_extract_info_no_advisor(self):
+    def test006_extract_info_no_advisor(self):
         # Test the extractNodeInformation() method for a record with no advisor.
         grabber = grab.Grabber(21235)
         [name, institution, year, advisors, descendents] = grabber.extractNodeInformation()
@@ -353,7 +359,7 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEquals(advisors, [])
         self.assertEquals(descendents, [77909, 72669])
         
-    def test006_extract_info_no_year(self):
+    def test007_extract_info_no_year(self):
         # Test the extractNodeInformation() method for a record with no year.
         # This example also has no descendents.
         grabber = grab.Grabber(53658)
@@ -364,7 +370,7 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEquals(advisors, [51261])
         self.assertEquals(descendents, [])
         
-    def test007_extract_info_no_inst(self):
+    def test008_extract_info_no_inst(self):
         # Test the extractNodeInformation() method for a record with no institution.
         # This test is also missing additional information already tested.
         grabber = grab.Grabber(52965)
@@ -376,7 +382,7 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEquals(descendents, [52996])
 
     # Tests for special (from my point of view) characters:
-    def test008_slash_l(self):
+    def test009_slash_l(self):
         # Test the extractNodeInformation() method for a record
         # containing a slash l character. Example:
         # http://www.genealogy.math.ndsu.nodak.edu/id.php?id=7383.
@@ -442,14 +448,11 @@ class TestGeneagrapherMethods(unittest.TestCase):
         self.ggrapher.parseInput()
         self.assertRaises(AttributeError, self.ggrapher.buildGraph)
 
-def runTests():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestRecordMethods))
-    suite.addTest(unittest.makeSuite(TestNodeMethods))
-    suite.addTest(unittest.makeSuite(TestGraphMethods))
-    suite.addTest(unittest.makeSuite(TestGrabberMethods))
-    suite.addTest(unittest.makeSuite(TestGeneagrapherMethods))
-    unittest.TextTestRunner(verbosity=1).run(suite)
-
-if __name__ == '__main__':
-    runTests()
+class GeneagrapherTestSuite(unittest.TestSuite):
+    def __init__(self):
+        unittest.TestSuite.__init__(self)
+        self.addTest(unittest.makeSuite(TestRecordMethods))
+        self.addTest(unittest.makeSuite(TestNodeMethods))
+        self.addTest(unittest.makeSuite(TestGraphMethods))
+        self.addTest(unittest.makeSuite(TestGrabberMethods))
+        self.addTest(unittest.makeSuite(TestGeneagrapherMethods))

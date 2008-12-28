@@ -3,7 +3,7 @@ use_setuptools()
 from setuptools import setup, find_packages
 
 setup(name="Geneagrapher",
-      version="0.2",
+      version="0.2.1a1.dev",
       description="Generates mathematic genealogy graph files.",
       long_description="""\
 The Geneagrapher generates Graphviz "dot" files of mathematical
@@ -20,6 +20,6 @@ genealogies using data from the Math Genealogy Project's website.
             'ggrapher = geneagrapher.ggrapher:ggrapher'
         ]
       },
-      test_suite = "tests.tests"
+      test_suite = "tests.tests.GeneagrapherTestSuite"
 )
 
