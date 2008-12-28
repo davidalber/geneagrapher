@@ -2,6 +2,12 @@ import urllib
 import re
 from htmlentitydefs import name2codepoint
 
+class BadIdError(ValueError):
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return repr(self.value)
+
 class Grabber:
     """
     Class for grabbing and parsing mathematician information from
@@ -45,10 +51,11 @@ class Grabber:
         # Split the page string at newline characters.
         psarray = self.pagestr.split('\n')
         
-        if psarray[0].find("An error occurred in the forwarding block") > -1:
+        if psarray[0].find("An error occurred in the forwarding block") > -1 or \
+                psarray[0].find("DB Error: invalid number") > -1:
             # Then a bad URL (e.g., a bad record id) was given. Throw an exception.
             msg = "Invalid page address for id %d" % (self.id)
-            raise ValueError(msg)
+            raise BadIdError(msg)
 
         lines = iter(psarray)
         for line in lines:
