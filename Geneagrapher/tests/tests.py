@@ -14,6 +14,7 @@ class TestRecordMethods(unittest.TestCase):
         self.assertEqual(record.institution, "Universitaet Helmstedt")
         self.assertEqual(record.year, 1799)
         self.assertEqual(record.id, 18231)
+        self.assertEqual(record.sort_order, "year")
         
     def test002_init_bad_name(self):
         # Test constructor with bad 'name' parameter.
@@ -39,28 +40,53 @@ class TestRecordMethods(unittest.TestCase):
         record2 = GGraph.Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
         self.assert_(record1 == record2)
         
+        record1 = GGraph.Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231, "surname")
+        record2 = GGraph.Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231, "surname")
+        self.assert_(record1 == record2)
+        
+        record1 = GGraph.Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231, "id")
+        record2 = GGraph.Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231, "id")
+        self.assert_(record1 == record2)
+        
     def test007_cmp_unequal(self):
         # Verify two 'unequal' records are compared correctly.
         record1 = GGraph.Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
         record2 = GGraph.Record("Leonhard Euler", "Universitaet Basel", 1726, 38586)
-        self.assert_(record1 < record2)
+        self.assertTrue(record1 > record2)
 
-    def test008_hasInstitution_yes(self):
+        record1 = GGraph.Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231, "surname")
+        record2 = GGraph.Record("Leonhard Euler", "Universitaet Basel", 1726, 38586, "surname")
+        self.assertTrue(record1 > record2)
+
+        record1 = GGraph.Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231, "id")
+        record2 = GGraph.Record("Leonhard Euler", "Universitaet Basel", 1726, 38586, "id")
+        self.assertTrue(record1 < record2)
+
+    def test008_cmp_no_year(self):
+        # Verify year-based comparison acts as expected when one
+        # record is missing a year.
+        record1 = GGraph.Record(name="Record 1", institution="Universitaet Helmstedt",
+                                year=1999, id=18231)
+        record2 = GGraph.Record(name="Record 1", institution="Universitaet Helmstedt", id=18231)
+        self.assertTrue(record1 < record2)
+        self.assertTrue(record2 > record1)
+
+    def test009_hasInstitution_yes(self):
         # Verify hasInstitution() method returns True when the conditions are right.
         record = GGraph.Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
         self.assert_(record.hasInstitution())
 
-    def test009_hasInstitution_no(self):
+    def test010_hasInstitution_no(self):
         # Verify hasInstitution() method returns False when the conditions are right.
         record = GGraph.Record("Carl Friedrich Gauss", None, 1799, 18231)
         self.assert_(not record.hasInstitution())
 
-    def test010_hasYear_yes(self):
+    def test011_hasYear_yes(self):
         # Verify hasYear() method returns True when the conditions are right.
         record = GGraph.Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
         self.assert_(record.hasYear())
 
-    def test011_hasYear_no(self):
+    def test012_hasYear_no(self):
         # Verify hasYear() method returns False when the conditions are right.
         record = GGraph.Record("Carl Friedrich Gauss", "Universitaet Helmstedt", None, 18231)
         self.assert_(not record.hasYear())
@@ -136,7 +162,7 @@ class TestNodeMethods(unittest.TestCase):
         record2 = GGraph.Record("Leonhard Euler", "Universitaet Basel", 1726, 38586)
         node1 = GGraph.Node(self.record, [], [])
         node2 = GGraph.Node(record2, [], [])
-        self.assert_(node1 < node2)
+        self.assert_(node1 > node2)
 
     def test010_add_ancestor(self):
         # Test the addAncestor() method.
@@ -221,7 +247,7 @@ class TestGraphMethods(unittest.TestCase):
     def test010_add_second_node_head(self):
         # Test the addNode() method when adding a second node and
         # marking it as a head node.
-        self.graph1.addNode("Leonhard Euler", "Universitaet Basel", 1726, 38586, [], [], True)
+        self.graph1.addNode("Leonhard Euler", "Universitaet Basel", 1726, 38586, [], [], isHead=True)
         self.assertEquals([38586, 18231], self.graph1.getNodeList())
         self.assertEquals(self.graph1.heads, [self.node1, self.graph1.getNode(38586)])
 
@@ -259,7 +285,7 @@ class TestGraphMethods(unittest.TestCase):
         dotfile = self.graph1.generateDotFile(True, False)
         self.assertEquals(dotfile, dotfileexpt)
         
-    def test015_generate_dot_file(self):
+    def test015_generate_dot_file1(self):
         # Test the generateDotFile() method.
         graph = GGraph.Graph()
         graph.addNode("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231, [18230], [])
@@ -274,12 +300,76 @@ class TestGraphMethods(unittest.TestCase):
     node [shape=plaintext];
     edge [style=bold];
 
-    18231 [label="Carl Friedrich Gauss \\nUniversitaet Helmstedt (1799)"];
-    18230 [label="Johann Friedrich Pfaff \\nGeorg-August-Universitaet Goettingen (1786)"];
-    66476 [label="Abraham Gotthelf Kaestner \\nUniversitaet Leipzig (1739)"];
-    57670 [label="Christian August Hausen \\nMartin-Luther-Universitaet Halle-Wittenberg (1713)"];
-    72669 [label="Johann Christoph Wichmannshausen \\nUniversitaet Leipzig (1685)"];
     21235 [label="Otto Mencke \\nUniversitaet Leipzig (1665)"];
+    72669 [label="Johann Christoph Wichmannshausen \\nUniversitaet Leipzig (1685)"];
+    57670 [label="Christian August Hausen \\nMartin-Luther-Universitaet Halle-Wittenberg (1713)"];
+    66476 [label="Abraham Gotthelf Kaestner \\nUniversitaet Leipzig (1739)"];
+    18230 [label="Johann Friedrich Pfaff \\nGeorg-August-Universitaet Goettingen (1786)"];
+    18231 [label="Carl Friedrich Gauss \\nUniversitaet Helmstedt (1799)"];
+
+    18230 -> 18231;
+    66476 -> 18230;
+    57670 -> 66476;
+    72669 -> 57670;
+    21235 -> 72669;
+}
+"""
+        dotfile = graph.generateDotFile(True, False)
+        self.assertEquals(dotfile, dotfileexpt)
+
+    def test016_generate_dot_file2(self):
+        # Test the generateDotFile() method.
+        graph = GGraph.Graph()
+        graph.addNode("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231, [18230], [], sort_order="surname")
+        graph.addNode("Johann Friedrich Pfaff", "Georg-August-Universitaet Goettingen", 1786, 18230, [66476], [], sort_order="surname")
+        graph.addNode("Abraham Gotthelf Kaestner", "Universitaet Leipzig", 1739, 66476, [57670], [], sort_order="surname")
+        graph.addNode("Christian August Hausen", "Martin-Luther-Universitaet Halle-Wittenberg", 1713, 57670, [72669], [], sort_order="surname")
+        graph.addNode("Johann Christoph Wichmannshausen", "Universitaet Leipzig", 1685, 72669, [21235], [], sort_order="surname")
+        graph.addNode("Otto Mencke", "Universitaet Leipzig", 1665, 21235, [], [], sort_order="surname")
+        
+        dotfileexpt = """digraph genealogy {
+    graph [charset="utf-8"];
+    node [shape=plaintext];
+    edge [style=bold];
+
+    18231 [label="Carl Friedrich Gauss \\nUniversitaet Helmstedt (1799)"];
+    57670 [label="Christian August Hausen \\nMartin-Luther-Universitaet Halle-Wittenberg (1713)"];
+    66476 [label="Abraham Gotthelf Kaestner \\nUniversitaet Leipzig (1739)"];
+    21235 [label="Otto Mencke \\nUniversitaet Leipzig (1665)"];
+    18230 [label="Johann Friedrich Pfaff \\nGeorg-August-Universitaet Goettingen (1786)"];
+    72669 [label="Johann Christoph Wichmannshausen \\nUniversitaet Leipzig (1685)"];
+
+    18230 -> 18231;
+    66476 -> 18230;
+    57670 -> 66476;
+    72669 -> 57670;
+    21235 -> 72669;
+}
+"""
+        dotfile = graph.generateDotFile(True, False)
+        self.assertEquals(dotfile, dotfileexpt)
+
+    def test017_generate_dot_file3(self):
+        # Test the generateDotFile() method.
+        graph = GGraph.Graph()
+        graph.addNode("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231, [18230], [], sort_order="id")
+        graph.addNode("Johann Friedrich Pfaff", "Georg-August-Universitaet Goettingen", 1786, 18230, [66476], [], sort_order="id")
+        graph.addNode("Abraham Gotthelf Kaestner", "Universitaet Leipzig", 1739, 66476, [57670], [], sort_order="id")
+        graph.addNode("Christian August Hausen", "Martin-Luther-Universitaet Halle-Wittenberg", 1713, 57670, [72669], [], sort_order="id")
+        graph.addNode("Johann Christoph Wichmannshausen", "Universitaet Leipzig", 1685, 72669, [21235], [], sort_order="id")
+        graph.addNode("Otto Mencke", "Universitaet Leipzig", 1665, 21235, [], [], sort_order="id")
+        
+        dotfileexpt = """digraph genealogy {
+    graph [charset="utf-8"];
+    node [shape=plaintext];
+    edge [style=bold];
+
+    18230 [label="Johann Friedrich Pfaff \\nGeorg-August-Universitaet Goettingen (1786)"];
+    18231 [label="Carl Friedrich Gauss \\nUniversitaet Helmstedt (1799)"];
+    21235 [label="Otto Mencke \\nUniversitaet Leipzig (1665)"];
+    57670 [label="Christian August Hausen \\nMartin-Luther-Universitaet Halle-Wittenberg (1713)"];
+    66476 [label="Abraham Gotthelf Kaestner \\nUniversitaet Leipzig (1739)"];
+    72669 [label="Johann Christoph Wichmannshausen \\nUniversitaet Leipzig (1685)"];
 
     18230 -> 18231;
     66476 -> 18230;
@@ -427,17 +517,19 @@ class TestGeneagrapherMethods(unittest.TestCase):
         self.assertEquals(self.ggrapher.get_descendants, False)
         self.assertEquals(self.ggrapher.verbose, False)
         self.assertEquals(self.ggrapher.supp_node_filename, None)
+        self.assertEquals(self.ggrapher.node_sort_order, "year")
         self.assertEquals(self.ggrapher.write_filename, None)
         self.assertEquals(self.ggrapher.leaf_ids, [3])
 
     def test004_parse_options(self):
         # Test parseInput() with options.
-        sys.argv = ['geneagrapher', '--with-ancestors', '--with-descendants', '--file=filler', '--verbose', '-n', 'suppfiller', '3', '43']
+        sys.argv = ['geneagrapher', '--with-ancestors', '--with-descendants', '--file=filler', '--verbose', '-n', 'suppfiller', '--node-sort=surname', '3', '43']
         self.ggrapher.parseInput()
         self.assertEquals(self.ggrapher.get_ancestors, True)
         self.assertEquals(self.ggrapher.get_descendants, True)
         self.assertEquals(self.ggrapher.verbose, True)
         self.assertEquals(self.ggrapher.supp_node_filename, "suppfiller")
+        self.assertEquals(self.ggrapher.node_sort_order, "surname")
         self.assertEquals(self.ggrapher.write_filename, "filler")
         self.assertEquals(self.ggrapher.leaf_ids, [3, 43])
 
@@ -447,6 +539,47 @@ class TestGeneagrapherMethods(unittest.TestCase):
         sys.argv = ['geneagrapher', '--attach-node-file=tests.py', '3', '43']
         self.ggrapher.parseInput()
         self.assertRaises(AttributeError, self.ggrapher.buildGraph)
+
+    def test006_sort_order_type_test1(self):
+        # Test the parseInput() method with a valid sort order.
+        sys.argv = ['geneagrapher', '--node-sort=year', '3', '43']
+        self.ggrapher.parseInput()
+        self.assertEquals(self.ggrapher.get_ancestors, False)
+        self.assertEquals(self.ggrapher.get_descendants, False)
+        self.assertEquals(self.ggrapher.verbose, False)
+        self.assertEquals(self.ggrapher.supp_node_filename, None)
+        self.assertEquals(self.ggrapher.node_sort_order, "year")
+        self.assertEquals(self.ggrapher.write_filename, None)
+        self.assertEquals(self.ggrapher.leaf_ids, [3, 43])
+
+    def test007_sort_order_type_test2(self):
+        # Test the parseInput() method with a valid sort order.
+        sys.argv = ['geneagrapher', '--node-sort=surname', '3', '43']
+        self.ggrapher.parseInput()
+        self.assertEquals(self.ggrapher.get_ancestors, False)
+        self.assertEquals(self.ggrapher.get_descendants, False)
+        self.assertEquals(self.ggrapher.verbose, False)
+        self.assertEquals(self.ggrapher.supp_node_filename, None)
+        self.assertEquals(self.ggrapher.node_sort_order, "surname")
+        self.assertEquals(self.ggrapher.write_filename, None)
+        self.assertEquals(self.ggrapher.leaf_ids, [3, 43])
+
+    def test008_sort_order_type_test3(self):
+        # Test the parseInput() method with a valid sort order.
+        sys.argv = ['geneagrapher', '--node-sort=id', '3', '43']
+        self.ggrapher.parseInput()
+        self.assertEquals(self.ggrapher.get_ancestors, False)
+        self.assertEquals(self.ggrapher.get_descendants, False)
+        self.assertEquals(self.ggrapher.verbose, False)
+        self.assertEquals(self.ggrapher.supp_node_filename, None)
+        self.assertEquals(self.ggrapher.node_sort_order, "id")
+        self.assertEquals(self.ggrapher.write_filename, None)
+        self.assertEquals(self.ggrapher.leaf_ids, [3, 43])
+
+    def test009_sort_order_type_test4(self):
+        # Test the parseInput() method with an invalid sort order.
+        sys.argv = ['geneagrapher', '--node-sort=notreal', '3', '43']
+        self.assertRaises(geneagrapher.BadSortTypeError, self.ggrapher.parseInput)
 
 class GeneagrapherTestSuite(unittest.TestSuite):
     def __init__(self):

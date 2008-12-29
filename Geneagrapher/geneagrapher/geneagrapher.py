@@ -1,6 +1,13 @@
 from optparse import OptionParser
+import sys
 import GGraph
 import grab
+
+class BadSortTypeError(ValueError):
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return self.value
 
 class Geneagrapher:
 	"""
@@ -37,6 +44,8 @@ class Geneagrapher:
 				       help="print version and exit")
 		self.parser.add_option("-n", "--attach-node-file", dest="supp_node_filename", metavar="FILE",
 				       help="attach supplementary nodes returned by function 'define_supp_nodes()' in FILE to the graph", default=None)
+		self.parser.add_option("-s", "--node-sort", dest="node_sort_order", metavar="SORT_TYPE",
+				       help="sort the nodes based on SORT_TYPE [defalut: 'year']; valid values: 'year' (sort by graduation year), 'surname' (sort by surname), 'id' (sort by node ID)", default="year")
 
 		(options, args) = self.parser.parse_args()
 		
@@ -51,9 +60,16 @@ class Geneagrapher:
 		self.get_descendants = options.get_descendants
 		self.verbose = options.verbose
 		self.supp_node_filename = options.supp_node_filename
+		self.node_sort_order = options.node_sort_order
 		self.write_filename = options.filename
 		for arg in args:
 			self.leaf_ids.append(int(arg))
+
+		# Verify the node sort order value is valid.
+		if self.node_sort_order != "year" and self.node_sort_order != "surname" and \
+			    self.node_sort_order != "id":
+			msg = "Node sort order type '%s' invalid" % (self.node_sort_order)
+			raise BadSortTypeError(msg)
 		
 	def buildGraph(self):
 		"""
@@ -86,10 +102,11 @@ class Geneagrapher:
 					print "Grabbing record #%d" % (id)
 				try:
 					[name, institution, year, advisors, descendants] = grabber.extractNodeInformation()
-				except ValueError:
+				except grab.BadIdError, msg:
 					# The given id does not exist in the Math Genealogy Project's database.
-					raise
-				self.graph.addNode(name, institution, year, id, advisors, descendants, True)
+					print msg
+					sys.exit()
+				self.graph.addNode(name, institution, year, id, advisors, descendants, self.node_sort_order, True)
 				if self.get_ancestors:
 					ancestor_grab_queue += advisors
 				if self.get_descendants:
@@ -109,7 +126,7 @@ class Geneagrapher:
 					except ValueError:
 						# The given id does not exist in the Math Genealogy Project's database.
 						raise
-					self.graph.addNode(name, institution, year, id, advisors, descendants)
+					self.graph.addNode(name, institution, year, id, advisors, descendants, self.node_sort_order)
 					ancestor_grab_queue += advisors
 						
 		# Grab descendants of leaf nodes.
@@ -126,7 +143,7 @@ class Geneagrapher:
 					except ValueError:
 						# The given id does not exist in the Math Genealogy Project's database.
 						raise
-					self.graph.addNode(name, institution, year, id, advisors, descendants)
+					self.graph.addNode(name, institution, year, id, advisors, descendants, self.node_sort_order)
 					descendant_grab_queue += descendants
 					
 	def generateDotFile(self):
@@ -142,8 +159,12 @@ if __name__ == "__main__":
 	geneagrapher = Geneagrapher()
 	try:
 		geneagrapher.parseInput()
-	except SyntaxError, e:
+	except SyntaxError, msg:
 		print geneagrapher.parser.get_usage()
-		print e
+		print msg
+		sys.exit()
+	except BadSortTypeError, msg:
+		print msg
+		sys.exit()
 	geneagrapher.buildGraph()
 	geneagrapher.generateDotFile()

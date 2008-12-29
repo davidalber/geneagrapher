@@ -10,7 +10,7 @@ class Record:
     """
     Container class storing record of a mathematician in the graph.
     """
-    def __init__(self, name, institution=None, year=None, id=None):
+    def __init__(self, name, institution=None, year=None, id=None, sort_order='year'):
         """
         Record class constructor.
         
@@ -20,11 +20,14 @@ class Record:
                 (empty if none)
             year: integer containing year degree was earned
             id: integer containing Math Genealogy Project id value
+            sort_order: 'year', 'surname', or 'id'; defines the order
+                to sort nodes
         """
         self.name = name
         self.institution = institution
         self.year = year
         self.id = id
+        self.sort_order = sort_order
         
         # Verify we got the types wanted.
         if not isinstance(self.name, basestring):
@@ -38,9 +41,34 @@ class Record:
 
     def __cmp__(self, r2):
         """
-        Compare a pair of mathematician records based on ids.
+        Compare a pair of mathematician records based on surnames,
+        ids, or graduation years.
         """
-        return self.id.__cmp__(r2.id)
+        if self.sort_order == "surname":
+            sname1 = self.name.split()[-1]
+            sname2 = r2.name.split()[-1]
+            if sname1 > sname2:
+                return 1
+            elif sname1 < sname2:
+                return -1
+            else:
+                return 0
+        elif self.sort_order == "id":
+            id1 = int(self.id)
+            id2 = int(r2.id)
+            return id1.__cmp__(id2)
+        else:
+            # Do the 'year' sort order.
+            if self.year is not None:
+                if r2.year is not None:
+                    return self.year.__cmp__(r2.year)
+                else:
+                    return -1
+            else:
+                if r2.year is not None:
+                    return 1
+                else:
+                    return 0
     
     def hasInstitution(self):
         """
@@ -173,12 +201,13 @@ class Graph:
         """
         return self.nodes.keys()
 
-    def addNode(self, name, institution, year, id, ancestors, descendants, isHead=False):
+    def addNode(self, name, institution, year, id, ancestors,
+                descendants, sort_order='year', isHead=False):
         """
         Add a new node to the graph if a matching node is not already
         present.
         """
-        record = Record(name, institution, year, id)
+        record = Record(name, institution, year, id, sort_order)
         node = Node(record, ancestors, descendants)
         self.addNodeObject(node, isHead)
 
@@ -212,6 +241,7 @@ class Graph:
         for head in self.heads:
             queue.append(head.id())
         edges = ""
+        nodes = []
         dotfile = ""
         
         dotfile += """digraph genealogy {
@@ -239,9 +269,8 @@ class Graph:
                 # Add this node's descendants to queue.
                 queue += node.descendants
         
-            # Print this node's information.
-            nodestr = "    %d [label=\"%s\"];" % (node_id, node)
-            dotfile += nodestr
+            # Add this node to the front of the node list.
+            nodes.insert(0, node)
 
             # Store the connection information for this node.
             for advisor in node.ancestors:
@@ -249,7 +278,10 @@ class Graph:
                     edgestr = "\n    %d -> %d;" % (advisor, node_id)
                     edges += edgestr
                 
-            dotfile += "\n"
+        # Generate nodes list text.
+        nodes.sort()
+        for node in nodes:
+            dotfile += "    %d [label=\"%s\"];\n" % (node.id(), node)
 
         # Now print the connections between the nodes.
         dotfile += edges

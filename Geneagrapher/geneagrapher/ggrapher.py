@@ -1,3 +1,4 @@
+import sys
 import geneagrapher
 
 def ggrapher():
@@ -9,5 +10,9 @@ def ggrapher():
 	except SyntaxError, e:
 		print ggrapher.parser.get_usage()
 		print e
+		sys.exit()
+	except geneagrapher.BadSortTypeError, msg:
+		print msg
+		sys.exit()
 	ggrapher.buildGraph()
 	ggrapher.generateDotFile()
