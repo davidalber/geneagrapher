@@ -1,5 +1,6 @@
 from optparse import OptionParser
 import sys
+import pkg_resources
 import GGraph
 import grab
 
@@ -27,7 +28,9 @@ class Geneagrapher:
 		"""
 		Parse command-line information.
 		"""
-		self.parser = OptionParser()
+		pkg_env = pkg_resources.Environment()
+		version = "Geneagrapher %s" % (pkg_env[self.__module__.split('.')[0]][0].version)
+		self.parser = OptionParser(version=version)
 
 		self.parser.set_usage("%prog [options] ID ...")
 		self.parser.set_description('Create a Graphviz "dot" file for a mathematics genealogy, where ID is a record identifier from the Mathematics Genealogy Project. Multiple IDs may be passed.')
@@ -40,18 +43,12 @@ class Geneagrapher:
 				       default=False, help="retrieve descendants of IDs and include in graph")
 		self.parser.add_option("--verbose", "-v", action="store_true", dest="verbose", default=False,
 				       help="list nodes being retrieved")
-		self.parser.add_option("--version", "-V", action="store_true", dest="print_version", default=False,
-				       help="print version and exit")
 		self.parser.add_option("-n", "--attach-node-file", dest="supp_node_filename", metavar="FILE",
 				       help="attach supplementary nodes returned by function 'define_supp_nodes()' in FILE to the graph", default=None)
 		self.parser.add_option("-s", "--node-sort", dest="node_sort_order", metavar="SORT_TYPE",
 				       help="sort the nodes based on SORT_TYPE [defalut: 'year']; valid values: 'year' (sort by graduation year), 'surname' (sort by surname), 'id' (sort by node ID)", default="year")
 
 		(options, args) = self.parser.parse_args()
-		
-		if options.print_version:
-			print "Geneagrapher Version 0.2"
-			self.parser.exit()
 		
 		if len(args) == 0:
 			raise SyntaxError("%s: error: no record IDs passed" % (self.parser.get_prog_name()))
