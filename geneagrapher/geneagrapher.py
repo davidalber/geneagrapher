@@ -38,7 +38,7 @@ class Geneagrapher:
 		(options, args) = self.parser.parse_args()
 		
 		if options.print_version:
-			print "Geneagrapher Version 0.2-r1"
+			print "Geneagrapher Version 0.2-r2"
 			self.parser.exit()
 		
 		if len(args) == 0:
