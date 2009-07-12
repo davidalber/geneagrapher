@@ -1,0 +1,12 @@
+Metadata-Version: 1.0
+Name: Geneagrapher
+Version: 0.2-r2
+Summary: Generates mathematic genealogy graph files.
+Home-page: http://www.davidalber.net/
+Author: David Alber
+Author-email: alber.david@gmail.com
+License: MIT
+Description: The Geneagrapher generates Graphviz "dot" files of mathematical
+        genealogies using data from the Math Genealogy Project's website.
+        
+Platform: UNKNOWN
