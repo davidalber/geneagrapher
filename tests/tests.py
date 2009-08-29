@@ -345,13 +345,13 @@ class TestGrabberMethods(unittest.TestCase):
         
     def test005_extract_info_no_advisor(self):
         # Test the extractNodeInformation() method for a record with no advisor.
-        grabber = grab.Grabber(21235)
+        grabber = grab.Grabber(137717)
         [name, institution, year, advisors, descendents] = grabber.extractNodeInformation()
-        self.assertEquals(name, u"Otto  Mencke")
-        self.assertEquals(institution, u"Universit\xe4t Leipzig")
-        self.assertEquals(year, 1665)
+        self.assertEquals(name, u"Valentin  Alberti")
+        self.assertEquals(institution, None)
+        self.assertEquals(year, None)
         self.assertEquals(advisors, [])
-        self.assertEquals(descendents, [77909, 72669])
+        self.assertEquals(descendents, [137705])
         
     def test006_extract_info_no_year(self):
         # Test the extractNodeInformation() method for a record with no year.
@@ -359,7 +359,7 @@ class TestGrabberMethods(unittest.TestCase):
         grabber = grab.Grabber(53658)
         [name, institution, year, advisors, descendents] = grabber.extractNodeInformation()
         self.assertEquals(name, u"S.  Cingolani")
-        self.assertEquals(institution, u"Universit\xe0 di Pisa")
+        self.assertEquals(institution, u"Scuola Normale Superiore, Pisa")
         self.assertEquals(year, None)
         self.assertEquals(advisors, [51261])
         self.assertEquals(descendents, [])
