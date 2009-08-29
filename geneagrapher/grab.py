@@ -86,10 +86,17 @@ class Grabber:
                     self.year = int(inst_year[1].split(',')[0].strip())
 
             if 'Advisor' in line:
-                if 'a href=\"id.php?id=' in line:
-                    # Extract link to advisor page.
-                    advisor_id = int(line.split('a href=\"id.php?id=')[1].split('\">')[0])
-                    self.advisors.append(advisor_id)
+                advisorLine = line
+                while 'Advisor' in advisorLine:
+                    if 'a href=\"id.php?id=' in line:
+                        # Extract link to advisor page.
+                        advisor_id = int(advisorLine.split('a href=\"id.php?id=')[1].split('\">')[0])
+                        self.advisors.append(advisor_id)
+                        advisorLine = advisorLine.split(str(advisor_id))[1]
+                    else:
+                        # We are done. Adjust string to break the loop.
+                        # (Without this records with no advisor enter an infinite loop.)
+                        advisorLine = ""
 
             if '<tr ' in line:
                 descendant_id = int(line.split('a href=\"id.php?id=')[1].split('\">')[0])
