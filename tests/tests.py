@@ -388,6 +388,16 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEquals(advisors, [7298])
         self.assertEquals(descendents, [12681, 28292, 10275, 79297, 36991, 17851, 51907, 15165, 89841, 84016])
 
+    def test009_multiple_advisors(self):
+        # Test for multiple advisors.
+        grabber = grab.Grabber(7401)
+        [name, institution, year, advisors, descendents] = grabber.extractNodeInformation()
+        self.assertEquals(name, u"C. Felix (Christian) Klein")
+        self.assertEquals(institution, u"Rheinische Friedrich-Wilhelms-Universit\xe4tt Bonn")
+        self.assertEquals(year, 1868)
+        self.assertEquals(advisors, [7402, 19964])
+        #self.assertEquals(descendents, [18603, 18233, 62547, 29642, 55175, 29458, 19953, 18232])
+
 class TestGeneagrapherMethods(unittest.TestCase):
     """
     Unit tests for the geneagrapher.Geneagrapher class.
