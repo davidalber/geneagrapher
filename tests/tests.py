@@ -348,10 +348,10 @@ class TestGrabberMethods(unittest.TestCase):
         grabber = grab.Grabber(137717)
         [name, institution, year, advisors, descendents] = grabber.extractNodeInformation()
         self.assertEquals(name, u"Valentin  Alberti")
-        self.assertEquals(institution, None)
-        self.assertEquals(year, None)
+        self.assertEquals(institution, u"Universit\xe4t Leipzig")
+        self.assertEquals(year, 1678)
         self.assertEquals(advisors, [])
-        self.assertEquals(descendents, [137705])
+        self.assertEquals(descendents, [127946])
         
     def test006_extract_info_no_year(self):
         # Test the extractNodeInformation() method for a record with no year.
@@ -359,7 +359,7 @@ class TestGrabberMethods(unittest.TestCase):
         grabber = grab.Grabber(53658)
         [name, institution, year, advisors, descendents] = grabber.extractNodeInformation()
         self.assertEquals(name, u"S.  Cingolani")
-        self.assertEquals(institution, u"Scuola Normale Superiore, Pisa")
+        self.assertEquals(institution, u"Scuola Normale Superiore di Pisa")
         self.assertEquals(year, None)
         self.assertEquals(advisors, [51261])
         self.assertEquals(descendents, [])
@@ -386,7 +386,6 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEquals(institution, u"Georg-August-Universit\xe4t G\xf6ttingen")
         self.assertEquals(year, 1911)
         self.assertEquals(advisors, [7298])
-        self.assertEquals(descendents, [12681, 28292, 10275, 79297, 36991, 17851, 51907, 15165, 89841, 84016])
 
     def test009_multiple_advisors(self):
         # Test for multiple advisors.
@@ -396,7 +395,6 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEquals(institution, u"Rheinische Friedrich-Wilhelms-Universit\xe4t Bonn")
         self.assertEquals(year, 1868)
         self.assertEquals(advisors, [7402, 19964])
-        #self.assertEquals(descendents, [18603, 18233, 62547, 29642, 55175, 29458, 19953, 18232])
 
 class TestGeneagrapherMethods(unittest.TestCase):
     """
