@@ -333,7 +333,7 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEquals(institution, u"Universit\xe4t Helmstedt")
         self.assertEquals(year, 1799)
         self.assertEquals(advisors, [18230])
-        self.assertEquals(descendents, [18603, 18233, 62547, 29642, 55175, 29458, 19953, 18232])
+        self.assertEquals(descendents, [18603, 18233, 62547, 29642, 55175, 29458, 19953, 18232, 151876])
         
         # Verify calling extractNodeInformation() twice does not have side effect.
         [name, institution, year, advisors, descendents] = self.grabber.extractNodeInformation()
@@ -341,7 +341,7 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEquals(institution, u"Universit\xe4t Helmstedt")
         self.assertEquals(year, 1799)
         self.assertEquals(advisors, [18230])
-        self.assertEquals(descendents, [18603, 18233, 62547, 29642, 55175, 29458, 19953, 18232])
+        self.assertEquals(descendents, [18603, 18233, 62547, 29642, 55175, 29458, 19953, 18232, 151876])
         
     def test005_extract_info_no_advisor(self):
         # Test the extractNodeInformation() method for a record with no advisor.
