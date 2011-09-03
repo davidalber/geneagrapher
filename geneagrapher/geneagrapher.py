@@ -1,4 +1,5 @@
 from optparse import OptionParser
+import pkg_resources
 import GGraph
 import grab
 
@@ -19,7 +20,9 @@ class Geneagrapher:
 		"""
 		Parse command-line information.
 		"""
-		self.parser = OptionParser()
+		pkg_env = pkg_resources.Environment()
+		self.parser = OptionParser(version="{}".format(
+			pkg_env[self.__module__.split('.')[0]][0].version))
 
 		self.parser.set_usage("%prog [options] ID ...")
 		self.parser.set_description('Create a Graphviz "dot" file for a mathematics genealogy, where ID is a record identifier from the Mathematics Genealogy Project. Multiple IDs may be passed.')
@@ -32,14 +35,8 @@ class Geneagrapher:
 				       default=False, help="retrieve descendants of IDs and include in graph")
 		self.parser.add_option("--verbose", "-v", action="store_true", dest="verbose", default=False,
 				       help="list nodes being retrieved")
-		self.parser.add_option("--version", "-V", action="store_true", dest="print_version", default=False,
-				       help="print version and exit")
 
 		(options, args) = self.parser.parse_args()
-		
-		if options.print_version:
-			print "Geneagrapher Version 0.2.1-r2"
-			self.parser.exit()
 		
 		if len(args) == 0:
 			raise SyntaxError("%s: error: no record IDs passed" % (self.parser.get_prog_name()))
