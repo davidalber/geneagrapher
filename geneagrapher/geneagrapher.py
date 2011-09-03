@@ -64,7 +64,7 @@ class Geneagrapher:
 				# Then this information has not yet been grabbed.
 				grabber = grab.Grabber(id)
 				if self.verbose:
-					print "Grabbing record #%d" % (id)
+					print "Grabbing record #{}".format(id)
 				try:
 					[name, institution, year, advisors, descendants] = grabber.extractNodeInformation()
 				except ValueError:
@@ -84,7 +84,7 @@ class Geneagrapher:
 					# Then this information has not yet been grabbed.
 					grabber = grab.Grabber(id)
 					if self.verbose:
-						print "Grabbing record #%d" % (id)
+						print "Grabbing record #{}".format(id)
 					try:
 						[name, institution, year, advisors, descendants] = grabber.extractNodeInformation()
 					except ValueError:
@@ -101,7 +101,7 @@ class Geneagrapher:
 					# Then this information has not yet been grabbed.
 					grabber = grab.Grabber(id)
 					if self.verbose:
-						print "Grabbing record #%d" % (id)
+						print "Grabbing record #{}".format(id)
 					try:
 						[name, institution, year, advisors, descendants] = grabber.extractNodeInformation()
 					except ValueError:

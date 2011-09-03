@@ -188,7 +188,7 @@ class Graph:
         is not already present.
         """
         if node.id() is not None and self.hasNode(node.id()):
-            msg = "node with id %d already exists" % (node.id())
+            msg = "node with id {} already exists".format(node.id())
             raise DuplicateNodeError(msg)
         if node.id() is None:
             # Assign a "dummy" id.
@@ -240,13 +240,13 @@ class Graph:
                 queue += node.descendants
         
             # Print this node's information.
-            nodestr = "    %d [label=\"%s\"];" % (node_id, node)
+            nodestr = "    {} [label=\"{}\"];".format(node_id, node)
             dotfile += nodestr
 
             # Store the connection information for this node.
             for advisor in node.ancestors:
                 if self.hasNode(advisor):
-                    edgestr = "\n    %d -> %d;" % (advisor, node_id)
+                    edgestr = "\n    {} -> {};".format(advisor, node_id)
                     edges += edgestr
                 
             dotfile += "\n"
