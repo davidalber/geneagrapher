@@ -389,12 +389,12 @@ class TestGrabberMethods(unittest.TestCase):
 
     def test009_multiple_advisors(self):
         # Test for multiple advisors.
-        grabber = grab.Grabber(7401)
+        grabber = grab.Grabber(19964)
         [name, institution, year, advisors, descendents] = grabber.extractNodeInformation()
-        self.assertEquals(name, u"C. Felix (Christian) Klein")
-        self.assertEquals(institution, u"Rheinische Friedrich-Wilhelms-Universit\xe4t Bonn")
-        self.assertEquals(year, 1868)
-        self.assertEquals(advisors, [7402, 19964])
+        self.assertEquals(name, u"Rudolf Otto Sigismund Lipschitz")
+        self.assertEquals(institution, u"Universit\xe4t Berlin")
+        self.assertEquals(year, 1853)
+        self.assertEquals(advisors, [17946, 47064])
 
 class TestGeneagrapherMethods(unittest.TestCase):
     """
