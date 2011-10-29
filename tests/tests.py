@@ -1,6 +1,7 @@
 import sys
 import unittest
-from geneagrapher import GGraph, grab, geneagrapher
+from geneagrapher import GGraph, geneagrapher
+from geneagrapher.grabber import Grabber
 
 # Unit tests for GGraph.
 class TestRecordMethods(unittest.TestCase):
@@ -293,10 +294,10 @@ class TestGraphMethods(unittest.TestCase):
 
 class TestGrabberMethods(unittest.TestCase):
     """
-    Unit tests for the grab.Grabber class.
+    Unit tests for the Grabber class.
     """
     def setUp(self):
-        self.grabber = grab.Grabber(18231)
+        self.grabber = Grabber(18231)
         
     def test001_init(self):
         # Test constructor.
@@ -319,7 +320,7 @@ class TestGrabberMethods(unittest.TestCase):
 
     def test003_extract_info_bad(self):
         # Verify exception thrown for bad id.
-        grabber = grab.Grabber(999999999)
+        grabber = Grabber(999999999)
         self.assertRaises(ValueError, grabber.extract_node_information)
         
     def test004_extract_info_all_fields(self):
@@ -345,7 +346,7 @@ class TestGrabberMethods(unittest.TestCase):
         
     def test005_extract_info_no_advisor(self):
         # Test the extract_node_information() method for a record with no advisor.
-        grabber = grab.Grabber(137717)
+        grabber = Grabber(137717)
         [name, institution, year, advisors, descendents] = grabber.extract_node_information()
         self.assertEquals(name, u"Valentin  Alberti")
         self.assertEquals(institution, u"Universit\xe4t Leipzig")
@@ -356,7 +357,7 @@ class TestGrabberMethods(unittest.TestCase):
     def test006_extract_info_no_year(self):
         # Test the extract_node_information() method for a record with no year.
         # This example also has no descendents.
-        grabber = grab.Grabber(53658)
+        grabber = Grabber(53658)
         [name, institution, year, advisors, descendents] = grabber.extract_node_information()
         self.assertEquals(name, u"S.  Cingolani")
         self.assertEquals(institution, u"Scuola Normale Superiore di Pisa")
@@ -367,7 +368,7 @@ class TestGrabberMethods(unittest.TestCase):
     def test007_extract_info_no_inst(self):
         # Test the extract_node_information() method for a record with no institution.
         # This test is also missing additional information already tested.
-        grabber = grab.Grabber(52965)
+        grabber = Grabber(52965)
         [name, institution, year, advisors, descendents] = grabber.extract_node_information()
         self.assertEquals(name, u"Walter  Mayer")
         self.assertEquals(institution, None)
@@ -380,7 +381,7 @@ class TestGrabberMethods(unittest.TestCase):
         # Test the extract_node_information() method for a record
         # containing a slash l character. Example:
         # http://www.genealogy.math.ndsu.nodak.edu/id.php?id=7383.
-        grabber = grab.Grabber(7383)
+        grabber = Grabber(7383)
         [name, institution, year, advisors, descendents] = grabber.extract_node_information()
         self.assertEquals(name, u"W\u0142adys\u0142aw Hugo Dyonizy Steinhaus")
         self.assertEquals(institution, u"Georg-August-Universit\xe4t G\xf6ttingen")
@@ -389,7 +390,7 @@ class TestGrabberMethods(unittest.TestCase):
 
     def test009_multiple_advisors(self):
         # Test for multiple advisors.
-        grabber = grab.Grabber(19964)
+        grabber = Grabber(19964)
         [name, institution, year, advisors, descendents] = grabber.extract_node_information()
         self.assertEquals(name, u"Rudolf Otto Sigismund Lipschitz")
         self.assertEquals(institution, u"Universit\xe4t Berlin")

@@ -1,7 +1,7 @@
 from optparse import OptionParser
 import pkg_resources
 import GGraph
-import grab
+from grabber import Grabber
 
 class Geneagrapher:
     """
@@ -65,7 +65,7 @@ class Geneagrapher:
             id = leaf_grab_queue.pop()
             if not self.graph.hasNode(id):
                 # Then this information has not yet been grabbed.
-                grabber = grab.Grabber(id)
+                grabber = Grabber(id)
                 if self.verbose:
                     print "Grabbing record #{}".format(id)
                 try:
@@ -85,7 +85,7 @@ class Geneagrapher:
                 id = ancestor_grab_queue.pop()
                 if not self.graph.hasNode(id):
                     # Then this information has not yet been grabbed.
-                    grabber = grab.Grabber(id)
+                    grabber = Grabber(id)
                     if self.verbose:
                         print "Grabbing record #{}".format(id)
                     try:
@@ -102,7 +102,7 @@ class Geneagrapher:
                 id = descendant_grab_queue.pop()
                 if not self.graph.hasNode(id):
                     # Then this information has not yet been grabbed.
-                    grabber = grab.Grabber(id)
+                    grabber = Grabber(id)
                     if self.verbose:
                         print "Grabbing record #{}".format(id)
                     try:
