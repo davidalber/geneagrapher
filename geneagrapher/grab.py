@@ -16,11 +16,12 @@ class Grabber:
         self.advisors = []
         self.descendants = []
 
-    def unescape(self, s):
+    @staticmethod
+    def unescape(s):
         return re.sub('&(%s);' % '|'.join(name2codepoint),\
                       lambda m: unichr(name2codepoint[m.group(1)]), s)
 
-    def getPage(self):
+    def get_page(self):
         """
         Grab the page for self.id from the Math Genealogy Database.
         """
@@ -30,14 +31,14 @@ class Grabber:
             self.pagestr = page.read()
             self.pagestr = self.pagestr.decode('utf-8')
             
-    def extractNodeInformation(self):
+    def extract_node_information(self):
         """
         For the mathematician in this object, extract the list of
         advisor ids, the mathematician name, the mathematician
         institution, and the year of the mathematician's degree.
         """
         if self.pagestr is None:
-            self.getPage()
+            self.get_page()
             
         self.advisors = []
         self.descendants = []

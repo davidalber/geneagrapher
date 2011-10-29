@@ -69,7 +69,7 @@ class Geneagrapher:
                 if self.verbose:
                     print "Grabbing record #{}".format(id)
                 try:
-                    [name, institution, year, advisors, descendants] = grabber.extractNodeInformation()
+                    [name, institution, year, advisors, descendants] = grabber.extract_node_information()
                 except ValueError:
                     # The given id does not exist in the Math Genealogy Project's database.
                     raise
@@ -89,7 +89,7 @@ class Geneagrapher:
                     if self.verbose:
                         print "Grabbing record #{}".format(id)
                     try:
-                        [name, institution, year, advisors, descendants] = grabber.extractNodeInformation()
+                        [name, institution, year, advisors, descendants] = grabber.extract_node_information()
                     except ValueError:
                         # The given id does not exist in the Math Genealogy Project's database.
                         raise
@@ -106,7 +106,7 @@ class Geneagrapher:
                     if self.verbose:
                         print "Grabbing record #{}".format(id)
                     try:
-                        [name, institution, year, advisors, descendants] = grabber.extractNodeInformation()
+                        [name, institution, year, advisors, descendants] = grabber.extract_node_information()
                     except ValueError:
                         # The given id does not exist in the Math Genealogy Project's database.
                         raise

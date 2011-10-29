@@ -309,22 +309,22 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEquals(self.grabber.descendants, [])
 
     def test002_get_page(self):
-        # Test getPage() method.
-        self.grabber.getPage()
+        # Test get_page() method.
+        self.grabber.get_page()
         self.assert_(self.grabber.pagestr is not None)
         self.assert_(u"<title>The Mathematics Genealogy Project - Carl Gau\xdf</title>" in self.grabber.pagestr)
         # Get page again and test for adverse affects.
-        self.grabber.getPage()
+        self.grabber.get_page()
         self.assert_(u"<title>The Mathematics Genealogy Project - Carl Gau\xdf</title>" in self.grabber.pagestr)
 
     def test003_extract_info_bad(self):
         # Verify exception thrown for bad id.
         grabber = grab.Grabber(999999999)
-        self.assertRaises(ValueError, grabber.extractNodeInformation)
+        self.assertRaises(ValueError, grabber.extract_node_information)
         
     def test004_extract_info_all_fields(self):
-        # Test the extractNodeInformation() method for a record containing all fields.
-        [name, institution, year, advisors, descendents] = self.grabber.extractNodeInformation()
+        # Test the extract_node_information() method for a record containing all fields.
+        [name, institution, year, advisors, descendents] = self.grabber.extract_node_information()
         self.assertEquals(name, self.grabber.name)
         self.assertEquals(institution, self.grabber.institution)
         self.assertEquals(year, self.grabber.year)
@@ -335,8 +335,8 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEquals(advisors, [18230])
         self.assertEquals(descendents, [18603, 18233, 62547, 29642, 55175, 29458, 19953, 18232, 151876])
         
-        # Verify calling extractNodeInformation() twice does not have side effect.
-        [name, institution, year, advisors, descendents] = self.grabber.extractNodeInformation()
+        # Verify calling extract_node_information() twice does not have side effect.
+        [name, institution, year, advisors, descendents] = self.grabber.extract_node_information()
         self.assertEquals(name, u"Carl Friedrich Gau\xdf")
         self.assertEquals(institution, u"Universit\xe4t Helmstedt")
         self.assertEquals(year, 1799)
@@ -344,9 +344,9 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEquals(descendents, [18603, 18233, 62547, 29642, 55175, 29458, 19953, 18232, 151876])
         
     def test005_extract_info_no_advisor(self):
-        # Test the extractNodeInformation() method for a record with no advisor.
+        # Test the extract_node_information() method for a record with no advisor.
         grabber = grab.Grabber(137717)
-        [name, institution, year, advisors, descendents] = grabber.extractNodeInformation()
+        [name, institution, year, advisors, descendents] = grabber.extract_node_information()
         self.assertEquals(name, u"Valentin  Alberti")
         self.assertEquals(institution, u"Universit\xe4t Leipzig")
         self.assertEquals(year, 1678)
@@ -354,10 +354,10 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEquals(descendents, [127946])
         
     def test006_extract_info_no_year(self):
-        # Test the extractNodeInformation() method for a record with no year.
+        # Test the extract_node_information() method for a record with no year.
         # This example also has no descendents.
         grabber = grab.Grabber(53658)
-        [name, institution, year, advisors, descendents] = grabber.extractNodeInformation()
+        [name, institution, year, advisors, descendents] = grabber.extract_node_information()
         self.assertEquals(name, u"S.  Cingolani")
         self.assertEquals(institution, u"Scuola Normale Superiore di Pisa")
         self.assertEquals(year, None)
@@ -365,10 +365,10 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEquals(descendents, [])
         
     def test007_extract_info_no_inst(self):
-        # Test the extractNodeInformation() method for a record with no institution.
+        # Test the extract_node_information() method for a record with no institution.
         # This test is also missing additional information already tested.
         grabber = grab.Grabber(52965)
-        [name, institution, year, advisors, descendents] = grabber.extractNodeInformation()
+        [name, institution, year, advisors, descendents] = grabber.extract_node_information()
         self.assertEquals(name, u"Walter  Mayer")
         self.assertEquals(institution, None)
         self.assertEquals(year, None)
@@ -377,11 +377,11 @@ class TestGrabberMethods(unittest.TestCase):
 
     # Tests for special (from my point of view) characters:
     def test008_slash_l(self):
-        # Test the extractNodeInformation() method for a record
+        # Test the extract_node_information() method for a record
         # containing a slash l character. Example:
         # http://www.genealogy.math.ndsu.nodak.edu/id.php?id=7383.
         grabber = grab.Grabber(7383)
-        [name, institution, year, advisors, descendents] = grabber.extractNodeInformation()
+        [name, institution, year, advisors, descendents] = grabber.extract_node_information()
         self.assertEquals(name, u"W\u0142adys\u0142aw Hugo Dyonizy Steinhaus")
         self.assertEquals(institution, u"Georg-August-Universit\xe4t G\xf6ttingen")
         self.assertEquals(year, 1911)
@@ -390,7 +390,7 @@ class TestGrabberMethods(unittest.TestCase):
     def test009_multiple_advisors(self):
         # Test for multiple advisors.
         grabber = grab.Grabber(19964)
-        [name, institution, year, advisors, descendents] = grabber.extractNodeInformation()
+        [name, institution, year, advisors, descendents] = grabber.extract_node_information()
         self.assertEquals(name, u"Rudolf Otto Sigismund Lipschitz")
         self.assertEquals(institution, u"Universit\xe4t Berlin")
         self.assertEquals(year, 1853)
