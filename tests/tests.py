@@ -46,25 +46,25 @@ class TestRecordMethods(unittest.TestCase):
         record2 = GGraph.Record("Leonhard Euler", "Universitaet Basel", 1726, 38586)
         self.assert_(record1 < record2)
 
-    def test008_hasInstitution_yes(self):
-        # Verify hasInstitution() method returns True when the conditions are right.
+    def test008_has_institution_yes(self):
+        # Verify has_institution() method returns True when the conditions are right.
         record = GGraph.Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
-        self.assert_(record.hasInstitution())
+        self.assert_(record.has_institution())
 
-    def test009_hasInstitution_no(self):
-        # Verify hasInstitution() method returns False when the conditions are right.
+    def test009_has_institution_no(self):
+        # Verify has_institution() method returns False when the conditions are right.
         record = GGraph.Record("Carl Friedrich Gauss", None, 1799, 18231)
-        self.assert_(not record.hasInstitution())
+        self.assert_(not record.has_institution())
 
-    def test010_hasYear_yes(self):
-        # Verify hasYear() method returns True when the conditions are right.
+    def test010_has_year_yes(self):
+        # Verify has_year() method returns True when the conditions are right.
         record = GGraph.Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
-        self.assert_(record.hasYear())
+        self.assert_(record.has_year())
 
-    def test011_hasYear_no(self):
-        # Verify hasYear() method returns False when the conditions are right.
+    def test011_has_year_no(self):
+        # Verify has_year() method returns False when the conditions are right.
         record = GGraph.Record("Carl Friedrich Gauss", "Universitaet Helmstedt", None, 18231)
-        self.assert_(not record.hasYear())
+        self.assert_(not record.has_year())
 
 class TestNodeMethods(unittest.TestCase):
     """
@@ -140,26 +140,26 @@ class TestNodeMethods(unittest.TestCase):
         self.assert_(node1 < node2)
 
     def test010_add_ancestor(self):
-        # Test the addAncestor() method.
+        # Test the add_ancestor() method.
         node = GGraph.Node(self.record, [], [])
-        node.addAncestor(5)
+        node.add_ancestor(5)
         self.assertEquals(node.ancestors, [5])
 
     def test011_add_ancestor_bad_type(self):
-        # Test the addAncestor() method for a case where the parameter type is incorrect.
+        # Test the add_ancestor() method for a case where the parameter type is incorrect.
         node = GGraph.Node(self.record, [], [])
-        self.assertRaises(TypeError, node.addAncestor, '5')
+        self.assertRaises(TypeError, node.add_ancestor, '5')
         
     def test012_get_id(self):
         node = GGraph.Node(self.record, [], [])
-        self.assertEquals(node.id(), 18231)
+        self.assertEquals(node.get_id(), 18231)
 
     def test013_set_id(self):
-        # Test the setId() method.
+        # Test the set_id() method.
         node = GGraph.Node(self.record, [], [])
-        self.assertEquals(node.id(), 18231)
-        node.setId(15)
-        self.assertEquals(node.id(), 15)
+        self.assertEquals(node.get_id(), 18231)
+        node.set_id(15)
+        self.assertEquals(node.get_id(), 15)
         
 
 class TestGraphMethods(unittest.TestCase):
@@ -187,67 +187,67 @@ class TestGraphMethods(unittest.TestCase):
         self.assertRaises(TypeError, GGraph.Graph, 3)
         
     def test004_has_node_true(self):
-        # Test the hasNode() method for a True case.
-        self.assertEquals(self.graph1.hasNode(18231), True)
+        # Test the has_node() method for a True case.
+        self.assertEquals(self.graph1.has_node(18231), True)
         
     def test005_has_node_false(self):
-        # Test the hasNode() method for a False case.
-        self.assertEquals(self.graph1.hasNode(1), False)
+        # Test the has_node() method for a False case.
+        self.assertEquals(self.graph1.has_node(1), False)
         
     def test006_get_node(self):
-        # Test the getNode() method.
-        node = self.graph1.getNode(18231)
+        # Test the get_node() method.
+        node = self.graph1.get_node(18231)
         self.assert_(node == self.node1)
         
     def test007_get_node_not_found(self):
-        # Test the getNode() method for a case where the node does not exist.
-        node = self.graph1.getNode(1)
+        # Test the get_node() method for a case where the node does not exist.
+        node = self.graph1.get_node(1)
         self.assertEquals(node, None)
         
     def test008_get_node_list(self):
-        # Test the getNodeList() method.
-        self.assertEquals(self.graph1.getNodeList(), [18231])
+        # Test the get_node_list() method.
+        self.assertEquals(self.graph1.get_node_list(), [18231])
         
     def test008_get_node_list_empty(self):
-        # Test the getNodeList() method for an empty graph.
+        # Test the get_node_list() method for an empty graph.
         graph = GGraph.Graph()
-        self.assertEquals(graph.getNodeList(), [])
+        self.assertEquals(graph.get_node_list(), [])
         
     def test009_add_node(self):
-        # Test the addNode() method.
-        self.graph1.addNode("Leonhard Euler", "Universitaet Basel", 1726, 38586, [], [])
-        self.assertEquals([38586, 18231], self.graph1.getNodeList())
+        # Test the add_node() method.
+        self.graph1.add_node("Leonhard Euler", "Universitaet Basel", 1726, 38586, [], [])
+        self.assertEquals([38586, 18231], self.graph1.get_node_list())
         self.assertEquals(self.graph1.heads, [self.node1])
 
     def test010_add_second_node_head(self):
-        # Test the addNode() method when adding a second node and
+        # Test the add_node() method when adding a second node and
         # marking it as a head node.
-        self.graph1.addNode("Leonhard Euler", "Universitaet Basel", 1726, 38586, [], [], True)
-        self.assertEquals([38586, 18231], self.graph1.getNodeList())
-        self.assertEquals(self.graph1.heads, [self.node1, self.graph1.getNode(38586)])
+        self.graph1.add_node("Leonhard Euler", "Universitaet Basel", 1726, 38586, [], [], True)
+        self.assertEquals([38586, 18231], self.graph1.get_node_list())
+        self.assertEquals(self.graph1.heads, [self.node1, self.graph1.get_node(38586)])
 
     def test011_add_node_head(self):
-        # Test the addNode() method when no heads exist.
+        # Test the add_node() method when no heads exist.
         graph = GGraph.Graph()
         self.assertEquals(graph.heads, None)
-        graph.addNode("Leonhard Euler", "Universitaet Basel", 1726, 38586, [], [])
-        self.assertEquals(graph.heads, [graph.getNode(38586)])
+        graph.add_node("Leonhard Euler", "Universitaet Basel", 1726, 38586, [], [])
+        self.assertEquals(graph.heads, [graph.get_node(38586)])
 
     def test012_add_node_already_present(self):
-        self.graph1.addNode("Leonhard Euler", "Universitaet Basel", 1726, 38586, [], [])
-        self.assertEquals([38586, 18231], self.graph1.getNodeList())
-        self.assertRaises(GGraph.DuplicateNodeError, self.graph1.addNode, "Leonhard Euler", "Universitaet Basel", 1726, 38586, [], [])
+        self.graph1.add_node("Leonhard Euler", "Universitaet Basel", 1726, 38586, [], [])
+        self.assertEquals([38586, 18231], self.graph1.get_node_list())
+        self.assertRaises(GGraph.DuplicateNodeError, self.graph1.add_node, "Leonhard Euler", "Universitaet Basel", 1726, 38586, [], [])
 
     def test013_add_node_object(self):
-        # Test the addNodeObject() method.
+        # Test the add_node_object() method.
         record = GGraph.Record("Leonhard Euler", "Universitaet Basel", 1726, 38586)
         node = GGraph.Node(record, [], [])
-        self.graph1.addNodeObject(node)
-        self.assertEquals([38586, 18231], self.graph1.getNodeList())
+        self.graph1.add_node_object(node)
+        self.assertEquals([38586, 18231], self.graph1.get_node_list())
         self.assertEquals(self.graph1.heads, [self.node1])
 
     def test014_generate_dot_file(self):
-        # Test the generateDotFile() method.
+        # Test the generate_dot_file() method.
         dotfileexpt = """digraph genealogy {
     graph [charset="utf-8"];
     node [shape=plaintext];
@@ -257,18 +257,18 @@ class TestGraphMethods(unittest.TestCase):
 
 }
 """    
-        dotfile = self.graph1.generateDotFile(True, False)
+        dotfile = self.graph1.generate_dot_file(True, False)
         self.assertEquals(dotfile, dotfileexpt)
         
     def test015_generate_dot_file(self):
-        # Test the generateDotFile() method.
+        # Test the generate_dot_file() method.
         graph = GGraph.Graph()
-        graph.addNode("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231, [18230], [])
-        graph.addNode("Johann Friedrich Pfaff", "Georg-August-Universitaet Goettingen", 1786, 18230, [66476], [])
-        graph.addNode("Abraham Gotthelf Kaestner", "Universitaet Leipzig", 1739, 66476, [57670], [])
-        graph.addNode("Christian August Hausen", "Martin-Luther-Universitaet Halle-Wittenberg", 1713, 57670, [72669], [])
-        graph.addNode("Johann Christoph Wichmannshausen", "Universitaet Leipzig", 1685, 72669, [21235], [])
-        graph.addNode("Otto Mencke", "Universitaet Leipzig", 1665, 21235, [], [])
+        graph.add_node("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231, [18230], [])
+        graph.add_node("Johann Friedrich Pfaff", "Georg-August-Universitaet Goettingen", 1786, 18230, [66476], [])
+        graph.add_node("Abraham Gotthelf Kaestner", "Universitaet Leipzig", 1739, 66476, [57670], [])
+        graph.add_node("Christian August Hausen", "Martin-Luther-Universitaet Halle-Wittenberg", 1713, 57670, [72669], [])
+        graph.add_node("Johann Christoph Wichmannshausen", "Universitaet Leipzig", 1685, 72669, [21235], [])
+        graph.add_node("Otto Mencke", "Universitaet Leipzig", 1665, 21235, [], [])
         
         dotfileexpt = """digraph genealogy {
     graph [charset="utf-8"];
@@ -289,7 +289,7 @@ class TestGraphMethods(unittest.TestCase):
     21235 -> 72669;
 }
 """
-        dotfile = graph.generateDotFile(True, False)
+        dotfile = graph.generate_dot_file(True, False)
         self.assertEquals(dotfile, dotfileexpt)
 
 class TestGrabberMethods(unittest.TestCase):

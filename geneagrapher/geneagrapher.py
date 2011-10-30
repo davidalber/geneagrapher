@@ -63,7 +63,7 @@ class Geneagrapher:
         # Grab "leaf" nodes.
         while len(leaf_grab_queue) != 0:
             id = leaf_grab_queue.pop()
-            if not self.graph.hasNode(id):
+            if not self.graph.has_node(id):
                 # Then this information has not yet been grabbed.
                 grabber = Grabber(id)
                 if self.verbose:
@@ -73,7 +73,7 @@ class Geneagrapher:
                 except ValueError:
                     # The given id does not exist in the Math Genealogy Project's database.
                     raise
-                self.graph.addNode(name, institution, year, id, advisors, descendants, True)
+                self.graph.add_node(name, institution, year, id, advisors, descendants, True)
                 if self.get_ancestors:
                     ancestor_grab_queue += advisors
                 if self.get_descendants:
@@ -83,7 +83,7 @@ class Geneagrapher:
         if self.get_ancestors:
             while len(ancestor_grab_queue) != 0:
                 id = ancestor_grab_queue.pop()
-                if not self.graph.hasNode(id):
+                if not self.graph.has_node(id):
                     # Then this information has not yet been grabbed.
                     grabber = Grabber(id)
                     if self.verbose:
@@ -93,14 +93,14 @@ class Geneagrapher:
                     except ValueError:
                         # The given id does not exist in the Math Genealogy Project's database.
                         raise
-                    self.graph.addNode(name, institution, year, id, advisors, descendants)
+                    self.graph.add_node(name, institution, year, id, advisors, descendants)
                     ancestor_grab_queue += advisors
                         
         # Grab descendants of leaf nodes.
         if self.get_descendants:
             while len(descendant_grab_queue) != 0:
                 id = descendant_grab_queue.pop()
-                if not self.graph.hasNode(id):
+                if not self.graph.has_node(id):
                     # Then this information has not yet been grabbed.
                     grabber = Grabber(id)
                     if self.verbose:
@@ -110,11 +110,11 @@ class Geneagrapher:
                     except ValueError:
                         # The given id does not exist in the Math Genealogy Project's database.
                         raise
-                    self.graph.addNode(name, institution, year, id, advisors, descendants)
+                    self.graph.add_node(name, institution, year, id, advisors, descendants)
                     descendant_grab_queue += descendants
                     
     def generate_dot_file(self):
-        dotfile = self.graph.generateDotFile(self.get_ancestors, self.get_descendants)
+        dotfile = self.graph.generate_dot_file(self.get_ancestors, self.get_descendants)
         if self.write_filename is not None:
             outfile = open(self.write_filename, "w")
             outfile.write(dotfile)

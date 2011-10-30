@@ -42,14 +42,14 @@ class Record:
         """
         return self.id.__cmp__(r2.id)
     
-    def hasInstitution(self):
+    def has_institution(self):
         """
         Return True if this record has an institution associated with it,
         else False.
         """
         return self.institution is not None
     
-    def hasYear(self):
+    def has_year(self):
         """
         Return True if this record has a year associated with it, else
         False.
@@ -85,15 +85,15 @@ class Node:
             raise TypeError("Unexpected parameter type: expected list object for 'ancestors'")
         if not isinstance(self.descendants, list):
             raise TypeError("Unexpected parameter type: expected list object for 'descendants'")
-        
+
     def __str__(self):
-        if self.record.hasInstitution():
-            if self.record.hasYear():
+        if self.record.has_institution():
+            if self.record.has_year():
                 return self.record.name.encode('utf-8', 'replace') + ' \\n' + self.record.institution.encode('utf-8', 'replace') + ' (' + str(self.record.year) + ')'
             else:
                 return self.record.name.encode('utf-8', 'replace') + ' \\n' + self.record.institution.encode('utf-8', 'replace')
         else:
-            if self.record.hasYear():
+            if self.record.has_year():
                 return self.record.name.encode('utf-8', 'replace') + ' \\n(' + str(self.record.year) + ')'
             else:
                 return self.record.name.encode('utf-8', 'replace')
@@ -101,7 +101,7 @@ class Node:
     def __cmp__(self, n2):
         return self.record.__cmp__(n2.record)
 
-    def addAncestor(self, ancestor):
+    def add_ancestor(self, ancestor):  # NOTE: is this used?
         """
         Append an ancestor id to the ancestor list.
         """
@@ -110,13 +110,13 @@ class Node:
             raise TypeError("Unexpected parameter type: expected int for 'ancestor'")
         self.ancestors.append(ancestor)
 
-    def id(self):
+    def get_id(self):
         """
         Accessor method to retrieve the id of this node's record.
         """
         return self.record.id
 
-    def setId(self, id):
+    def set_id(self, id):
         """
         Sets the record id.
         """
@@ -149,58 +149,58 @@ class Graph:
         self.nodes = {}
         if self.heads is not None:
             for head in self.heads:
-                self.nodes[head.id()] = head
+                self.nodes[head.get_id()] = head
 
-    def hasNode(self, id):
+    def has_node(self, id):
         """
         Check if the graph contains a node with the given id.
         """
         return self.nodes.has_key(id)
 
-    def getNode(self, id):
+    def get_node(self, id):
         """
         Return the node in the graph with given id. Returns
         None if no such node exists.
         """
-        if self.hasNode(id):
+        if self.has_node(id):
             return self.nodes[id]
         else:
             return None
 
-    def getNodeList(self):
+    def get_node_list(self): # NOTE: this method is unused
         """
         Return a list of the nodes in the graph.
         """
         return self.nodes.keys()
 
-    def addNode(self, name, institution, year, id, ancestors, descendants, isHead=False):
+    def add_node(self, name, institution, year, id, ancestors, descendants, isHead=False):
         """
         Add a new node to the graph if a matching node is not already
         present.
         """
         record = Record(name, institution, year, id)
         node = Node(record, ancestors, descendants)
-        self.addNodeObject(node, isHead)
+        self.add_node_object(node, isHead)
 
-    def addNodeObject(self, node, isHead=False):
+    def add_node_object(self, node, isHead=False):
         """
         Add a new node object to the graph if a node with the same id
         is not already present.
         """
-        if node.id() is not None and self.hasNode(node.id()):
-            msg = "node with id {} already exists".format(node.id())
+        if node.get_id() is not None and self.has_node(node.get_id()):
+            msg = "node with id {} already exists".format(node.get_id())
             raise DuplicateNodeError(msg)
-        if node.id() is None:
+        if node.get_id() is None:
             # Assign a "dummy" id.
-            node.setId(self.supp_id)
+            node.set_id(self.supp_id)
             self.supp_id -= 1
-        self.nodes[node.id()] = node
+        self.nodes[node.get_id()] = node
         if self.heads is None:
             self.heads = [node]
         elif isHead:
             self.heads.append(node)
 
-    def generateDotFile(self, include_ancestors, include_descendants):
+    def generate_dot_file(self, include_ancestors, include_descendants):
         """
         Return a string that contains the content of the Graphviz dotfile
         format for this graph.
@@ -210,7 +210,7 @@ class Graph:
 
         queue = []
         for head in self.heads:
-            queue.append(head.id())
+            queue.append(head.get_id())
         edges = ""
         dotfile = ""
         
@@ -221,10 +221,10 @@ class Graph:
 
         while len(queue) > 0:
             node_id = queue.pop()
-            if not self.hasNode(node_id):
+            if not self.has_node(node_id):
                 # Skip this id if a corresponding node is not present.
                 continue
-            node = self.getNode(node_id)
+            node = self.get_node(node_id)
 
             if node.already_printed:
                 continue
@@ -245,7 +245,7 @@ class Graph:
 
             # Store the connection information for this node.
             for advisor in node.ancestors:
-                if self.hasNode(advisor):
+                if self.has_node(advisor):
                     edgestr = "\n    {} -> {};".format(advisor, node_id)
                     edges += edgestr
                 
