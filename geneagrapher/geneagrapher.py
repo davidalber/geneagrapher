@@ -122,12 +122,14 @@ class Geneagrapher:
         else:
             print dotfile
         
-if __name__ == "__main__":
-    geneagrapher = Geneagrapher()
+def ggrapher():
+    """Function to run the Geneagrapher. This is the function called when
+    the ggrapher script is run."""
+    ggrapher = Geneagrapher()
     try:
-        geneagrapher.parse_input()
+        ggrapher.parse_input()
     except SyntaxError, e:
-        print geneagrapher.parser.get_usage()
+        print ggrapher.parser.get_usage()
         print e
-    geneagrapher.build_graph()
-    geneagrapher.generate_dot_file()
+    ggrapher.build_graph()
+    ggrapher.generate_dot_file()

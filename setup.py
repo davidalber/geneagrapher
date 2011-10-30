@@ -17,7 +17,7 @@ genealogies using data from the Math Genealogy Project's website.
       install_requires=[],
       entry_points = {
         'console_scripts': [
-            'ggrapher = geneagrapher.ggrapher:ggrapher'
+            'ggrapher = geneagrapher.geneagrapher:ggrapher'
         ]
       },
       test_suite = "tests.tests"
