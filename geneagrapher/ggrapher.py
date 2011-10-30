@@ -5,9 +5,9 @@ def ggrapher():
     the ggrapher script is run."""
     ggrapher = geneagrapher.Geneagrapher()
     try:
-        ggrapher.parseInput()
+        ggrapher.parse_input()
     except SyntaxError, e:
         print ggrapher.parser.get_usage()
         print e
-    ggrapher.buildGraph()
-    ggrapher.generateDotFile()
+    ggrapher.build_graph()
+    ggrapher.generate_dot_file()

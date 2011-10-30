@@ -16,7 +16,7 @@ class Geneagrapher:
         self.verbose = False
         self.write_filename = None
 
-    def parseInput(self):
+    def parse_input(self):
         """
         Parse command-line information.
         """
@@ -51,7 +51,7 @@ class Geneagrapher:
         for arg in args:
             self.leaf_ids.append(int(arg))
         
-    def buildGraph(self):
+    def build_graph(self):
         """
         Populate the graph member by grabbing the mathematician
         pages and extracting relevant data.
@@ -113,7 +113,7 @@ class Geneagrapher:
                     self.graph.addNode(name, institution, year, id, advisors, descendants)
                     descendant_grab_queue += descendants
                     
-    def generateDotFile(self):
+    def generate_dot_file(self):
         dotfile = self.graph.generateDotFile(self.get_ancestors, self.get_descendants)
         if self.write_filename is not None:
             outfile = open(self.write_filename, "w")
@@ -125,9 +125,9 @@ class Geneagrapher:
 if __name__ == "__main__":
     geneagrapher = Geneagrapher()
     try:
-        geneagrapher.parseInput()
+        geneagrapher.parse_input()
     except SyntaxError, e:
         print geneagrapher.parser.get_usage()
         print e
-    geneagrapher.buildGraph()
-    geneagrapher.generateDotFile()
+    geneagrapher.build_graph()
+    geneagrapher.generate_dot_file()

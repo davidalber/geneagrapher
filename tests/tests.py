@@ -414,17 +414,17 @@ class TestGeneagrapherMethods(unittest.TestCase):
         self.assertEquals(self.ggrapher.write_filename, None)
         
     def test002_parse_empty(self):
-        # Test parseInput() with no arguments.
+        # Test parse_input() with no arguments.
         sys.argv = ['geneagrapher']
-        self.assertRaises(SyntaxError, self.ggrapher.parseInput)
+        self.assertRaises(SyntaxError, self.ggrapher.parse_input)
         
     def test003_parse_default(self):
-        # Test parseInput() with no options.
+        # Test parse_input() with no options.
         sys.argv = ['geneagrapher', '3']
         self.ggrapher.get_ancestors = False
         self.ggrapher.get_descendents = True
         self.ggrapher.write_filename = "filler"
-        self.ggrapher.parseInput()
+        self.ggrapher.parse_input()
         self.assertEquals(self.ggrapher.get_ancestors, False)
         self.assertEquals(self.ggrapher.get_descendants, False)
         self.assertEquals(self.ggrapher.verbose, False)
@@ -432,9 +432,9 @@ class TestGeneagrapherMethods(unittest.TestCase):
         self.assertEquals(self.ggrapher.leaf_ids, [3])
 
     def test004_parse_options(self):
-        # Test parseInput() with options.
+        # Test parse_input() with options.
         sys.argv = ['geneagrapher', '--with-ancestors', '--with-descendants', '--file=filler', '--verbose', '3', '43']
-        self.ggrapher.parseInput()
+        self.ggrapher.parse_input()
         self.assertEquals(self.ggrapher.get_ancestors, True)
         self.assertEquals(self.ggrapher.get_descendants, True)
         self.assertEquals(self.ggrapher.verbose, True)
