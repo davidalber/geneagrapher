@@ -1,3 +1,6 @@
+from node import Node
+from record import Record
+
 class DuplicateNodeError(Exception):
     def __init__(self, value):
         self.value = value

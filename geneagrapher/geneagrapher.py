@@ -1,6 +1,6 @@
 from optparse import OptionParser
 import pkg_resources
-import GGraph
+from graph import Graph
 from grabber import Grabber
 
 class Geneagrapher:
@@ -9,7 +9,7 @@ class Geneagrapher:
     extracted from the Mathematics Genealogy Project website.
     """
     def __init__(self):
-        self.graph = GGraph.Graph()
+        self.graph = Graph()
         self.leaf_ids = []
         self.get_ancestors = False
         self.get_descendants = False
