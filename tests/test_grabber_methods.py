@@ -11,7 +11,6 @@ class TestGrabberMethods(unittest.TestCase):
     def test001_init(self):
         # Test constructor.
         self.assertEquals(self.grabber.id, 18231)
-        self.assertEquals(self.grabber.pagestr, None)
         self.assertEquals(self.grabber.name, None)
         self.assertEquals(self.grabber.institution, None)
         self.assertEquals(self.grabber.year, None)
@@ -20,12 +19,9 @@ class TestGrabberMethods(unittest.TestCase):
 
     def test002_get_page(self):
         # Test get_page() method.
-        self.grabber.get_page()
-        self.assert_(self.grabber.pagestr is not None)
-        self.assert_(u"<title>The Mathematics Genealogy Project - Carl Gau\xdf</title>" in self.grabber.pagestr)
-        # Get page again and test for adverse affects.
-        self.grabber.get_page()
-        self.assert_(u"<title>The Mathematics Genealogy Project - Carl Gau\xdf</title>" in self.grabber.pagestr)
+        page = self.grabber.get_page()
+        pagestr = page.read()
+        self.assert_("<title>The Mathematics Genealogy Project - Carl Gau" in pagestr)
 
     def test003_extract_info_bad(self):
         # Verify exception thrown for bad id.

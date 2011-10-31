@@ -14,7 +14,7 @@ genealogies using data from the Math Genealogy Project's website.
       url="http://www.davidalber.net/",
       license="MIT",
       packages=find_packages(exclude='tests'),
-      install_requires=[],
+      install_requires=['BeautifulSoup >= 3.2.0'],
       entry_points = {
         'console_scripts': [
             'ggrapher = geneagrapher.geneagrapher:ggrapher'
