@@ -21,7 +21,12 @@ class Grabber:
         """
         url = 'http://genealogy.math.ndsu.nodak.edu/id.php?id=' + str(self.id)
         return urllib.urlopen(url)
-            
+
+    @staticmethod
+    def extract_id(tag):
+        """Extract the ID from a tag with form <a href="id.php?id=7401">."""
+        return tag.attrs[0][-1].split('=')[-1]
+
     def extract_node_information(self):
         """
         For the mathematician in this object, extract the list of
@@ -56,12 +61,12 @@ class Grabber:
         # Get advisor IDs.
         for advisor_info in soup.findAll(text=re.compile('Advisor')):
             if 'Advisor: Unknown' not in advisor_info:
-                advisor_id = advisor_info.findNext().attrs[0][-1].split('=')[1]
+                advisor_id = self.extract_id(advisor_info.findNext())
                 self.advisors.append(int(advisor_id))
 
         # Get descendant IDs.
         if soup.find('table') is not None:
             for descendant_info in soup.find('table').findAll('a'):
-                descendant_id = descendant_info.attrs[0][-1].split('=')[-1]
+                descendant_id = self.extract_id(descendant_info)
                 self.descendants.append(int(descendant_id))
         return [self.name, self.institution, self.year, self.advisors, self.descendants]
