@@ -1,6 +1,5 @@
 import urllib
 import re
-from htmlentitydefs import name2codepoint
 from BeautifulSoup import BeautifulSoup
 
 class Grabber:
@@ -15,11 +14,6 @@ class Grabber:
         self.year = None
         self.advisors = []
         self.descendants = []
-
-    @staticmethod
-    def unescape(s):
-        return re.sub('&(%s);' % '|'.join(name2codepoint),\
-                      lambda m: unichr(name2codepoint[m.group(1)]), s)
 
     def get_page(self):
         """
