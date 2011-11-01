@@ -19,7 +19,6 @@ class Node:
         self.record = record
         self.ancestors = ancestors
         self.descendants = descendants
-        self.already_printed = False
 
         # Verify parameter types.
         if not isinstance(self.record, Record):
@@ -59,7 +58,7 @@ class Node:
         """
         return self.record.id
 
-    def set_id(self, id):
+    def set_id(self, id):  # NOTE: is this used?
         """
         Sets the record id.
         """

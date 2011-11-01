@@ -103,17 +103,17 @@ class Graph:
     node [shape=plaintext];
     edge [style=bold];\n\n"""
 
+        printed_nodes = {}
         while len(queue) > 0:
             node_id = queue.pop()
             if not self.has_node(node_id):
                 # Skip this id if a corresponding node is not present.
                 continue
-            node = self.get_node(node_id)
-
-            if node.already_printed:
+            if printed_nodes.has_key(node_id):
+                # Skip this id because it is already printed.
                 continue
-            else:
-                node.already_printed = True
+            node = self.get_node(node_id)
+            printed_nodes[id] = node
             
             if include_ancestors:
                 # Add this node's advisors to queue.
