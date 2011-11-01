@@ -29,16 +29,7 @@ class Node:
             raise TypeError("Unexpected parameter type: expected list object for 'descendants'")
 
     def __str__(self):
-        if self.record.has_institution():
-            if self.record.has_year():
-                return self.record.name.encode('utf-8', 'replace') + ' \\n' + self.record.institution.encode('utf-8', 'replace') + ' (' + str(self.record.year) + ')'
-            else:
-                return self.record.name.encode('utf-8', 'replace') + ' \\n' + self.record.institution.encode('utf-8', 'replace')
-        else:
-            if self.record.has_year():
-                return self.record.name.encode('utf-8', 'replace') + ' \\n(' + str(self.record.year) + ')'
-            else:
-                return self.record.name.encode('utf-8', 'replace')
+        return str(self.record)
 
     def __cmp__(self, n2):
         return self.record.__cmp__(n2.record)
