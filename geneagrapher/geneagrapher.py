@@ -48,8 +48,7 @@ class Geneagrapher:
         self.get_descendants = options.get_descendants
         self.verbose = options.verbose
         self.write_filename = options.filename
-        for arg in args:
-            self.leaf_ids.append(int(arg))
+        self.leaf_ids = [int(arg) for arg in args]
         
     def build_graph(self):
         """
