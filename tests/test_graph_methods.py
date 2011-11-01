@@ -6,7 +6,7 @@ class TestGraphMethods(unittest.TestCase):
     Unit tests for the Graph class.
     """
     def setUp(self):
-        self.record1 = Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
+        self.record1 = Record(u"Carl Friedrich Gau\xdf", u"Universit\xe4t Helmstedt", 1799, 18231)
         self.node1 = Node(self.record1, [], [])
         self.graph1 = Graph([self.node1])
     
@@ -87,12 +87,12 @@ class TestGraphMethods(unittest.TestCase):
 
     def test014_generate_dot_file(self):
         # Test the generate_dot_file() method.
-        dotfileexpt = """digraph genealogy {
+        dotfileexpt = u"""digraph genealogy {
     graph [charset="utf-8"];
     node [shape=plaintext];
     edge [style=bold];
 
-    18231 [label="Carl Friedrich Gauss \\nUniversitaet Helmstedt (1799)"];
+    18231 [label="Carl Friedrich Gau\xdf \\nUniversit\xe4t Helmstedt (1799)"];
 
 }
 """    
@@ -102,24 +102,24 @@ class TestGraphMethods(unittest.TestCase):
     def test015_generate_dot_file(self):
         # Test the generate_dot_file() method.
         graph = Graph()
-        graph.add_node("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231, [18230], [])
-        graph.add_node("Johann Friedrich Pfaff", "Georg-August-Universitaet Goettingen", 1786, 18230, [66476], [])
-        graph.add_node("Abraham Gotthelf Kaestner", "Universitaet Leipzig", 1739, 66476, [57670], [])
-        graph.add_node("Christian August Hausen", "Martin-Luther-Universitaet Halle-Wittenberg", 1713, 57670, [72669], [])
-        graph.add_node("Johann Christoph Wichmannshausen", "Universitaet Leipzig", 1685, 72669, [21235], [])
-        graph.add_node("Otto Mencke", "Universitaet Leipzig", 1665, 21235, [], [])
+        graph.add_node(u"Carl Friedrich Gau\xdf", u"Universit\xe4t Helmstedt", 1799, 18231, [18230], [])
+        graph.add_node(u"Johann Friedrich Pfaff", u"Georg-August-Universit\xe4t Goettingen", 1786, 18230, [66476], [])
+        graph.add_node(u"Abraham Gotthelf Kaestner", u"Universit\xe4t Leipzig", 1739, 66476, [57670], [])
+        graph.add_node(u"Christian August Hausen", u"Martin-Luther-Universit\xe4t Halle-Wittenberg", 1713, 57670, [72669], [])
+        graph.add_node(u"Johann Christoph Wichmannshausen", u"Universit\xe4t Leipzig", 1685, 72669, [21235], [])
+        graph.add_node(u"Otto Mencke", u"Universit\xe4t Leipzig", 1665, 21235, [], [])
         
-        dotfileexpt = """digraph genealogy {
+        dotfileexpt = u"""digraph genealogy {
     graph [charset="utf-8"];
     node [shape=plaintext];
     edge [style=bold];
 
-    18231 [label="Carl Friedrich Gauss \\nUniversitaet Helmstedt (1799)"];
-    18230 [label="Johann Friedrich Pfaff \\nGeorg-August-Universitaet Goettingen (1786)"];
-    66476 [label="Abraham Gotthelf Kaestner \\nUniversitaet Leipzig (1739)"];
-    57670 [label="Christian August Hausen \\nMartin-Luther-Universitaet Halle-Wittenberg (1713)"];
-    72669 [label="Johann Christoph Wichmannshausen \\nUniversitaet Leipzig (1685)"];
-    21235 [label="Otto Mencke \\nUniversitaet Leipzig (1665)"];
+    18231 [label="Carl Friedrich Gau\xdf \\nUniversit\xe4t Helmstedt (1799)"];
+    18230 [label="Johann Friedrich Pfaff \\nGeorg-August-Universit\xe4t Goettingen (1786)"];
+    66476 [label="Abraham Gotthelf Kaestner \\nUniversit\xe4t Leipzig (1739)"];
+    57670 [label="Christian August Hausen \\nMartin-Luther-Universit\xe4t Halle-Wittenberg (1713)"];
+    72669 [label="Johann Christoph Wichmannshausen \\nUniversit\xe4t Leipzig (1685)"];
+    21235 [label="Otto Mencke \\nUniversit\xe4t Leipzig (1665)"];
 
     18230 -> 18231;
     66476 -> 18230;

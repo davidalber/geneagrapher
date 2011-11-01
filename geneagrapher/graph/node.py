@@ -28,8 +28,8 @@ class Node:
         if not isinstance(self.descendants, list):
             raise TypeError("Unexpected parameter type: expected list object for 'descendants'")
 
-    def __str__(self):
-        return str(self.record)
+    def __unicode__(self):
+        return self.record.__unicode__()
 
     def __cmp__(self, n2):
         return self.record.__cmp__(n2.record)

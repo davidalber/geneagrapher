@@ -114,6 +114,7 @@ class Geneagrapher:
                     
     def generate_dot_file(self):
         dotfile = self.graph.generate_dot_file(self.get_ancestors, self.get_descendants)
+        dotfile = dotfile.encode('utf-8', 'replace')
         if self.write_filename is not None:
             outfile = open(self.write_filename, "w")
             outfile.write(dotfile)

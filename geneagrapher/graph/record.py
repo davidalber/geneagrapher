@@ -34,17 +34,17 @@ class Record:
         """
         return self.id.__cmp__(r2.id)
 
-    def __str__(self):
+    def __unicode__(self):
         if self.has_institution():
             if self.has_year():
-                return self.name.encode('utf-8', 'replace') + ' \\n' + self.institution.encode('utf-8', 'replace') + ' (' + str(self.year) + ')'
+                return u'{} \\n{} ({})'.format(self.name, self.institution, self.year)
             else:
-                return self.name.encode('utf-8', 'replace') + ' \\n' + self.institution.encode('utf-8', 'replace')
+                return u'{} \\n{}'.format(self.name, self.institution)
         else:
             if self.has_year():
-                return self.name.encode('utf-8', 'replace') + ' \\n(' + str(self.year) + ')'
+                return u'{} \\n({})'.format(self.name, self.year)
             else:
-                return self.name.encode('utf-8', 'replace')
+                return self.name
     
     def has_institution(self):
         """

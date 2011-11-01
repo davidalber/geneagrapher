@@ -6,7 +6,7 @@ class TestNodeMethods(unittest.TestCase):
     Unit tests for the Node class.
     """
     def setUp(self):
-        self.record = Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
+        self.record = Record(u"Carl Friedrich Gau\xdf", u"Universit\xe4t Helmstedt", 1799, 18231)
     
     def test001_init(self):
         # Test the constructor.
@@ -28,36 +28,36 @@ class TestNodeMethods(unittest.TestCase):
         # Test the constructor for a case where the descendent list is not a list.
         self.assertRaises(TypeError, Node, self.record, [], 1)
         
-    def test004_str_full(self):
-        # Test __str__() method for Node with complete record.
+    def test004_unicode_full(self):
+        # Test __unicode__() method for Node with complete record.
         node = Node(self.record, [], [])
-        nodestr = node.__str__()
-        nodestrexpt = "Carl Friedrich Gauss \\nUniversitaet Helmstedt (1799)"
+        nodestr = node.__unicode__()
+        nodestrexpt = u"Carl Friedrich Gau\xdf \\nUniversit\xe4t Helmstedt (1799)"
         self.assertEquals(nodestr, nodestrexpt)
 
-    def test005_str_no_year(self):
-        # Test __str__() method for Node containing record without year.
-        record = Record("Carl Friedrich Gauss", "Universitaet Helmstedt", None, 18231)
+    def test005_unicode_no_year(self):
+        # Test __unicode__() method for Node containing record without year.
+        record = Record(self.record.name, self.record.institution, None, 18231)
         node = Node(record, [], [])
-        nodestr = node.__str__()
-        nodestrexpt = "Carl Friedrich Gauss \\nUniversitaet Helmstedt"
+        nodestr = node.__unicode__()
+        nodestrexpt = u"Carl Friedrich Gau\xdf \\nUniversit\xe4t Helmstedt"
         self.assertEquals(nodestr, nodestrexpt)
 
-    def test006_str_no_inst(self):
-        # Test __str__() method for Node containing record without institution.
-        record = Record("Carl Friedrich Gauss", None, 1799, 18231)
+    def test006_unicode_no_inst(self):
+        # Test __unicode__() method for Node containing record without institution.
+        record = Record(self.record.name, None, 1799, 18231)
         node = Node(record, [], [])
-        nodestr = node.__str__()
-        nodestrexpt = "Carl Friedrich Gauss \\n(1799)"
+        nodestr = node.__unicode__()
+        nodestrexpt = u"Carl Friedrich Gau\xdf \\n(1799)"
         self.assertEquals(nodestr, nodestrexpt)
 
-    def test007_str_no_inst_no_id(self):
-        # Test __str__() method for Node containing record without institution
+    def test007_unicode_no_inst_no_id(self):
+        # Test __unicode__() method for Node containing record without institution
         # or year.
-        record = Record("Carl Friedrich Gauss", None, None, 18231)
+        record = Record(self.record.name, None, None, 18231)
         node = Node(record, [], [])
-        nodestr = node.__str__()
-        nodestrexpt = "Carl Friedrich Gauss"
+        nodestr = node.__unicode__()
+        nodestrexpt = u"Carl Friedrich Gau\xdf"
         self.assertEquals(nodestr, nodestrexpt)
 
     def test008_cmp_equal(self):

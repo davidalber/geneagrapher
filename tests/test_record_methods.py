@@ -6,6 +6,9 @@ class TestRecordMethods(unittest.TestCase):
     """
     Unit tests for the Record class.
     """
+    def setUp(self):
+        self.record = Record(u"Carl Friedrich Gau\xdf", u"Universit\xe4t Helmstedt", 1799, 18231)
+
     def test001_init(self):
         # Test the constructor.
         record = Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
@@ -63,6 +66,34 @@ class TestRecordMethods(unittest.TestCase):
         # Verify has_year() method returns False when the conditions are right.
         record = Record("Carl Friedrich Gauss", "Universitaet Helmstedt", None, 18231)
         self.assert_(not record.has_year())
+
+    def test012_unicode_full(self):
+        # Test __unicode__() method for complete record.
+        recstr = self.record.__unicode__()
+        recstrexpt = u"Carl Friedrich Gau\xdf \\nUniversit\xe4t Helmstedt (1799)"
+        self.assertEquals(recstr, recstrexpt)
+
+    def test013_unicode_no_year(self):
+        # Test __unicode__() method for record without year.
+        record = Record(self.record.name, self.record.institution, None, 18231)
+        recstr = record.__unicode__()
+        recstrexpt = u"Carl Friedrich Gau\xdf \\nUniversit\xe4t Helmstedt"
+        self.assertEquals(recstr, recstrexpt)
+
+    def test014_unicode_no_inst(self):
+        # Test __unicode__() method for record without institution.
+        record = Record(self.record.name, None, 1799, 18231)
+        recstr = record.__unicode__()
+        recstrexpt = u"Carl Friedrich Gau\xdf \\n(1799)"
+        self.assertEquals(recstr, recstrexpt)
+
+    def test015_unicode_no_inst_no_id(self):
+        # Test __unicode__() method for record without institution
+        # or year.
+        record = Record(self.record.name, None, None, 18231)
+        recstr = record.__unicode__()
+        recstrexpt = u"Carl Friedrich Gau\xdf"
+        self.assertEquals(recstr, recstrexpt)
 
 if __name__ == '__main__':
     unittest.main()
