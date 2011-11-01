@@ -25,7 +25,7 @@ class Grabber:
     @staticmethod
     def extract_id(tag):
         """Extract the ID from a tag with form <a href="id.php?id=7401">."""
-        return tag.attrs[0][-1].split('=')[-1]
+        return int(tag.attrs[0][-1].split('=')[-1])
 
     def extract_node_information(self):
         """
@@ -59,14 +59,13 @@ class Grabber:
             self.year = int(inst_year)
 
         # Get advisor IDs.
-        for advisor_info in soup.findAll(text=re.compile('Advisor')):
-            if 'Advisor: Unknown' not in advisor_info:
-                advisor_id = self.extract_id(advisor_info.findNext())
-                self.advisors.append(int(advisor_id))
+        self.advisors = [self.extract_id(info.findNext()) for info in
+                         soup.findAll(text=re.compile('Advisor'))
+                         if 'Advisor: Unknown' not in info]
 
         # Get descendant IDs.
         if soup.find('table') is not None:
-            for descendant_info in soup.find('table').findAll('a'):
-                descendant_id = self.extract_id(descendant_info)
-                self.descendants.append(int(descendant_id))
+            self.descendants = [self.extract_id(info) for info in
+                                soup.find('table').findAll('a')]
+            
         return [self.name, self.institution, self.year, self.advisors, self.descendants]
