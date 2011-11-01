@@ -15,13 +15,6 @@ class Grabber:
         self.advisors = []
         self.descendants = []
 
-    def get_page(self):
-        """
-        Grab the page for self.id from the Math Genealogy Database.
-        """
-        url = 'http://genealogy.math.ndsu.nodak.edu/id.php?id=' + str(self.id)
-        return urllib.urlopen(url)
-
     @staticmethod
     def extract_id(tag):
         """Extract the ID from a tag with form <a href="id.php?id=7401">."""
@@ -33,7 +26,8 @@ class Grabber:
         advisor ids, the mathematician name, the mathematician
         institution, and the year of the mathematician's degree.
         """
-        page = self.get_page()
+        url = 'http://genealogy.math.ndsu.nodak.edu/id.php?id=' + str(self.id)
+        page = urllib.urlopen(url)
         soup = BeautifulSoup(page, convertEntities='html')
         page.close()
             
