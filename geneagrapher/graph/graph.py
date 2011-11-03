@@ -30,10 +30,10 @@ class Graph:
                 if not isinstance(head, Node):
                     raise TypeError("Unexpected parameter type: expected list of Node objects for 'heads'")
 
-        self.nodes = {}
         if self.heads is not None:
-            for head in self.heads:
-                self.nodes[head.get_id()] = head
+            self.nodes = dict([(head.get_id(), head) for head in self.heads])
+        else:
+            self.nodes = {}
 
     def has_node(self, id):
         """
@@ -46,10 +46,7 @@ class Graph:
         Return the node in the graph with given id. Returns
         None if no such node exists.
         """
-        if self.has_node(id):
-            return self.nodes[id]
-        else:
-            return None
+        return self.nodes[id]
 
     def get_node_list(self): # NOTE: this method is unused
         """

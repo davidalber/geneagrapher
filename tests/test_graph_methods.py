@@ -40,8 +40,7 @@ class TestGraphMethods(unittest.TestCase):
         
     def test007_get_node_not_found(self):
         # Test the get_node() method for a case where the node does not exist.
-        node = self.graph1.get_node(1)
-        self.assertEquals(node, None)
+        self.assertRaises(KeyError, self.graph1.get_node, 1)
         
     def test008_get_node_list(self):
         # Test the get_node_list() method.
