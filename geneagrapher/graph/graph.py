@@ -102,7 +102,7 @@ class Graph:
 
         printed_nodes = {}
         while len(queue) > 0:
-            node_id = queue.pop()
+            node_id = queue.pop(0)
             if not self.has_node(node_id):
                 # Skip this id if a corresponding node is not present.
                 continue

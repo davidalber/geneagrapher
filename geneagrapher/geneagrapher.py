@@ -120,7 +120,7 @@ class Geneagrapher:
             outfile.write(dotfile)
             outfile.close()
         else:
-            print dotfile
+            print dotfile,
         
 def ggrapher():
     """Function to run the Geneagrapher. This is the function called when
