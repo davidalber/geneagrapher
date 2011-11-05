@@ -61,7 +61,7 @@ class Geneagrapher:
 
         # Grab "leaf" nodes.
         while len(leaf_grab_queue) != 0:
-            id = leaf_grab_queue.pop()
+            id = leaf_grab_queue.pop(0)
             if not self.graph.has_node(id):
                 # Then this information has not yet been grabbed.
                 grabber = Grabber(id)
@@ -77,7 +77,7 @@ class Geneagrapher:
         # Grab ancestors of leaf nodes.
         if self.get_ancestors:
             while len(ancestor_grab_queue) != 0:
-                id = ancestor_grab_queue.pop()
+                id = ancestor_grab_queue.pop(0)
                 if not self.graph.has_node(id):
                     # Then this information has not yet been grabbed.
                     grabber = Grabber(id)
@@ -90,7 +90,7 @@ class Geneagrapher:
         # Grab descendants of leaf nodes.
         if self.get_descendants:
             while len(descendant_grab_queue) != 0:
-                id = descendant_grab_queue.pop()
+                id = descendant_grab_queue.pop(0)
                 if not self.graph.has_node(id):
                     # Then this information has not yet been grabbed.
                     grabber = Grabber(id)
