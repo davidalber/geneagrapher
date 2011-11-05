@@ -67,11 +67,7 @@ class Geneagrapher:
                 grabber = Grabber(id)
                 if self.verbose:
                     print "Grabbing record #{}".format(id)
-                try:
-                    [name, institution, year, advisors, descendants] = grabber.extract_node_information()
-                except ValueError:
-                    # The given id does not exist in the Math Genealogy Project's database.
-                    raise
+                [name, institution, year, advisors, descendants] = grabber.extract_node_information()
                 self.graph.add_node(name, institution, year, id, advisors, descendants, True)
                 if self.get_ancestors:
                     ancestor_grab_queue += advisors
@@ -87,11 +83,7 @@ class Geneagrapher:
                     grabber = Grabber(id)
                     if self.verbose:
                         print "Grabbing record #{}".format(id)
-                    try:
-                        [name, institution, year, advisors, descendants] = grabber.extract_node_information()
-                    except ValueError:
-                        # The given id does not exist in the Math Genealogy Project's database.
-                        raise
+                    [name, institution, year, advisors, descendants] = grabber.extract_node_information()
                     self.graph.add_node(name, institution, year, id, advisors, descendants)
                     ancestor_grab_queue += advisors
                         
@@ -104,11 +96,7 @@ class Geneagrapher:
                     grabber = Grabber(id)
                     if self.verbose:
                         print "Grabbing record #{}".format(id)
-                    try:
-                        [name, institution, year, advisors, descendants] = grabber.extract_node_information()
-                    except ValueError:
-                        # The given id does not exist in the Math Genealogy Project's database.
-                        raise
+                    [name, institution, year, advisors, descendants] = grabber.extract_node_information()
                     self.graph.add_node(name, institution, year, id, advisors, descendants)
                     descendant_grab_queue += descendants
                     
