@@ -24,7 +24,7 @@ class Geneagrapher:
         self.parser = OptionParser(version="{}".format(
             pkg_env[self.__module__.split('.')[0]][0].version))
 
-        self.parser.set_usage("%prog [options] ID ...")
+        self.parser.set_usage("%prog [options] ID [ID...]")
         self.parser.set_description('Create a Graphviz "dot" file for a mathematics genealogy, where ID is a record identifier from the Mathematics Genealogy Project. Multiple IDs may be passed.')
 
         self.parser.add_option("-f", "--file", dest="filename",
@@ -42,7 +42,7 @@ class Geneagrapher:
         (options, args) = self.parser.parse_args()
         
         if len(args) == 0:
-            raise SyntaxError("%s: error: no record IDs passed" % (self.parser.get_prog_name()))
+            self.parser.error("no record IDs given")
 
         self.get_ancestors = options.get_ancestors
         self.get_descendants = options.get_descendants
@@ -126,10 +126,6 @@ def ggrapher():
     """Function to run the Geneagrapher. This is the function called when
     the ggrapher script is run."""
     ggrapher = Geneagrapher()
-    try:
-        ggrapher.parse_input()
-    except SyntaxError, e:
-        print ggrapher.parser.get_usage()
-        print e
+    ggrapher.parse_input()
     ggrapher.build_graph()
     ggrapher.generate_dot_file()

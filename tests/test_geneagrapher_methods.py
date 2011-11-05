@@ -24,8 +24,23 @@ class TestGeneagrapherMethods(unittest.TestCase):
     def test002_parse_empty(self):
         # Test parse_input() with no arguments.
         sys.argv = ['geneagrapher']
-        self.assertRaises(SyntaxError, self.ggrapher.parse_input)
-        
+
+        # Redirect stderr to capture output.
+        stderr = sys.stderr
+        stderr_intercept = StringIO.StringIO()
+        sys.stderr = stderr_intercept
+
+        expected = """Usage: geneagrapher [options] ID [ID...]
+
+geneagrapher: error: no record IDs given
+"""
+        try:
+            self.ggrapher.parse_input()
+        except SystemExit:
+            self.assertEquals(stderr_intercept.getvalue().decode('utf-8'), expected)
+
+        sys.stderr = stderr
+
     def test003_parse_default(self):
         # Test parse_input() with no options.
         sys.argv = ['geneagrapher', '3']
@@ -298,6 +313,29 @@ class TestGeneagrapherMethods(unittest.TestCase):
         with open(outfname, 'r') as fin:
             self.assertEquals(fin.read().decode('utf-8'), expected)
         os.remove(outfname)
+
+    def test013_end_to_end_through_ggrapher_self_stdout(self):
+        # Complete test calling ggrapher getting no ancestors or descendants
+        # and writing the result to stdout.
+        sys.argv = ['geneagrapher', '30484']
+
+        # Redirect stdout to capture output.
+        stdout = sys.stdout
+        stdout_intercept = StringIO.StringIO()
+        sys.stdout = stdout_intercept
+        geneagrapher.ggrapher()
+        sys.stdout = stdout
+
+        expected = u"""digraph genealogy {
+    graph [charset="utf-8"];
+    node [shape=plaintext];
+    edge [style=bold];
+
+    30484 [label="Peter Chris Pappas \\nThe Pennsylvania State University (1982)"];
+
+}
+"""
+        self.assertEquals(stdout_intercept.getvalue().decode('utf-8'), expected)
 
 if __name__ == '__main__':
     unittest.main()
