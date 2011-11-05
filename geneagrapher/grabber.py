@@ -36,7 +36,7 @@ class Grabber:
 
         if soup.firstText().text == u"You have specified an ID that does not exist in the database. Please back up and try again.":
             # Then a bad URL (e.g., a bad record id) was given. Throw an exception.
-            msg = "Invalid page address for id {}".format(self.id)
+            msg = "Invalid id {}".format(self.id)
             raise ValueError(msg)
 
         # Get mathematician name.

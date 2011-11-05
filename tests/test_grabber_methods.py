@@ -21,6 +21,13 @@ class TestGrabberMethods(unittest.TestCase):
         # Verify exception thrown for bad id.
         grabber = Grabber(999999999)
         self.assertRaises(ValueError, grabber.extract_node_information)
+
+        try:
+            grabber.extract_node_information()
+        except ValueError as e:
+            self.assertEquals(str(e), "Invalid id 999999999")
+        else:
+            self.fail()
         
     def test003_extract_info_all_fields(self):
         # Test the extract_node_information() method for a record containing all fields.
