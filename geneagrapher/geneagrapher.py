@@ -49,6 +49,23 @@ class Geneagrapher:
         self.verbose = options.verbose
         self.write_filename = options.filename
         self.leaf_ids = [int(arg) for arg in args]
+
+    def build_graph_portion(self, grab_queue, is_seed, **kwargs):
+        """Handle grabbing and storing nodes in the graph. Depending on the
+        arguments, this method handles seed nodes, ancestors, or descendants."""
+        while len(grab_queue) != 0:
+            id = grab_queue.pop(0)
+            if not self.graph.has_node(id):
+                # Then this information has not yet been grabbed.
+                grabber = Grabber(id)
+                if self.verbose:
+                    print "Grabbing record #{}".format(id)
+                [name, institution, year, advisors, descendants] = grabber.extract_node_information()
+                self.graph.add_node(name, institution, year, id, advisors, descendants, is_seed)
+                if self.get_ancestors and kwargs.has_key('ancestor_grab_queue'):
+                    kwargs['ancestor_grab_queue'] += advisors
+                if self.get_descendants and kwargs.has_key('descendant_grab_queue'):
+                    kwargs['descendant_grab_queue'] += descendants
         
     def build_graph(self):
         """
@@ -60,46 +77,20 @@ class Geneagrapher:
         descendant_grab_queue = []
 
         # Grab "leaf" nodes.
-        while len(leaf_grab_queue) != 0:
-            id = leaf_grab_queue.pop(0)
-            if not self.graph.has_node(id):
-                # Then this information has not yet been grabbed.
-                grabber = Grabber(id)
-                if self.verbose:
-                    print "Grabbing record #{}".format(id)
-                [name, institution, year, advisors, descendants] = grabber.extract_node_information()
-                self.graph.add_node(name, institution, year, id, advisors, descendants, True)
-                if self.get_ancestors:
-                    ancestor_grab_queue += advisors
-                if self.get_descendants:
-                    descendant_grab_queue += descendants
+        self.build_graph_portion(leaf_grab_queue, True,
+                                 ancestor_grab_queue=ancestor_grab_queue,
+                                 descendant_grab_queue=descendant_grab_queue)
 
         # Grab ancestors of leaf nodes.
         if self.get_ancestors:
-            while len(ancestor_grab_queue) != 0:
-                id = ancestor_grab_queue.pop(0)
-                if not self.graph.has_node(id):
-                    # Then this information has not yet been grabbed.
-                    grabber = Grabber(id)
-                    if self.verbose:
-                        print "Grabbing record #{}".format(id)
-                    [name, institution, year, advisors, descendants] = grabber.extract_node_information()
-                    self.graph.add_node(name, institution, year, id, advisors, descendants)
-                    ancestor_grab_queue += advisors
-                        
+            self.build_graph_portion(ancestor_grab_queue, False,
+                                     ancestor_grab_queue=ancestor_grab_queue)
+
         # Grab descendants of leaf nodes.
         if self.get_descendants:
-            while len(descendant_grab_queue) != 0:
-                id = descendant_grab_queue.pop(0)
-                if not self.graph.has_node(id):
-                    # Then this information has not yet been grabbed.
-                    grabber = Grabber(id)
-                    if self.verbose:
-                        print "Grabbing record #{}".format(id)
-                    [name, institution, year, advisors, descendants] = grabber.extract_node_information()
-                    self.graph.add_node(name, institution, year, id, advisors, descendants)
-                    descendant_grab_queue += descendants
-                    
+            self.build_graph_portion(descendant_grab_queue, False,
+                                     descendant_grab_queue=descendant_grab_queue)
+
     def generate_dot_file(self):
         dotfile = self.graph.generate_dot_file(self.get_ancestors, self.get_descendants)
         dotfile = dotfile.encode('utf-8', 'replace')
