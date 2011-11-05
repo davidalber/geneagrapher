@@ -92,7 +92,36 @@ geneagrapher: error: no record IDs given
         self.assertEquals(record.year, 1672)
         self.assertEquals(record.id, 127946)
 
-    def test007_build_graph_with_ancestors(self):
+    def test007_build_graph_only_self_verbose(self):
+        # Graph building with no ancestors or descendants.
+        self.ggrapher.verbose = True
+        self.ggrapher.leaf_ids.append(127946)
+
+        # Redirect stdout to capture output.
+        stdout = sys.stdout
+        stdout_intercept = StringIO.StringIO()
+        sys.stdout = stdout_intercept
+        self.ggrapher.build_graph()
+        sys.stdout = stdout
+
+        nodes = self.ggrapher.graph.nodes
+        self.assertEquals(len(nodes), 1)
+        self.assertTrue(nodes.has_key(127946))
+
+        node = nodes[127946]
+        self.assertEquals(node.ancestors, [137717, 137705])
+        self.assertEquals(node.descendants, [144155, 127803])
+
+        record = node.record
+        self.assertEquals(record.name, "Christian   Thomasius")
+        self.assertEquals(record.institution, None)
+        self.assertEquals(record.year, 1672)
+        self.assertEquals(record.id, 127946)
+
+        self.assertEquals(stdout_intercept.getvalue().decode('utf-8'),
+                          u"Grabbing record #127946\n")
+
+    def test008_build_graph_with_ancestors(self):
         # Graph building with ancestors.
         self.ggrapher.leaf_ids.append(127946)
         self.ggrapher.get_ancestors = True
@@ -144,7 +173,7 @@ geneagrapher: error: no record IDs given
         self.assertEquals(record.year, None)
         self.assertEquals(record.id, 143630)
 
-    def test008_build_graph_with_descendants(self):
+    def test009_build_graph_with_descendants(self):
         # Graph building with descendants.
         self.ggrapher.leaf_ids.append(79568)
         self.ggrapher.get_descendants = True
@@ -185,7 +214,7 @@ geneagrapher: error: no record IDs given
         self.assertEquals(record.year, 2003)
         self.assertEquals(record.id, 99457)
 
-    def test009_build_graph_bad_id(self):
+    def test010_build_graph_bad_id(self):
         # Graph building with a bad ID.
         self.ggrapher.leaf_ids.append(79568583832)
         self.assertRaises(ValueError, self.ggrapher.build_graph)
@@ -197,7 +226,7 @@ geneagrapher: error: no record IDs given
         else:
             self.fail()
 
-    def test010_end_to_end_self_stdout(self):
+    def test011_end_to_end_self_stdout(self):
         # Complete test getting no ancestors or descendants and writing the
         # result to stdout.
         sys.argv = ['geneagrapher', '30484']
@@ -228,7 +257,7 @@ geneagrapher: error: no record IDs given
 """
         self.assertEquals(stdout_intercept.getvalue().decode('utf-8'), expected)
 
-    def test011_end_to_end_ancestors_stdout(self):
+    def test012_end_to_end_ancestors_stdout(self):
         # Complete test getting with ancestors, writing the result to stdout.
         sys.argv = ['geneagrapher', '-a', '127946']
         self.ggrapher.parse_input()
@@ -264,7 +293,7 @@ geneagrapher: error: no record IDs given
 """
         self.assertEquals(stdout_intercept.getvalue().decode('utf-8'), expected)
 
-    def test012_end_to_end_descendants_stdout(self):
+    def test013_end_to_end_descendants_stdout(self):
         # Complete test getting with descendants, writing the result to stdout.
         sys.argv = ['geneagrapher', '-d', '79568']
         self.ggrapher.parse_input()
@@ -298,7 +327,7 @@ geneagrapher: error: no record IDs given
 """
         self.assertEquals(stdout_intercept.getvalue().decode('utf-8'), expected)
 
-    def test013_end_to_end_self_file(self):
+    def test014_end_to_end_self_file(self):
         # Complete test getting no ancestors or descendants and writing the
         # result to stdout.
         outfname = 'outfile.test'
@@ -326,7 +355,7 @@ geneagrapher: error: no record IDs given
             self.assertEquals(fin.read().decode('utf-8'), expected)
         os.remove(outfname)
 
-    def test014_end_to_end_through_ggrapher_self_stdout(self):
+    def test015_end_to_end_through_ggrapher_self_stdout(self):
         # Complete test calling ggrapher getting no ancestors or descendants
         # and writing the result to stdout.
         sys.argv = ['geneagrapher', '30484']
