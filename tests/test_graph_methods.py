@@ -76,6 +76,13 @@ class TestGraphMethods(unittest.TestCase):
         self.assertEquals([38586, 18231], self.graph1.get_node_list())
         self.assertRaises(DuplicateNodeError, self.graph1.add_node, "Leonhard Euler", "Universitaet Basel", 1726, 38586, [], [])
 
+        try:
+            self.graph1.add_node("Leonhard Euler", "Universitaet Basel", 1726, 38586, [], [])
+        except DuplicateNodeError as e:
+            self.assertEquals(str(e), "node with id {} already exists".format(38586))
+        else:
+            self.fail()
+
     def test013_add_node_object(self):
         # Test the add_node_object() method.
         record = Record("Leonhard Euler", "Universitaet Basel", 1726, 38586)
