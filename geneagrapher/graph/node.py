@@ -1,5 +1,6 @@
 from record import Record
 
+
 class Node:
     """
     Container class storing a node in the graph.
@@ -7,7 +8,7 @@ class Node:
     def __init__(self, record, ancestors, descendants):
         """
         Node class constructor.
-        
+
         Parameters:
             record: instance of the Record class
             ancestors: list of the record's genealogical ancestors'
@@ -15,18 +16,21 @@ class Node:
             descendants: list of this record's genealogical
                 descendants' IDs
         """
-        
+
         self.record = record
         self.ancestors = ancestors
         self.descendants = descendants
 
         # Verify parameter types.
         if not isinstance(self.record, Record):
-            raise TypeError("Unexpected parameter type: expected Record object for 'record'")
+            raise TypeError("Unexpected parameter type: expected Record \
+object for 'record'")
         if not isinstance(self.ancestors, list):
-            raise TypeError("Unexpected parameter type: expected list object for 'ancestors'")
+            raise TypeError("Unexpected parameter type: expected list object \
+for 'ancestors'")
         if not isinstance(self.descendants, list):
-            raise TypeError("Unexpected parameter type: expected list object for 'descendants'")
+            raise TypeError("Unexpected parameter type: expected list object \
+for 'descendants'")
 
     def __unicode__(self):
         return self.record.__unicode__()
@@ -40,7 +44,8 @@ class Node:
         """
         # Verify we were passed an int.
         if not isinstance(ancestor, int):
-            raise TypeError("Unexpected parameter type: expected int for 'ancestor'")
+            raise TypeError("Unexpected parameter type: expected int for \
+'ancestor'")
         self.ancestors.append(ancestor)
 
     def get_id(self):

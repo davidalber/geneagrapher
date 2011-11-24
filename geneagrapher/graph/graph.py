@@ -1,12 +1,14 @@
 from node import Node
 from record import Record
 
+
 class DuplicateNodeError(Exception):
     def __init__(self, value):
         self.value = value
 
     def __str__(self):
         return self.value
+
 
 class Graph:
     """
@@ -15,21 +17,23 @@ class Graph:
     def __init__(self, heads=None):
         """
         Graph class constructor.
-        
+
         Parameters:
             heads: a list of Node objects representing the tree head
                 (can be omitted to create an empty graph)
         """
         self.heads = heads
         self.supp_id = -1
-        
+
         # Verify type of heads is what we expect.
         if self.heads is not None:
             if not isinstance(self.heads, list):
-                raise TypeError("Unexpected parameter type: expected list of Node objects for 'heads'")
+                raise TypeError("Unexpected parameter type: expected list of \
+Node objects for 'heads'")
             for head in self.heads:
                 if not isinstance(head, Node):
-                    raise TypeError("Unexpected parameter type: expected list of Node objects for 'heads'")
+                    raise TypeError("Unexpected parameter type: expected list \
+of Node objects for 'heads'")
 
         if self.heads is not None:
             self.nodes = dict([(head.get_id(), head) for head in self.heads])
@@ -40,7 +44,7 @@ class Graph:
         """
         Check if the graph contains a node with the given id.
         """
-        return self.nodes.has_key(id)
+        return id in self.nodes
 
     def get_node(self, id):
         """
@@ -49,13 +53,14 @@ class Graph:
         """
         return self.nodes[id]
 
-    def get_node_list(self): # NOTE: this method is unused
+    def get_node_list(self):  # NOTE: this method is unused
         """
         Return a list of the nodes in the graph.
         """
         return self.nodes.keys()
 
-    def add_node(self, name, institution, year, id, ancestors, descendants, isHead=False):
+    def add_node(self, name, institution, year, id, ancestors, descendants,
+                 isHead=False):
         """
         Add a new node to the graph if a matching node is not already
         present.
@@ -95,7 +100,7 @@ class Graph:
             queue.append(head.get_id())
         edges = ""
         dotfile = ""
-        
+
         dotfile += u"""digraph genealogy {
     graph [charset="utf-8"];
     node [shape=plaintext];
@@ -107,20 +112,20 @@ class Graph:
             if not self.has_node(node_id):
                 # Skip this id if a corresponding node is not present.
                 continue
-            if printed_nodes.has_key(node_id):
+            if node_id in printed_nodes:
                 # Skip this id because it is already printed.
                 continue
             node = self.get_node(node_id)
             printed_nodes[node_id] = node
-            
+
             if include_ancestors:
                 # Add this node's advisors to queue.
                 queue += node.ancestors
-                
+
             if include_descendants:
                 # Add this node's descendants to queue.
                 queue += node.descendants
-        
+
             # Print this node's information.
             nodestr = u"    {} [label=\"{}\"];".format(node_id, node)
             dotfile += nodestr
@@ -130,7 +135,7 @@ class Graph:
                 if self.has_node(advisor):
                     edgestr = "\n    {} -> {};".format(advisor, node_id)
                     edges += edgestr
-                
+
             dotfile += "\n"
 
         # Now print the connections between the nodes.
