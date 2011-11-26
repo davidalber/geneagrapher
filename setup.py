@@ -15,11 +15,8 @@ genealogies using data from the Math Genealogy Project's website.
       license="MIT",
       packages=find_packages(exclude='tests'),
       install_requires=['BeautifulSoup >= 3.2.0'],
-      entry_points = {
-        'console_scripts': [
-            'ggrapher = geneagrapher.geneagrapher:ggrapher'
-        ]
+      entry_points={
+        'console_scripts': ['ggrapher = geneagrapher.geneagrapher:ggrapher']
       },
-      test_suite = "tests.tests"
+      test_suite="tests.tests"
 )
-
