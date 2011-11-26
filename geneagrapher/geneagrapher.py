@@ -1,4 +1,5 @@
 from optparse import OptionParser
+from collections import deque
 import pkg_resources
 from graph import Graph
 from grabber import Grabber
@@ -61,7 +62,7 @@ in graph")
         arguments, this method handles seed nodes, ancestors, or
         descendants."""
         while len(grab_queue) != 0:
-            id = grab_queue.pop(0)
+            id = grab_queue.popleft()
             if not self.graph.has_node(id):
                 # Then this information has not yet been grabbed.
                 grabber = Grabber(id)
@@ -72,18 +73,18 @@ in graph")
                 self.graph.add_node(name, institution, year, id, advisors,
                                     descendants, is_seed)
                 if self.get_ancestors and 'ancestor_queue' in kwargs:
-                    kwargs['ancestor_queue'] += advisors
+                    kwargs['ancestor_queue'].extend(advisors)
                 if self.get_descendants and 'descendant_queue' in kwargs:
-                    kwargs['descendant_queue'] += descendants
+                    kwargs['descendant_queue'].extend(descendants)
 
     def build_graph(self):
         """
         Populate the graph member by grabbing the mathematician
         pages and extracting relevant data.
         """
-        seed_queue = list(self.seed_ids)
-        ancestor_queue = []
-        descendant_queue = []
+        seed_queue = deque(self.seed_ids)
+        ancestor_queue = deque()
+        descendant_queue = deque()
 
         # Grab "seed" nodes.
         self.build_graph_portion(seed_queue, True,
