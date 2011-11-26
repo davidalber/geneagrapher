@@ -1,38 +1,43 @@
 import unittest
 from geneagrapher.graph import Node, Record
 
+
 class TestNodeMethods(unittest.TestCase):
     """
     Unit tests for the Node class.
     """
     def setUp(self):
-        self.record = Record(u"Carl Friedrich Gau\xdf", u"Universit\xe4t Helmstedt", 1799, 18231)
-    
+        self.record = Record(u"Carl Friedrich Gau\xdf",
+                             u"Universit\xe4t Helmstedt", 1799, 18231)
+
     def test001_init(self):
         # Test the constructor.
         node = Node(self.record, [], [])
         self.assertEquals(node.record, self.record)
         self.assertEquals(node.ancestors, [])
         self.assertEquals(node.descendants, [])
-        
+
     def test002_init_bad_record(self):
-        # Test the constructor for a case where the record passed is not a Record
-        # object.
+        # Test the constructor for a case where the record passed is not a
+        # Record object.
         self.assertRaises(TypeError, Node, 1, [], [])
-        
+
     def test003_init_bad_ancestor_list(self):
-        # Test the constructor for a case where the ancestor list is not a list.
+        # Test the constructor for a case where the ancestor list is not a
+        # list.
         self.assertRaises(TypeError, Node, self.record, 1, [])
 
     def test003_2_init_bad_descendent_list(self):
-        # Test the constructor for a case where the descendent list is not a list.
+        # Test the constructor for a case where the descendent list is not a
+        # list.
         self.assertRaises(TypeError, Node, self.record, [], 1)
-        
+
     def test004_unicode_full(self):
         # Test __unicode__() method for Node with complete record.
         node = Node(self.record, [], [])
         nodestr = node.__unicode__()
-        nodestrexpt = u"Carl Friedrich Gau\xdf \\nUniversit\xe4t Helmstedt (1799)"
+        nodestrexpt = u"Carl Friedrich Gau\xdf \\nUniversit\xe4t Helmstedt \
+(1799)"
         self.assertEquals(nodestr, nodestrexpt)
 
     def test005_unicode_no_year(self):
@@ -44,7 +49,8 @@ class TestNodeMethods(unittest.TestCase):
         self.assertEquals(nodestr, nodestrexpt)
 
     def test006_unicode_no_inst(self):
-        # Test __unicode__() method for Node containing record without institution.
+        # Test __unicode__() method for Node containing record without
+        # institution.
         record = Record(self.record.name, None, 1799, 18231)
         node = Node(record, [], [])
         nodestr = node.__unicode__()
@@ -52,8 +58,8 @@ class TestNodeMethods(unittest.TestCase):
         self.assertEquals(nodestr, nodestrexpt)
 
     def test007_unicode_no_inst_no_id(self):
-        # Test __unicode__() method for Node containing record without institution
-        # or year.
+        # Test __unicode__() method for Node containing record without
+        # institution or year.
         record = Record(self.record.name, None, None, 18231)
         node = Node(record, [], [])
         nodestr = node.__unicode__()
@@ -62,7 +68,8 @@ class TestNodeMethods(unittest.TestCase):
 
     def test008_cmp_equal(self):
         # Test comparison method for Nodes with identical records.
-        record2 = Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
+        record2 = Record("Carl Friedrich Gauss", "Universitaet Helmstedt",
+                         1799, 18231)
         node1 = Node(self.record, [], [])
         node2 = Node(record2, [], [])
         self.assert_(node1 == node2)
@@ -81,10 +88,11 @@ class TestNodeMethods(unittest.TestCase):
         self.assertEquals(node.ancestors, [5])
 
     def test011_add_ancestor_bad_type(self):
-        # Test the add_ancestor() method for a case where the parameter type is incorrect.
+        # Test the add_ancestor() method for a case where the parameter type
+        # is incorrect.
         node = Node(self.record, [], [])
         self.assertRaises(TypeError, node.add_ancestor, '5')
-        
+
     def test012_get_id(self):
         node = Node(self.record, [], [])
         self.assertEquals(node.get_id(), 18231)

@@ -5,13 +5,14 @@ import StringIO
 from geneagrapher import geneagrapher
 from geneagrapher.graph import Graph
 
+
 class TestGeneagrapherMethods(unittest.TestCase):
     """
     Unit tests for the geneagrapher.Geneagrapher class.
     """
     def setUp(self):
         self.ggrapher = geneagrapher.Geneagrapher()
-        
+
     def test001_init(self):
         # Test constructor.
         self.assertEquals(isinstance(self.ggrapher.graph, Graph), True)
@@ -20,7 +21,7 @@ class TestGeneagrapherMethods(unittest.TestCase):
         self.assertEquals(self.ggrapher.get_descendants, False)
         self.assertEquals(self.ggrapher.verbose, False)
         self.assertEquals(self.ggrapher.write_filename, None)
-        
+
     def test002_parse_empty(self):
         # Test parse_input() with no arguments.
         sys.argv = ['geneagrapher']
@@ -37,7 +38,8 @@ geneagrapher: error: no record IDs given
         try:
             self.ggrapher.parse_input()
         except SystemExit:
-            self.assertEquals(stderr_intercept.getvalue().decode('utf-8'), expected)
+            self.assertEquals(stderr_intercept.getvalue().decode('utf-8'),
+                              expected)
 
         sys.stderr = stderr
 
@@ -56,7 +58,8 @@ geneagrapher: error: no record IDs given
 
     def test004_parse_options(self):
         # Test parse_input() with options.
-        sys.argv = ['geneagrapher', '--with-ancestors', '--with-descendants', '--file=filler', '--verbose', '3', '43']
+        sys.argv = ['geneagrapher', '--with-ancestors', '--with-descendants',
+                    '--file=filler', '--verbose', '3', '43']
         self.ggrapher.parse_input()
         self.assertEquals(self.ggrapher.get_ancestors, True)
         self.assertEquals(self.ggrapher.get_descendants, True)
@@ -66,7 +69,8 @@ geneagrapher: error: no record IDs given
 
     def test005_parse_short_options(self):
         # Test parse_input() with short versions of the options.
-        sys.argv = ['geneagrapher', '-a', '-d', '-f', 'filler', '-v', '3', '43']
+        sys.argv = ['geneagrapher', '-a', '-d', '-f', 'filler', '-v', '3',
+                    '43']
         self.ggrapher.parse_input()
         self.assertEquals(self.ggrapher.get_ancestors, True)
         self.assertEquals(self.ggrapher.get_descendants, True)
@@ -80,7 +84,7 @@ geneagrapher: error: no record IDs given
         self.ggrapher.build_graph()
         nodes = self.ggrapher.graph.nodes
         self.assertEquals(len(nodes), 1)
-        self.assertTrue(nodes.has_key(127946))
+        self.assertTrue(127946 in nodes)
 
         node = nodes[127946]
         self.assertEquals(node.ancestors, [137717, 137705])
@@ -106,7 +110,7 @@ geneagrapher: error: no record IDs given
 
         nodes = self.ggrapher.graph.nodes
         self.assertEquals(len(nodes), 1)
-        self.assertTrue(nodes.has_key(127946))
+        self.assertTrue(127946 in nodes)
 
         node = nodes[127946]
         self.assertEquals(node.ancestors, [137717, 137705])
@@ -128,10 +132,10 @@ geneagrapher: error: no record IDs given
         self.ggrapher.build_graph()
         nodes = self.ggrapher.graph.nodes
         self.assertEquals(len(nodes), 4)
-        self.assertTrue(nodes.has_key(127946))
-        self.assertTrue(nodes.has_key(137717))
-        self.assertTrue(nodes.has_key(137705))
-        self.assertTrue(nodes.has_key(143630))
+        self.assertTrue(127946 in nodes)
+        self.assertTrue(137717 in nodes)
+        self.assertTrue(137705 in nodes)
+        self.assertTrue(143630 in nodes)
 
         node = nodes[127946]
         self.assertEquals(node.ancestors, [137717, 137705])
@@ -180,9 +184,9 @@ geneagrapher: error: no record IDs given
         self.ggrapher.build_graph()
         nodes = self.ggrapher.graph.nodes
         self.assertEquals(len(nodes), 3)
-        self.assertTrue(nodes.has_key(79568))
-        self.assertTrue(nodes.has_key(79562))
-        self.assertTrue(nodes.has_key(99457))
+        self.assertTrue(79568 in nodes)
+        self.assertTrue(79562 in nodes)
+        self.assertTrue(99457 in nodes)
 
         node = nodes[79568]
         self.assertEquals(node.ancestors, [13301])
@@ -251,11 +255,13 @@ geneagrapher: error: no record IDs given
     node [shape=plaintext];
     edge [style=bold];
 
-    30484 [label="Peter Chris Pappas \\nThe Pennsylvania State University (1982)"];
+    30484 [label="Peter Chris Pappas \\nThe Pennsylvania State University \
+(1982)"];
 
 }
 """
-        self.assertEquals(stdout_intercept.getvalue().decode('utf-8'), expected)
+        self.assertEquals(stdout_intercept.getvalue().decode('utf-8'),
+                          expected)
 
     def test012_end_to_end_ancestors_stdout(self):
         # Complete test getting with ancestors, writing the result to stdout.
@@ -291,7 +297,8 @@ geneagrapher: error: no record IDs given
     143630 -> 137705;
 }
 """
-        self.assertEquals(stdout_intercept.getvalue().decode('utf-8'), expected)
+        self.assertEquals(stdout_intercept.getvalue().decode('utf-8'),
+                          expected)
 
     def test013_end_to_end_descendants_stdout(self):
         # Complete test getting with descendants, writing the result to stdout.
@@ -325,7 +332,8 @@ geneagrapher: error: no record IDs given
     79568 -> 99457;
 }
 """
-        self.assertEquals(stdout_intercept.getvalue().decode('utf-8'), expected)
+        self.assertEquals(stdout_intercept.getvalue().decode('utf-8'),
+                          expected)
 
     def test014_end_to_end_self_file(self):
         # Complete test getting no ancestors or descendants and writing the
@@ -347,7 +355,8 @@ geneagrapher: error: no record IDs given
     node [shape=plaintext];
     edge [style=bold];
 
-    30484 [label="Peter Chris Pappas \\nThe Pennsylvania State University (1982)"];
+    30484 [label="Peter Chris Pappas \\nThe Pennsylvania State University \
+(1982)"];
 
 }
 """
@@ -372,11 +381,13 @@ geneagrapher: error: no record IDs given
     node [shape=plaintext];
     edge [style=bold];
 
-    30484 [label="Peter Chris Pappas \\nThe Pennsylvania State University (1982)"];
+    30484 [label="Peter Chris Pappas \\nThe Pennsylvania State University \
+(1982)"];
 
 }
 """
-        self.assertEquals(stdout_intercept.getvalue().decode('utf-8'), expected)
+        self.assertEquals(stdout_intercept.getvalue().decode('utf-8'),
+                          expected)
 
 if __name__ == '__main__':
     unittest.main()

@@ -5,6 +5,7 @@ from test_graph_methods import TestGraphMethods
 from test_grabber_methods import TestGrabberMethods
 from test_geneagrapher_methods import TestGeneagrapherMethods
 
+
 def runTests():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(TestRecordMethods))
