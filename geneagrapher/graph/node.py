@@ -1,6 +1,5 @@
 from record import Record
 
-
 class Node:
     """
     Container class storing a node in the graph.

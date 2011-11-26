@@ -11,7 +11,7 @@ class Geneagrapher:
     """
     def __init__(self):
         self.graph = Graph()
-        self.leaf_ids = []
+        self.seed_ids = []
         self.get_ancestors = False
         self.get_descendants = False
         self.verbose = False
@@ -54,7 +54,7 @@ in graph")
         self.get_descendants = options.get_descendants
         self.verbose = options.verbose
         self.write_filename = options.filename
-        self.leaf_ids = [int(arg) for arg in args]
+        self.seed_ids = [int(arg) for arg in args]
 
     def build_graph_portion(self, grab_queue, is_seed, **kwargs):
         """Handle grabbing and storing nodes in the graph. Depending on the
@@ -81,21 +81,21 @@ in graph")
         Populate the graph member by grabbing the mathematician
         pages and extracting relevant data.
         """
-        leaf_queue = list(self.leaf_ids)
+        seed_queue = list(self.seed_ids)
         ancestor_queue = []
         descendant_queue = []
 
-        # Grab "leaf" nodes.
-        self.build_graph_portion(leaf_queue, True,
+        # Grab "seed" nodes.
+        self.build_graph_portion(seed_queue, True,
                                  ancestor_queue=ancestor_queue,
                                  descendant_queue=descendant_queue)
 
-        # Grab ancestors of leaf nodes.
+        # Grab ancestors of seed nodes.
         if self.get_ancestors:
             self.build_graph_portion(ancestor_queue, False,
                                      ancestor_queue=ancestor_queue)
 
-        # Grab descendants of leaf nodes.
+        # Grab descendants of seed nodes.
         if self.get_descendants:
             self.build_graph_portion(descendant_queue, False,
                                      descendant_queue=descendant_queue)

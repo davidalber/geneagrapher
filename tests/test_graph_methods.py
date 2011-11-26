@@ -13,16 +13,16 @@ class TestGraphMethods(unittest.TestCase):
     def test001_init_empty(self):
         # Test the constructor.
         graph = Graph()
-        self.assertEquals(graph.heads, None)
+        self.assertEquals(graph.seeds, None)
         
     def test002_init(self):
         # Test the constructor.
-        self.assert_(self.graph1.heads == [self.node1])
+        self.assert_(self.graph1.seeds == [self.node1])
         self.assertEquals(self.graph1.nodes.keys(), [18231])
         self.assertEquals(self.graph1.nodes[18231], self.node1)
         
-    def test003_init_bad_heads(self):
-        # Test the constructor when passed a bad type for the heads parameter.
+    def test003_init_bad_seeds(self):
+        # Test the constructor when passed a bad type for the seeds parameter.
         self.assertRaises(TypeError, Graph, 3)
         
     def test004_has_node_true(self):
@@ -55,21 +55,21 @@ class TestGraphMethods(unittest.TestCase):
         # Test the add_node() method.
         self.graph1.add_node("Leonhard Euler", "Universitaet Basel", 1726, 38586, [], [])
         self.assertEquals([38586, 18231], self.graph1.get_node_list())
-        self.assertEquals(self.graph1.heads, [self.node1])
+        self.assertEquals(self.graph1.seeds, [self.node1])
 
-    def test010_add_second_node_head(self):
+    def test010_add_second_node_seed(self):
         # Test the add_node() method when adding a second node and
-        # marking it as a head node.
+        # marking it as a seed node.
         self.graph1.add_node("Leonhard Euler", "Universitaet Basel", 1726, 38586, [], [], True)
         self.assertEquals([38586, 18231], self.graph1.get_node_list())
-        self.assertEquals(self.graph1.heads, [self.node1, self.graph1.get_node(38586)])
+        self.assertEquals(self.graph1.seeds, [self.node1, self.graph1.get_node(38586)])
 
-    def test011_add_node_head(self):
-        # Test the add_node() method when no heads exist.
+    def test011_add_node_seed(self):
+        # Test the add_node() method when no seeds exist.
         graph = Graph()
-        self.assertEquals(graph.heads, None)
+        self.assertEquals(graph.seeds, None)
         graph.add_node("Leonhard Euler", "Universitaet Basel", 1726, 38586, [], [])
-        self.assertEquals(graph.heads, [graph.get_node(38586)])
+        self.assertEquals(graph.seeds, [graph.get_node(38586)])
 
     def test012_add_node_already_present(self):
         self.graph1.add_node("Leonhard Euler", "Universitaet Basel", 1726, 38586, [], [])
@@ -89,7 +89,7 @@ class TestGraphMethods(unittest.TestCase):
         node = Node(record, [], [])
         self.graph1.add_node_object(node)
         self.assertEquals([38586, 18231], self.graph1.get_node_list())
-        self.assertEquals(self.graph1.heads, [self.node1])
+        self.assertEquals(self.graph1.seeds, [self.node1])
 
     def test014_generate_dot_file(self):
         # Test the generate_dot_file() method.

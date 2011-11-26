@@ -14,29 +14,29 @@ class Graph:
     """
     Class storing the representation of a genealogy graph.
     """
-    def __init__(self, heads=None):
+    def __init__(self, seeds=None):
         """
         Graph class constructor.
 
         Parameters:
-            heads: a list of Node objects representing the tree head
-                (can be omitted to create an empty graph)
+            seeds: a list of Node objects representing the tree seed nodes
+                (omit to create an empty graph)
         """
-        self.heads = heads
+        self.seeds = seeds
         self.supp_id = -1
 
-        # Verify type of heads is what we expect.
-        if self.heads is not None:
-            if not isinstance(self.heads, list):
+        # Verify type of seeds is what we expect.
+        if self.seeds is not None:
+            if not isinstance(self.seeds, list):
                 raise TypeError("Unexpected parameter type: expected list of \
-Node objects for 'heads'")
-            for head in self.heads:
-                if not isinstance(head, Node):
+Node objects for 'seeds'")
+            for seed in self.seeds:
+                if not isinstance(seed, Node):
                     raise TypeError("Unexpected parameter type: expected list \
-of Node objects for 'heads'")
+of Node objects for 'seeds'")
 
-        if self.heads is not None:
-            self.nodes = dict([(head.get_id(), head) for head in self.heads])
+        if self.seeds is not None:
+            self.nodes = dict([(seed.get_id(), seed) for seed in self.seeds])
         else:
             self.nodes = {}
 
@@ -60,16 +60,16 @@ of Node objects for 'heads'")
         return self.nodes.keys()
 
     def add_node(self, name, institution, year, id, ancestors, descendants,
-                 isHead=False):
+                 is_seed=False):
         """
         Add a new node to the graph if a matching node is not already
         present.
         """
         record = Record(name, institution, year, id)
         node = Node(record, ancestors, descendants)
-        self.add_node_object(node, isHead)
+        self.add_node_object(node, is_seed)
 
-    def add_node_object(self, node, isHead=False):
+    def add_node_object(self, node, is_seed=False):
         """
         Add a new node object to the graph if a node with the same id
         is not already present.
@@ -82,22 +82,22 @@ of Node objects for 'heads'")
             node.set_id(self.supp_id)
             self.supp_id -= 1
         self.nodes[node.get_id()] = node
-        if self.heads is None:
-            self.heads = [node]
-        elif isHead:
-            self.heads.append(node)
+        if self.seeds is None:
+            self.seeds = [node]
+        elif is_seed:
+            self.seeds.append(node)
 
     def generate_dot_file(self, include_ancestors, include_descendants):
         """
         Return a string that contains the content of the Graphviz dotfile
         format for this graph.
         """
-        if self.heads is None:
+        if self.seeds is None:
             return ""
 
         queue = []
-        for head in self.heads:
-            queue.append(head.get_id())
+        for seed in self.seeds:
+            queue.append(seed.get_id())
         edges = ""
         dotfile = ""
 

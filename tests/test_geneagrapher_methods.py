@@ -15,7 +15,7 @@ class TestGeneagrapherMethods(unittest.TestCase):
     def test001_init(self):
         # Test constructor.
         self.assertEquals(isinstance(self.ggrapher.graph, Graph), True)
-        self.assertEquals(self.ggrapher.leaf_ids, [])
+        self.assertEquals(self.ggrapher.seed_ids, [])
         self.assertEquals(self.ggrapher.get_ancestors, False)
         self.assertEquals(self.ggrapher.get_descendants, False)
         self.assertEquals(self.ggrapher.verbose, False)
@@ -52,7 +52,7 @@ geneagrapher: error: no record IDs given
         self.assertEquals(self.ggrapher.get_descendants, False)
         self.assertEquals(self.ggrapher.verbose, False)
         self.assertEquals(self.ggrapher.write_filename, None)
-        self.assertEquals(self.ggrapher.leaf_ids, [3])
+        self.assertEquals(self.ggrapher.seed_ids, [3])
 
     def test004_parse_options(self):
         # Test parse_input() with options.
@@ -62,7 +62,7 @@ geneagrapher: error: no record IDs given
         self.assertEquals(self.ggrapher.get_descendants, True)
         self.assertEquals(self.ggrapher.verbose, True)
         self.assertEquals(self.ggrapher.write_filename, "filler")
-        self.assertEquals(self.ggrapher.leaf_ids, [3, 43])
+        self.assertEquals(self.ggrapher.seed_ids, [3, 43])
 
     def test005_parse_short_options(self):
         # Test parse_input() with short versions of the options.
@@ -72,11 +72,11 @@ geneagrapher: error: no record IDs given
         self.assertEquals(self.ggrapher.get_descendants, True)
         self.assertEquals(self.ggrapher.verbose, True)
         self.assertEquals(self.ggrapher.write_filename, "filler")
-        self.assertEquals(self.ggrapher.leaf_ids, [3, 43])
+        self.assertEquals(self.ggrapher.seed_ids, [3, 43])
 
     def test006_build_graph_only_self(self):
         # Graph building with no ancestors or descendants.
-        self.ggrapher.leaf_ids.append(127946)
+        self.ggrapher.seed_ids.append(127946)
         self.ggrapher.build_graph()
         nodes = self.ggrapher.graph.nodes
         self.assertEquals(len(nodes), 1)
@@ -95,7 +95,7 @@ geneagrapher: error: no record IDs given
     def test007_build_graph_only_self_verbose(self):
         # Graph building with no ancestors or descendants.
         self.ggrapher.verbose = True
-        self.ggrapher.leaf_ids.append(127946)
+        self.ggrapher.seed_ids.append(127946)
 
         # Redirect stdout to capture output.
         stdout = sys.stdout
@@ -123,7 +123,7 @@ geneagrapher: error: no record IDs given
 
     def test008_build_graph_with_ancestors(self):
         # Graph building with ancestors.
-        self.ggrapher.leaf_ids.append(127946)
+        self.ggrapher.seed_ids.append(127946)
         self.ggrapher.get_ancestors = True
         self.ggrapher.build_graph()
         nodes = self.ggrapher.graph.nodes
@@ -175,7 +175,7 @@ geneagrapher: error: no record IDs given
 
     def test009_build_graph_with_descendants(self):
         # Graph building with descendants.
-        self.ggrapher.leaf_ids.append(79568)
+        self.ggrapher.seed_ids.append(79568)
         self.ggrapher.get_descendants = True
         self.ggrapher.build_graph()
         nodes = self.ggrapher.graph.nodes
@@ -216,7 +216,7 @@ geneagrapher: error: no record IDs given
 
     def test010_build_graph_bad_id(self):
         # Graph building with a bad ID.
-        self.ggrapher.leaf_ids.append(79568583832)
+        self.ggrapher.seed_ids.append(79568583832)
         self.assertRaises(ValueError, self.ggrapher.build_graph)
 
         try:
@@ -235,7 +235,7 @@ geneagrapher: error: no record IDs given
         self.assertEquals(self.ggrapher.get_descendants, False)
         self.assertEquals(self.ggrapher.verbose, False)
         self.assertEquals(self.ggrapher.write_filename, None)
-        self.assertEquals(self.ggrapher.leaf_ids, [30484])
+        self.assertEquals(self.ggrapher.seed_ids, [30484])
 
         self.ggrapher.build_graph()
 
@@ -265,7 +265,7 @@ geneagrapher: error: no record IDs given
         self.assertEquals(self.ggrapher.get_descendants, False)
         self.assertEquals(self.ggrapher.verbose, False)
         self.assertEquals(self.ggrapher.write_filename, None)
-        self.assertEquals(self.ggrapher.leaf_ids, [127946])
+        self.assertEquals(self.ggrapher.seed_ids, [127946])
 
         self.ggrapher.build_graph()
 
@@ -301,7 +301,7 @@ geneagrapher: error: no record IDs given
         self.assertEquals(self.ggrapher.get_descendants, True)
         self.assertEquals(self.ggrapher.verbose, False)
         self.assertEquals(self.ggrapher.write_filename, None)
-        self.assertEquals(self.ggrapher.leaf_ids, [79568])
+        self.assertEquals(self.ggrapher.seed_ids, [79568])
 
         self.ggrapher.build_graph()
 
@@ -337,7 +337,7 @@ geneagrapher: error: no record IDs given
         self.assertEquals(self.ggrapher.get_descendants, False)
         self.assertEquals(self.ggrapher.verbose, False)
         self.assertEquals(self.ggrapher.write_filename, outfname)
-        self.assertEquals(self.ggrapher.leaf_ids, [30484])
+        self.assertEquals(self.ggrapher.seed_ids, [30484])
 
         self.ggrapher.build_graph()
         self.ggrapher.generate_dot_file()
