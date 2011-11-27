@@ -121,6 +121,9 @@ class TestGrabberMethods(unittest.TestCase):
                           u"Georg-August-Universit\xe4t G\xf6ttingen")
         self.assertEquals(year, 1911)
         self.assertEquals(advisors, set([7298]))
+        self.assertEquals(descendents, set([12681, 28292, 10275, 79297,
+                                            36991, 17851, 127470, 51907,
+                                            15165, 89841, 84016]))
 
     def test009_multiple_advisors(self):
         # Test for multiple advisors.
