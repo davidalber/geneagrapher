@@ -87,8 +87,8 @@ geneagrapher: error: no record IDs given
         self.assertTrue(127946 in graph)
 
         node = graph[127946]
-        self.assertEquals(node.ancestors, [137717, 137705])
-        self.assertEquals(node.descendants, [144155, 127803])
+        self.assertEquals(node.ancestors, set([137717, 137705]))
+        self.assertEquals(node.descendants, set([144155, 127803]))
 
         record = node.record
         self.assertEquals(record.name, "Christian   Thomasius")
@@ -113,8 +113,8 @@ geneagrapher: error: no record IDs given
         self.assertTrue(127946 in graph)
 
         node = graph[127946]
-        self.assertEquals(node.ancestors, [137717, 137705])
-        self.assertEquals(node.descendants, [144155, 127803])
+        self.assertEquals(node.ancestors, set([137717, 137705]))
+        self.assertEquals(node.descendants, set([144155, 127803]))
 
         record = node.record
         self.assertEquals(record.name, "Christian   Thomasius")
@@ -138,8 +138,8 @@ geneagrapher: error: no record IDs given
         self.assertTrue(143630 in graph)
 
         node = graph[127946]
-        self.assertEquals(node.ancestors, [137717, 137705])
-        self.assertEquals(node.descendants, [144155, 127803])
+        self.assertEquals(node.ancestors, set([137717, 137705]))
+        self.assertEquals(node.descendants, set([144155, 127803]))
 
         record = node.record
         self.assertEquals(record.name, "Christian   Thomasius")
@@ -148,8 +148,8 @@ geneagrapher: error: no record IDs given
         self.assertEquals(record.id, 127946)
 
         node = graph[137717]
-        self.assertEquals(node.ancestors, [])
-        self.assertEquals(node.descendants, [127946])
+        self.assertEquals(node.ancestors, set([]))
+        self.assertEquals(node.descendants, set([127946]))
 
         record = node.record
         self.assertEquals(record.name, "Valentin  Alberti")
@@ -158,8 +158,8 @@ geneagrapher: error: no record IDs given
         self.assertEquals(record.id, 137717)
 
         node = graph[137705]
-        self.assertEquals(node.ancestors, [143630])
-        self.assertEquals(node.descendants, [60985, 21235, 127946])
+        self.assertEquals(node.ancestors, set([143630]))
+        self.assertEquals(node.descendants, set([60985, 21235, 127946]))
 
         record = node.record
         self.assertEquals(record.name, "Jakob  Thomasius")
@@ -168,8 +168,8 @@ geneagrapher: error: no record IDs given
         self.assertEquals(record.id, 137705)
 
         node = graph[143630]
-        self.assertEquals(node.ancestors, [])
-        self.assertEquals(node.descendants, [137705])
+        self.assertEquals(node.ancestors, set([]))
+        self.assertEquals(node.descendants, set([137705]))
 
         record = node.record
         self.assertEquals(record.name, "Friedrich  Leibniz")
@@ -189,8 +189,8 @@ geneagrapher: error: no record IDs given
         self.assertTrue(99457 in graph)
 
         node = graph[79568]
-        self.assertEquals(node.ancestors, [13301])
-        self.assertEquals(node.descendants, [79562, 99457])
+        self.assertEquals(node.ancestors, set([13301]))
+        self.assertEquals(node.descendants, set([79562, 99457]))
 
         record = node.record
         self.assertEquals(record.name, "Ramdas  Kumaresan")
@@ -199,8 +199,8 @@ geneagrapher: error: no record IDs given
         self.assertEquals(record.id, 79568)
 
         node = graph[79562]
-        self.assertEquals(node.ancestors, [79568])
-        self.assertEquals(node.descendants, [])
+        self.assertEquals(node.ancestors, set([79568]))
+        self.assertEquals(node.descendants, set([]))
 
         record = node.record
         self.assertEquals(record.name, "C. S. Ramalingam")
@@ -209,8 +209,8 @@ geneagrapher: error: no record IDs given
         self.assertEquals(record.id, 79562)
 
         node = graph[99457]
-        self.assertEquals(node.ancestors, [79568])
-        self.assertEquals(node.descendants, [])
+        self.assertEquals(node.ancestors, set([79568]))
+        self.assertEquals(node.descendants, set([]))
 
         record = node.record
         self.assertEquals(record.name, "Yadong  Wang")

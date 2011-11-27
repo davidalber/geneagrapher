@@ -15,8 +15,8 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEquals(self.grabber.name, None)
         self.assertEquals(self.grabber.institution, None)
         self.assertEquals(self.grabber.year, None)
-        self.assertEquals(self.grabber.advisors, [])
-        self.assertEquals(self.grabber.descendants, [])
+        self.assertEquals(self.grabber.advisors, set([]))
+        self.assertEquals(self.grabber.descendants, set([]))
 
     def test002_extract_info_bad(self):
         # Verify exception thrown for bad id.
@@ -42,9 +42,9 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEquals(name, u"Carl Friedrich Gau\xdf")
         self.assertEquals(institution, u"Universit\xe4t Helmstedt")
         self.assertEquals(year, 1799)
-        self.assertEquals(advisors, [18230])
-        self.assertEquals(descendents, [18603, 18233, 62547, 29642, 55175,
-                                        29458, 19953, 18232, 151876])
+        self.assertEquals(advisors, set([18230]))
+        self.assertEquals(descendents, set([18603, 18233, 62547, 29642, 55175,
+                                            29458, 19953, 18232, 151876]))
 
         # Verify calling extract_node_information() twice does not have side
         # effect.
@@ -53,9 +53,9 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEquals(name, u"Carl Friedrich Gau\xdf")
         self.assertEquals(institution, u"Universit\xe4t Helmstedt")
         self.assertEquals(year, 1799)
-        self.assertEquals(advisors, [18230])
-        self.assertEquals(descendents, [18603, 18233, 62547, 29642, 55175,
-                                        29458, 19953, 18232, 151876])
+        self.assertEquals(advisors, set([18230]))
+        self.assertEquals(descendents, set([18603, 18233, 62547, 29642, 55175,
+                                            29458, 19953, 18232, 151876]))
 
     def test004_extract_info_no_advisor(self):
         # Test the extract_node_information() method for a record with no
@@ -66,8 +66,8 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEquals(name, u"Valentin  Alberti")
         self.assertEquals(institution, u"Universit\xe4t Leipzig")
         self.assertEquals(year, 1678)
-        self.assertEquals(advisors, [])
-        self.assertEquals(descendents, [127946])
+        self.assertEquals(advisors, set([]))
+        self.assertEquals(descendents, set([127946]))
 
     def test005_extract_info_no_descendants(self):
         # Test the extract_node_information() method for a record with no
@@ -80,8 +80,8 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEquals(name, u"S.  Cingolani")
         self.assertEquals(institution, u"Scuola Normale Superiore di Pisa")
         self.assertEquals(year, None)
-        self.assertEquals(advisors, [51261])
-        self.assertEquals(descendents, [])
+        self.assertEquals(advisors, set([51261]))
+        self.assertEquals(descendents, set([]))
 
     def test006_extract_info_no_year(self):
         # Test the extract_node_information() method for a record with no year.
@@ -92,8 +92,8 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEquals(name, u"S.  Cingolani")
         self.assertEquals(institution, u"Scuola Normale Superiore di Pisa")
         self.assertEquals(year, None)
-        self.assertEquals(advisors, [51261])
-        self.assertEquals(descendents, [])
+        self.assertEquals(advisors, set([51261]))
+        self.assertEquals(descendents, set([]))
 
     def test007_extract_info_no_inst(self):
         # Test the extract_node_information() method for a record with no
@@ -105,8 +105,8 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEquals(name, u"Walter  Mayer")
         self.assertEquals(institution, None)
         self.assertEquals(year, None)
-        self.assertEquals(advisors, [])
-        self.assertEquals(descendents, [52996])
+        self.assertEquals(advisors, set([]))
+        self.assertEquals(descendents, set([52996]))
 
     # Tests for special (from my point of view) characters:
     def test008_slash_l(self):
@@ -120,7 +120,7 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEquals(institution,
                           u"Georg-August-Universit\xe4t G\xf6ttingen")
         self.assertEquals(year, 1911)
-        self.assertEquals(advisors, [7298])
+        self.assertEquals(advisors, set([7298]))
 
     def test009_multiple_advisors(self):
         # Test for multiple advisors.
@@ -130,7 +130,7 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEquals(name, u"Rudolf Otto Sigismund Lipschitz")
         self.assertEquals(institution, u"Universit\xe4t Berlin")
         self.assertEquals(year, 1853)
-        self.assertEquals(advisors, [17946, 47064])
+        self.assertEquals(advisors, set([17946, 47064]))
 
 if __name__ == '__main__':
     unittest.main()

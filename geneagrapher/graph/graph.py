@@ -116,20 +116,30 @@ of Node objects for 'seeds'")
             node = self.get_node(node_id)
             printed_nodes[node_id] = node
 
+            sorted_ancestors = sorted([a for a in node.ancestors if a in self],
+                                      lambda x, y:
+                                      cmp(self[x].record.name.split()[-1],
+                                          self[y].record.name.split()[-1]))
+            sorted_descendants = sorted([d for d in node.descendants if
+                                         d in self],
+                                        lambda x, y:
+                                        cmp(self[x].record.name.split()[-1],
+                                            self[y].record.name.split()[-1]))
+
             if include_ancestors:
                 # Add this node's advisors to queue.
-                queue += node.ancestors
+                queue += sorted_ancestors
 
             if include_descendants:
                 # Add this node's descendants to queue.
-                queue += node.descendants
+                queue += sorted_descendants
 
             # Print this node's information.
             nodestr = u"    {} [label=\"{}\"];".format(node_id, node)
             dotfile += nodestr
 
             # Store the connection information for this node.
-            for advisor in node.ancestors:
+            for advisor in sorted_ancestors:
                 if self.has_node(advisor):
                     edgestr = "\n    {} -> {};".format(advisor, node_id)
                     edges += edgestr

@@ -13,8 +13,8 @@ class Grabber:
         self.name = None
         self.institution = None
         self.year = None
-        self.advisors = []
-        self.descendants = []
+        self.advisors = set([])
+        self.descendants = set([])
 
     @staticmethod
     def extract_id(tag):
@@ -31,9 +31,6 @@ class Grabber:
         page = urllib.urlopen(url)
         soup = BeautifulSoup(page, convertEntities='html')
         page.close()
-
-        self.advisors = []
-        self.descendants = []
 
         if soup.firstText().text == u"You have specified an ID that does not \
 exist in the database. Please back up and try again.":
@@ -58,14 +55,14 @@ center; margin-bottom: 1ex").find('span').contents[-1].strip()
             self.year = int(inst_year)
 
         # Get advisor IDs.
-        self.advisors = [self.extract_id(info.findNext()) for info in
-                         soup.findAll(text=re.compile('Advisor'))
-                         if 'Advisor: Unknown' not in info]
+        self.advisors = set([self.extract_id(info.findNext()) for info in
+                             soup.findAll(text=re.compile('Advisor'))
+                             if 'Advisor: Unknown' not in info])
 
         # Get descendant IDs.
         if soup.find('table') is not None:
-            self.descendants = [self.extract_id(info) for info in
-                                soup.find('table').findAll('a')]
+            self.descendants = set([self.extract_id(info) for info in
+                                    soup.find('table').findAll('a')])
 
         return [self.name, self.institution, self.year, self.advisors,
                 self.descendants]

@@ -9,7 +9,7 @@ class TestGraphMethods(unittest.TestCase):
     def setUp(self):
         self.record1 = Record(u"Carl Friedrich Gau\xdf",
                               u"Universit\xe4t Helmstedt", 1799, 18231)
-        self.node1 = Node(self.record1, [], [])
+        self.node1 = Node(self.record1, set(), set())
         self.graph1 = Graph([self.node1])
 
     def test001_init_empty(self):
@@ -64,7 +64,7 @@ class TestGraphMethods(unittest.TestCase):
     def test009_add_node(self):
         # Test the add_node() method.
         self.graph1.add_node("Leonhard Euler", "Universitaet Basel", 1726,
-                             38586, [], [])
+                             38586, set(), set())
         self.assertEquals([38586, 18231], self.graph1.get_node_list())
         self.assertEquals(self.graph1.seeds, [self.node1])
 
@@ -72,7 +72,7 @@ class TestGraphMethods(unittest.TestCase):
         # Test the add_node() method when adding a second node and
         # marking it as a seed node.
         self.graph1.add_node("Leonhard Euler", "Universitaet Basel", 1726,
-                             38586, [], [], True)
+                             38586, set(), set(), True)
         self.assertEquals([38586, 18231], self.graph1.get_node_list())
         self.assertEquals(self.graph1.seeds, [self.node1,
                                               self.graph1.get_node(38586)])
@@ -82,20 +82,20 @@ class TestGraphMethods(unittest.TestCase):
         graph = Graph()
         self.assertEquals(graph.seeds, None)
         graph.add_node("Leonhard Euler", "Universitaet Basel", 1726,
-                       38586, [], [])
+                       38586, set(), set())
         self.assertEquals(graph.seeds, [graph.get_node(38586)])
 
     def test012_add_node_already_present(self):
         self.graph1.add_node("Leonhard Euler", "Universitaet Basel", 1726,
-                             38586, [], [])
+                             38586, set(), set())
         self.assertEquals([38586, 18231], self.graph1.get_node_list())
         self.assertRaises(DuplicateNodeError, self.graph1.add_node,
                           "Leonhard Euler", "Universitaet Basel",
-                          1726, 38586, [], [])
+                          1726, 38586, set(), set())
 
         try:
             self.graph1.add_node("Leonhard Euler", "Universitaet Basel",
-                                 1726, 38586, [], [])
+                                 1726, 38586, set(), set())
         except DuplicateNodeError as e:
             self.assertEquals(str(e),
                               "node with id {} already exists".format(38586))
@@ -105,7 +105,7 @@ class TestGraphMethods(unittest.TestCase):
     def test013_add_node_object(self):
         # Test the add_node_object() method.
         record = Record("Leonhard Euler", "Universitaet Basel", 1726, 38586)
-        node = Node(record, [], [])
+        node = Node(record, set(), set())
         self.graph1.add_node_object(node)
         self.assertEquals([38586, 18231], self.graph1.get_node_list())
         self.assertEquals(self.graph1.seeds, [self.node1])
@@ -128,19 +128,20 @@ class TestGraphMethods(unittest.TestCase):
         # Test the generate_dot_file() method.
         graph = Graph()
         graph.add_node(u"Carl Friedrich Gau\xdf", u"Universit\xe4t Helmstedt",
-                       1799, 18231, [18230], [])
+                       1799, 18231, set([18230]), set())
         graph.add_node(u"Johann Friedrich Pfaff",
                        u"Georg-August-Universit\xe4t Goettingen", 1786, 18230,
-                       [66476], [])
+                       set([66476]), set())
         graph.add_node(u"Abraham Gotthelf Kaestner", u"Universit\xe4t Leipzig",
-                       1739, 66476, [57670], [])
+                       1739, 66476, set([57670]), set())
         graph.add_node(u"Christian August Hausen",
                        u"Martin-Luther-Universit\xe4t Halle-Wittenberg", 1713,
-                       57670, [72669], [])
+                       57670, set([72669]), set())
         graph.add_node(u"Johann Christoph Wichmannshausen",
-                       u"Universit\xe4t Leipzig", 1685, 72669, [21235], [])
+                       u"Universit\xe4t Leipzig", 1685, 72669, set([21235]),
+                       set())
         graph.add_node(u"Otto Mencke", u"Universit\xe4t Leipzig", 1665, 21235,
-                       [], [])
+                       set(), set())
 
         dotfileexpt = u"""digraph genealogy {
     graph [charset="utf-8"];

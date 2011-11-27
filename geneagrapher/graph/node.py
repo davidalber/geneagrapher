@@ -24,11 +24,11 @@ class Node:
         if not isinstance(self.record, Record):
             raise TypeError("Unexpected parameter type: expected Record \
 object for 'record'")
-        if not isinstance(self.ancestors, list):
-            raise TypeError("Unexpected parameter type: expected list object \
+        if not isinstance(self.ancestors, set):
+            raise TypeError("Unexpected parameter type: expected set object \
 for 'ancestors'")
-        if not isinstance(self.descendants, list):
-            raise TypeError("Unexpected parameter type: expected list object \
+        if not isinstance(self.descendants, set):
+            raise TypeError("Unexpected parameter type: expected set object \
 for 'descendants'")
 
     def __unicode__(self):
@@ -39,13 +39,13 @@ for 'descendants'")
 
     def add_ancestor(self, ancestor):  # NOTE: is this used?
         """
-        Append an ancestor id to the ancestor list.
+        Add an ancestor id to the ancestor set.
         """
         # Verify we were passed an int.
         if not isinstance(ancestor, int):
             raise TypeError("Unexpected parameter type: expected int for \
 'ancestor'")
-        self.ancestors.append(ancestor)
+        self.ancestors.add(ancestor)
 
     def get_id(self):
         """
