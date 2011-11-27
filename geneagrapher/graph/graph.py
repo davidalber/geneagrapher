@@ -40,11 +40,17 @@ of Node objects for 'seeds'")
         else:
             self.nodes = {}
 
+    def __contains__(self, id):
+        """
+        Return True if the given id is in the node list.
+        """
+        return id in self.nodes
+
     def has_node(self, id):
         """
         Check if the graph contains a node with the given id.
         """
-        return id in self.nodes
+        return id in self
 
     def get_node(self, id):
         """

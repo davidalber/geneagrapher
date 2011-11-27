@@ -35,6 +35,14 @@ class TestGraphMethods(unittest.TestCase):
         # Test the has_node() method for a False case.
         self.assertEquals(self.graph1.has_node(1), False)
 
+    def test004_has_node_true(self):
+        # Test the __contains__() method for a True case.
+        self.assertEquals(18231 in self.graph1, True)
+
+    def test005_has_node_false(self):
+        # Test the __contains__() method for a False case.
+        self.assertEquals(1 in self.graph1, False)
+
     def test006_get_node(self):
         # Test the get_node() method.
         node = self.graph1.get_node(18231)
