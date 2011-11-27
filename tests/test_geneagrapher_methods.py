@@ -82,11 +82,11 @@ geneagrapher: error: no record IDs given
         # Graph building with no ancestors or descendants.
         self.ggrapher.seed_ids.append(127946)
         self.ggrapher.build_graph()
-        nodes = self.ggrapher.graph.nodes
-        self.assertEquals(len(nodes), 1)
-        self.assertTrue(127946 in nodes)
+        graph = self.ggrapher.graph
+        self.assertEquals(len(graph), 1)
+        self.assertTrue(127946 in graph)
 
-        node = nodes[127946]
+        node = graph[127946]
         self.assertEquals(node.ancestors, [137717, 137705])
         self.assertEquals(node.descendants, [144155, 127803])
 
@@ -108,11 +108,11 @@ geneagrapher: error: no record IDs given
         self.ggrapher.build_graph()
         sys.stdout = stdout
 
-        nodes = self.ggrapher.graph.nodes
-        self.assertEquals(len(nodes), 1)
-        self.assertTrue(127946 in nodes)
+        graph = self.ggrapher.graph
+        self.assertEquals(len(graph), 1)
+        self.assertTrue(127946 in graph)
 
-        node = nodes[127946]
+        node = graph[127946]
         self.assertEquals(node.ancestors, [137717, 137705])
         self.assertEquals(node.descendants, [144155, 127803])
 
@@ -130,14 +130,14 @@ geneagrapher: error: no record IDs given
         self.ggrapher.seed_ids.append(127946)
         self.ggrapher.get_ancestors = True
         self.ggrapher.build_graph()
-        nodes = self.ggrapher.graph.nodes
-        self.assertEquals(len(nodes), 4)
-        self.assertTrue(127946 in nodes)
-        self.assertTrue(137717 in nodes)
-        self.assertTrue(137705 in nodes)
-        self.assertTrue(143630 in nodes)
+        graph = self.ggrapher.graph
+        self.assertEquals(len(graph), 4)
+        self.assertTrue(127946 in graph)
+        self.assertTrue(137717 in graph)
+        self.assertTrue(137705 in graph)
+        self.assertTrue(143630 in graph)
 
-        node = nodes[127946]
+        node = graph[127946]
         self.assertEquals(node.ancestors, [137717, 137705])
         self.assertEquals(node.descendants, [144155, 127803])
 
@@ -147,7 +147,7 @@ geneagrapher: error: no record IDs given
         self.assertEquals(record.year, 1672)
         self.assertEquals(record.id, 127946)
 
-        node = nodes[137717]
+        node = graph[137717]
         self.assertEquals(node.ancestors, [])
         self.assertEquals(node.descendants, [127946])
 
@@ -157,7 +157,7 @@ geneagrapher: error: no record IDs given
         self.assertEquals(record.year, 1678)
         self.assertEquals(record.id, 137717)
 
-        node = nodes[137705]
+        node = graph[137705]
         self.assertEquals(node.ancestors, [143630])
         self.assertEquals(node.descendants, [60985, 21235, 127946])
 
@@ -167,7 +167,7 @@ geneagrapher: error: no record IDs given
         self.assertEquals(record.year, 1643)
         self.assertEquals(record.id, 137705)
 
-        node = nodes[143630]
+        node = graph[143630]
         self.assertEquals(node.ancestors, [])
         self.assertEquals(node.descendants, [137705])
 
@@ -182,13 +182,13 @@ geneagrapher: error: no record IDs given
         self.ggrapher.seed_ids.append(79568)
         self.ggrapher.get_descendants = True
         self.ggrapher.build_graph()
-        nodes = self.ggrapher.graph.nodes
-        self.assertEquals(len(nodes), 3)
-        self.assertTrue(79568 in nodes)
-        self.assertTrue(79562 in nodes)
-        self.assertTrue(99457 in nodes)
+        graph = self.ggrapher.graph
+        self.assertEquals(len(graph), 3)
+        self.assertTrue(79568 in graph)
+        self.assertTrue(79562 in graph)
+        self.assertTrue(99457 in graph)
 
-        node = nodes[79568]
+        node = graph[79568]
         self.assertEquals(node.ancestors, [13301])
         self.assertEquals(node.descendants, [79562, 99457])
 
@@ -198,7 +198,7 @@ geneagrapher: error: no record IDs given
         self.assertEquals(record.year, 1982)
         self.assertEquals(record.id, 79568)
 
-        node = nodes[79562]
+        node = graph[79562]
         self.assertEquals(node.ancestors, [79568])
         self.assertEquals(node.descendants, [])
 
@@ -208,7 +208,7 @@ geneagrapher: error: no record IDs given
         self.assertEquals(record.year, 1995)
         self.assertEquals(record.id, 79562)
 
-        node = nodes[99457]
+        node = graph[99457]
         self.assertEquals(node.ancestors, [79568])
         self.assertEquals(node.descendants, [])
 

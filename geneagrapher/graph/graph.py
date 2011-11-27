@@ -10,7 +10,7 @@ class DuplicateNodeError(Exception):
         return self.value
 
 
-class Graph:
+class Graph(dict):
     """
     Class storing the representation of a genealogy graph.
     """
@@ -36,15 +36,7 @@ Node objects for 'seeds'")
 of Node objects for 'seeds'")
 
         if self.seeds is not None:
-            self.nodes = dict([(seed.get_id(), seed) for seed in self.seeds])
-        else:
-            self.nodes = {}
-
-    def __contains__(self, id):
-        """
-        Return True if the given id is in the node list.
-        """
-        return id in self.nodes
+            self.update([(seed.get_id(), seed) for seed in self.seeds])
 
     def has_node(self, id):
         """
@@ -57,13 +49,13 @@ of Node objects for 'seeds'")
         Return the node in the graph with given id. Returns
         None if no such node exists.
         """
-        return self.nodes[id]
+        return self[id]
 
     def get_node_list(self):  # NOTE: this method is unused
         """
         Return a list of the nodes in the graph.
         """
-        return self.nodes.keys()
+        return self.keys()
 
     def add_node(self, name, institution, year, id, ancestors, descendants,
                  is_seed=False):
@@ -87,7 +79,7 @@ of Node objects for 'seeds'")
             # Assign a "dummy" id.
             node.set_id(self.supp_id)
             self.supp_id -= 1
-        self.nodes[node.get_id()] = node
+        self[node.get_id()] = node
         if self.seeds is None:
             self.seeds = [node]
         elif is_seed:

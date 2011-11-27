@@ -20,8 +20,8 @@ class TestGraphMethods(unittest.TestCase):
     def test002_init(self):
         # Test the constructor.
         self.assert_(self.graph1.seeds == [self.node1])
-        self.assertEquals(self.graph1.nodes.keys(), [18231])
-        self.assertEquals(self.graph1.nodes[18231], self.node1)
+        self.assertEquals(self.graph1.keys(), [18231])
+        self.assertEquals(self.graph1[18231], self.node1)
 
     def test003_init_bad_seeds(self):
         # Test the constructor when passed a bad type for the seeds parameter.
