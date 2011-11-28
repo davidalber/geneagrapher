@@ -61,14 +61,31 @@ of Node objects for 'seed_nodes'")
         """
         return self.keys()
 
-    def add_node(self, name, institution, year, id, ancestors, descendants,
+    def add_node(self, name, institution, year, id, advisors, advisees,
                  is_seed=False):
         """
         Add a new node to the graph if a matching node is not already
         present.
         """
         record = Record(name, institution, year, id)
-        node = Node(record, ancestors, descendants)
+
+        # Ancestors is the set of advisors already in the graph.
+        graph_ancestors = set([advisor for advisor in advisors
+                               if advisor in self])
+        # For each ancestor, add this node's id to the ancestor's descendant
+        # set.
+        for ancestor in graph_ancestors:
+            self[ancestor].descendants.add(id)
+
+        # Descendants is the set of advisees already in the graph.
+        graph_descendants = set([descendant for descendant in advisees
+                                 if descendant in self])
+        # For each descendant, add this node's id to the descendant's
+        # ancestor set.
+        for descendant in graph_descendants:
+            self[descendant].ancestors.add(id)
+
+        node = Node(record, graph_ancestors, graph_descendants)
         self.add_node_object(node, is_seed)
 
     def add_node_object(self, node, is_seed=False):

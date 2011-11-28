@@ -87,8 +87,8 @@ geneagrapher: error: no record IDs given
         self.assertTrue(127946 in graph)
 
         node = graph[127946]
-        self.assertEquals(node.ancestors, set([137717, 137705]))
-        self.assertEquals(node.descendants, set([144155, 127803]))
+        self.assertEquals(node.ancestors, set())
+        self.assertEquals(node.descendants, set())
 
         record = node.record
         self.assertEquals(record.name, "Christian   Thomasius")
@@ -113,8 +113,8 @@ geneagrapher: error: no record IDs given
         self.assertTrue(127946 in graph)
 
         node = graph[127946]
-        self.assertEquals(node.ancestors, set([137717, 137705]))
-        self.assertEquals(node.descendants, set([144155, 127803]))
+        self.assertEquals(node.ancestors, set())
+        self.assertEquals(node.descendants, set())
 
         record = node.record
         self.assertEquals(record.name, "Christian   Thomasius")
@@ -139,7 +139,7 @@ geneagrapher: error: no record IDs given
 
         node = graph[127946]
         self.assertEquals(node.ancestors, set([137717, 137705]))
-        self.assertEquals(node.descendants, set([144155, 127803]))
+        self.assertEquals(node.descendants, set())
 
         record = node.record
         self.assertEquals(record.name, "Christian   Thomasius")
@@ -159,7 +159,7 @@ geneagrapher: error: no record IDs given
 
         node = graph[137705]
         self.assertEquals(node.ancestors, set([143630]))
-        self.assertEquals(node.descendants, set([60985, 21235, 127946]))
+        self.assertEquals(node.descendants, set([127946]))
 
         record = node.record
         self.assertEquals(record.name, "Jakob  Thomasius")
@@ -189,7 +189,7 @@ geneagrapher: error: no record IDs given
         self.assertTrue(99457 in graph)
 
         node = graph[79568]
-        self.assertEquals(node.ancestors, set([13301]))
+        self.assertEquals(node.ancestors, set())
         self.assertEquals(node.descendants, set([79562, 99457]))
 
         record = node.record

@@ -130,17 +130,17 @@ class TestGraphMethods(unittest.TestCase):
                        1799, 18231, set([18230]), set())
         graph.add_node(u"Johann Friedrich Pfaff",
                        u"Georg-August-Universit\xe4t Goettingen", 1786, 18230,
-                       set([66476]), set())
+                       set([66476]), set([18231]))
         graph.add_node(u"Abraham Gotthelf Kaestner", u"Universit\xe4t Leipzig",
-                       1739, 66476, set([57670]), set())
+                       1739, 66476, set([57670]), set([18230]))
         graph.add_node(u"Christian August Hausen",
                        u"Martin-Luther-Universit\xe4t Halle-Wittenberg", 1713,
-                       57670, set([72669]), set())
+                       57670, set([72669]), set([66476]))
         graph.add_node(u"Johann Christoph Wichmannshausen",
                        u"Universit\xe4t Leipzig", 1685, 72669, set([21235]),
-                       set())
+                       set([57670]))
         graph.add_node(u"Otto Mencke", u"Universit\xe4t Leipzig", 1665, 21235,
-                       set(), set())
+                       set(), set([72669]))
 
         dotfileexpt = u"""digraph genealogy {
     graph [charset="utf-8"];
@@ -166,6 +166,153 @@ Halle-Wittenberg (1713)"];
 """
         dotfile = graph.generate_dot_file(True, False)
         self.assertEquals(dotfile, dotfileexpt)
+
+    def test016_incremental_ancestor_descendant_check(self):
+        # Test the contents of the ancestors and descendants members of a
+        # graph's nodes as they are added.
+        graph = Graph()
+        graph.add_node(u"Carl Friedrich Gau\xdf", u"Universit\xe4t Helmstedt",
+                       1799, 18231, set([18230]), set([18603, 18233, 62547]))
+        node1 = graph[18231]
+        self.assertEquals(node1.ancestors, set())
+        self.assertEquals(node1.descendants, set())
+
+        graph.add_node(u"Johann Friedrich Pfaff",
+                       u"Georg-August-Universit\xe4t Goettingen", 1786, 18230,
+                       set([66476]), set([18231]))
+        node2 = graph[18230]
+        self.assertEquals(node1.ancestors, set([18230]))
+        self.assertEquals(node1.descendants, set())
+        self.assertEquals(node2.ancestors, set())
+        self.assertEquals(node2.descendants, set([18231]))
+
+        graph.add_node(u"Abraham Gotthelf Kaestner", u"Universit\xe4t Leipzig",
+                       1739, 66476, set([57670]), set([18230]))
+        node3 = graph[66476]
+        self.assertEquals(node1.ancestors, set([18230]))
+        self.assertEquals(node1.descendants, set())
+        self.assertEquals(node2.ancestors, set([66476]))
+        self.assertEquals(node2.descendants, set([18231]))
+        self.assertEquals(node3.ancestors, set())
+        self.assertEquals(node3.descendants, set([18230]))
+
+        graph.add_node(u"Christian August Hausen",
+                       u"Martin-Luther-Universit\xe4t Halle-Wittenberg", 1713,
+                       57670, set([72669]), set([66476]))
+        node4 = graph[57670]
+        self.assertEquals(node1.ancestors, set([18230]))
+        self.assertEquals(node1.descendants, set())
+        self.assertEquals(node2.ancestors, set([66476]))
+        self.assertEquals(node2.descendants, set([18231]))
+        self.assertEquals(node3.ancestors, set([57670]))
+        self.assertEquals(node3.descendants, set([18230]))
+        self.assertEquals(node4.ancestors, set())
+        self.assertEquals(node4.descendants, set([66476]))
+
+        graph.add_node(u"Johann Christoph Wichmannshausen",
+                       u"Universit\xe4t Leipzig", 1685, 72669, set([21235]),
+                       set([57670]))
+        node5 = graph[72669]
+        self.assertEquals(node1.ancestors, set([18230]))
+        self.assertEquals(node1.descendants, set())
+        self.assertEquals(node2.ancestors, set([66476]))
+        self.assertEquals(node2.descendants, set([18231]))
+        self.assertEquals(node3.ancestors, set([57670]))
+        self.assertEquals(node3.descendants, set([18230]))
+        self.assertEquals(node4.ancestors, set([72669]))
+        self.assertEquals(node4.descendants, set([66476]))
+        self.assertEquals(node5.ancestors, set())
+        self.assertEquals(node5.descendants, set([57670]))
+
+        graph.add_node(u"Otto Mencke", u"Universit\xe4t Leipzig", 1665, 21235,
+                       set(), set([72669]))
+        node6 = graph[21235]
+        self.assertEquals(node1.ancestors, set([18230]))
+        self.assertEquals(node1.descendants, set())
+        self.assertEquals(node2.ancestors, set([66476]))
+        self.assertEquals(node2.descendants, set([18231]))
+        self.assertEquals(node3.ancestors, set([57670]))
+        self.assertEquals(node3.descendants, set([18230]))
+        self.assertEquals(node4.ancestors, set([72669]))
+        self.assertEquals(node4.descendants, set([66476]))
+        self.assertEquals(node5.ancestors, set([21235]))
+        self.assertEquals(node5.descendants, set([57670]))
+        self.assertEquals(node6.ancestors, set())
+        self.assertEquals(node6.descendants, set([72669]))
+
+    def test017_incremental_ancestor_descendant_check2(self):
+        # Test the contents of the ancestors and descendants members of a
+        # graph's nodes as they are added inserted in a different ofder than
+        # in the previous test.
+        graph = Graph()
+        graph.add_node(u"Abraham Gotthelf Kaestner", u"Universit\xe4t Leipzig",
+                       1739, 66476, set([57670]), set([18230]))
+        node1 = graph[66476]
+        self.assertEquals(node1.ancestors, set())
+        self.assertEquals(node1.descendants, set())
+
+        graph.add_node(u"Johann Friedrich Pfaff",
+                       u"Georg-August-Universit\xe4t Goettingen", 1786, 18230,
+                       set([66476]), set([18231]))
+        node2 = graph[18230]
+        self.assertEquals(node1.ancestors, set())
+        self.assertEquals(node1.descendants, set([18230]))
+        self.assertEquals(node2.ancestors, set([66476]))
+        self.assertEquals(node2.descendants, set())
+
+        graph.add_node(u"Christian August Hausen",
+                       u"Martin-Luther-Universit\xe4t Halle-Wittenberg", 1713,
+                       57670, set([72669]), set([66476]))
+        node3 = graph[57670]
+        self.assertEquals(node1.ancestors, set([57670]))
+        self.assertEquals(node1.descendants, set([18230]))
+        self.assertEquals(node2.ancestors, set([66476]))
+        self.assertEquals(node2.descendants, set())
+        self.assertEquals(node3.ancestors, set())
+        self.assertEquals(node3.descendants, set([66476]))
+
+        graph.add_node(u"Johann Christoph Wichmannshausen",
+                       u"Universit\xe4t Leipzig", 1685, 72669, set([21235]),
+                       set([57670]))
+        node4 = graph[72669]
+        self.assertEquals(node1.ancestors, set([57670]))
+        self.assertEquals(node1.descendants, set([18230]))
+        self.assertEquals(node2.ancestors, set([66476]))
+        self.assertEquals(node2.descendants, set())
+        self.assertEquals(node3.ancestors, set([72669]))
+        self.assertEquals(node3.descendants, set([66476]))
+        self.assertEquals(node4.ancestors, set())
+        self.assertEquals(node4.descendants, set([57670]))
+
+        graph.add_node(u"Otto Mencke", u"Universit\xe4t Leipzig", 1665, 21235,
+                       set(), set([72669]))
+        node5 = graph[21235]
+        self.assertEquals(node1.ancestors, set([57670]))
+        self.assertEquals(node1.descendants, set([18230]))
+        self.assertEquals(node2.ancestors, set([66476]))
+        self.assertEquals(node2.descendants, set())
+        self.assertEquals(node3.ancestors, set([72669]))
+        self.assertEquals(node3.descendants, set([66476]))
+        self.assertEquals(node4.ancestors, set([21235]))
+        self.assertEquals(node4.descendants, set([57670]))
+        self.assertEquals(node5.ancestors, set())
+        self.assertEquals(node5.descendants, set([72669]))
+
+        graph.add_node(u"Carl Friedrich Gau\xdf", u"Universit\xe4t Helmstedt",
+                       1799, 18231, set([18230]), set([18603, 18233, 62547]))
+        node6 = graph[18231]
+        self.assertEquals(node1.ancestors, set([57670]))
+        self.assertEquals(node1.descendants, set([18230]))
+        self.assertEquals(node2.ancestors, set([66476]))
+        self.assertEquals(node2.descendants, set([18231]))
+        self.assertEquals(node3.ancestors, set([72669]))
+        self.assertEquals(node3.descendants, set([66476]))
+        self.assertEquals(node4.ancestors, set([21235]))
+        self.assertEquals(node4.descendants, set([57670]))
+        self.assertEquals(node5.ancestors, set())
+        self.assertEquals(node5.descendants, set([72669]))
+        self.assertEquals(node6.ancestors, set([18230]))
+        self.assertEquals(node6.descendants, set())
 
 if __name__ == '__main__':
     unittest.main()
