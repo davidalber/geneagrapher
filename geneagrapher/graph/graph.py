@@ -19,23 +19,25 @@ class Graph(dict):
         Graph class constructor.
 
         Parameters:
-            seeds: a list of Node objects representing the tree seed nodes
+            seeds: a set of Node objects representing the tree seed nodes
                 (omit to create an empty graph)
         """
+        dict.__init__(self)
         self.seeds = seeds
+        if self.seeds is None:
+            self.seeds = set()
         self.supp_id = -1
 
         # Verify type of seeds is what we expect.
-        if self.seeds is not None:
-            if not isinstance(self.seeds, list):
-                raise TypeError("Unexpected parameter type: expected list of \
+        if not isinstance(self.seeds, set):
+            raise TypeError("Unexpected parameter type: expected set of \
 Node objects for 'seeds'")
-            for seed in self.seeds:
-                if not isinstance(seed, Node):
-                    raise TypeError("Unexpected parameter type: expected list \
+        for seed in self.seeds:
+            if not isinstance(seed, Node):
+                raise TypeError("Unexpected parameter type: expected set \
 of Node objects for 'seeds'")
 
-        if self.seeds is not None:
+        if self.seeds != set():
             self.update([(seed.get_id(), seed) for seed in self.seeds])
 
     def has_node(self, id):
@@ -80,17 +82,15 @@ of Node objects for 'seeds'")
             node.set_id(self.supp_id)
             self.supp_id -= 1
         self[node.get_id()] = node
-        if self.seeds is None:
-            self.seeds = [node]
-        elif is_seed:
-            self.seeds.append(node)
+        if self.seeds == set() or is_seed:
+            self.seeds.add(node)
 
     def generate_dot_file(self, include_ancestors, include_descendants):
         """
         Return a string that contains the content of the Graphviz dotfile
         format for this graph.
         """
-        if self.seeds is None:
+        if self.seeds == set():
             return ""
 
         queue = []

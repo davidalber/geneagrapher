@@ -37,6 +37,9 @@ for 'descendants'")
     def __cmp__(self, n2):
         return self.record.__cmp__(n2.record)
 
+    def __hash__(self):
+        return hash(self.get_id())
+
     def add_ancestor(self, ancestor):  # NOTE: is this used?
         """
         Add an ancestor id to the ancestor set.

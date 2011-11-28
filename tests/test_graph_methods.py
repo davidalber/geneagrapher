@@ -10,16 +10,16 @@ class TestGraphMethods(unittest.TestCase):
         self.record1 = Record(u"Carl Friedrich Gau\xdf",
                               u"Universit\xe4t Helmstedt", 1799, 18231)
         self.node1 = Node(self.record1, set(), set())
-        self.graph1 = Graph([self.node1])
+        self.graph1 = Graph(set([self.node1]))
 
     def test001_init_empty(self):
         # Test the constructor.
         graph = Graph()
-        self.assertEquals(graph.seeds, None)
+        self.assertEquals(graph.seeds, set())
 
     def test002_init(self):
         # Test the constructor.
-        self.assert_(self.graph1.seeds == [self.node1])
+        self.assert_(self.graph1.seeds == set([self.node1]))
         self.assertEquals(self.graph1.keys(), [18231])
         self.assertEquals(self.graph1[18231], self.node1)
 
@@ -66,7 +66,7 @@ class TestGraphMethods(unittest.TestCase):
         self.graph1.add_node("Leonhard Euler", "Universitaet Basel", 1726,
                              38586, set(), set())
         self.assertEquals([38586, 18231], self.graph1.get_node_list())
-        self.assertEquals(self.graph1.seeds, [self.node1])
+        self.assertEquals(self.graph1.seeds, set([self.node1]))
 
     def test010_add_second_node_seed(self):
         # Test the add_node() method when adding a second node and
@@ -74,16 +74,16 @@ class TestGraphMethods(unittest.TestCase):
         self.graph1.add_node("Leonhard Euler", "Universitaet Basel", 1726,
                              38586, set(), set(), True)
         self.assertEquals([38586, 18231], self.graph1.get_node_list())
-        self.assertEquals(self.graph1.seeds, [self.node1,
-                                              self.graph1.get_node(38586)])
+        self.assertEquals(self.graph1.seeds, set([self.node1,
+                                              self.graph1[38586]]))
 
     def test011_add_node_seed(self):
         # Test the add_node() method when no seeds exist.
         graph = Graph()
-        self.assertEquals(graph.seeds, None)
+        self.assertEquals(graph.seeds, set())
         graph.add_node("Leonhard Euler", "Universitaet Basel", 1726,
                        38586, set(), set())
-        self.assertEquals(graph.seeds, [graph.get_node(38586)])
+        self.assertEquals(graph.seeds, set([graph[38586]]))
 
     def test012_add_node_already_present(self):
         self.graph1.add_node("Leonhard Euler", "Universitaet Basel", 1726,
@@ -108,7 +108,7 @@ class TestGraphMethods(unittest.TestCase):
         node = Node(record, set(), set())
         self.graph1.add_node_object(node)
         self.assertEquals([38586, 18231], self.graph1.get_node_list())
-        self.assertEquals(self.graph1.seeds, [self.node1])
+        self.assertEquals(self.graph1.seeds, set([self.node1]))
 
     def test014_generate_dot_file(self):
         # Test the generate_dot_file() method.
