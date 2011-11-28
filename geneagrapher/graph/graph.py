@@ -14,31 +14,33 @@ class Graph(dict):
     """
     Class storing the representation of a genealogy graph.
     """
-    def __init__(self, seeds=None):
+    def __init__(self, seed_nodes=None):
         """
         Graph class constructor.
 
         Parameters:
-            seeds: a set of Node objects representing the tree seed nodes
+            seed_nodes: a set of Node objects representing the tree seed nodes
                 (omit to create an empty graph)
         """
         dict.__init__(self)
-        self.seeds = seeds
-        if self.seeds is None:
+
+        # Verify type of seed_nodes is what we expect.
+        if seed_nodes is not None:
+            if not isinstance(seed_nodes, set):
+                raise TypeError("Unexpected argument type: expected set of \
+Node objects for 'seed_nodes'")
+            for seed in seed_nodes:
+                if not isinstance(seed, Node):
+                    raise TypeError("Unexpected parameter type: expected set \
+of Node objects for 'seed_nodes'")
+
+        if seed_nodes is None:
             self.seeds = set()
+        else:
+            self.seeds = set([seed.get_id() for seed in seed_nodes])
+            self.update([(seed.get_id(), seed) for seed in seed_nodes])
+
         self.supp_id = -1
-
-        # Verify type of seeds is what we expect.
-        if not isinstance(self.seeds, set):
-            raise TypeError("Unexpected parameter type: expected set of \
-Node objects for 'seeds'")
-        for seed in self.seeds:
-            if not isinstance(seed, Node):
-                raise TypeError("Unexpected parameter type: expected set \
-of Node objects for 'seeds'")
-
-        if self.seeds != set():
-            self.update([(seed.get_id(), seed) for seed in self.seeds])
 
     def has_node(self, id):
         """
@@ -83,7 +85,7 @@ of Node objects for 'seeds'")
             self.supp_id -= 1
         self[node.get_id()] = node
         if self.seeds == set() or is_seed:
-            self.seeds.add(node)
+            self.seeds.add(node.get_id())
 
     def generate_dot_file(self, include_ancestors, include_descendants):
         """
@@ -95,7 +97,7 @@ of Node objects for 'seeds'")
 
         queue = []
         for seed in self.seeds:
-            queue.append(seed.get_id())
+            queue.append(seed)
         edges = ""
         dotfile = ""
 
