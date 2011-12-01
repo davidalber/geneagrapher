@@ -7,7 +7,7 @@ class TestGrabberMethods(unittest.TestCase):
     def setUp(self):
         self.grabber = Grabber(18231)
 
-    def test001_init(self):
+    def test_init(self):
         """Test constructor."""
         self.assertEqual(self.grabber.id, 18231)
         self.assertEqual(self.grabber.name, None)
@@ -16,7 +16,7 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEqual(self.grabber.advisors, set([]))
         self.assertEqual(self.grabber.descendants, set([]))
 
-    def test002_extract_info_bad(self):
+    def test_extract_info_bad(self):
         """Verify exception thrown for bad id."""
         grabber = Grabber(999999999)
         self.assertRaises(ValueError, grabber.extract_node_information)
@@ -28,7 +28,7 @@ class TestGrabberMethods(unittest.TestCase):
         else:
             self.fail()
 
-    def test003_extract_info_all_fields(self):
+    def test_extract_info_all_fields(self):
         """Test the extract_node_information() method for a record containing
         all fields."""
         [name, institution, year, advisors,
@@ -55,7 +55,7 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEqual(descendents, set([18603, 18233, 62547, 29642, 55175,
                                            29458, 19953, 18232, 151876]))
 
-    def test004_extract_info_no_advisor(self):
+    def test_extract_info_no_advisor(self):
         """Test the extract_node_information() method for a record with no
         advisor."""
         grabber = Grabber(137717)
@@ -67,7 +67,7 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEqual(advisors, set([]))
         self.assertEqual(descendents, set([127946]))
 
-    def test005_extract_info_no_descendants(self):
+    def test_extract_info_no_descendants(self):
         """Test the extract_node_information() method for a record with no
         descendants."""
         # This is currently identical to the extract_info_no_year test.
@@ -80,7 +80,7 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEqual(advisors, set([51261]))
         self.assertEqual(descendents, set([]))
 
-    def test006_extract_info_no_year(self):
+    def test_extract_info_no_year(self):
         """
         Test the extract_node_information() method for a record with no year.
         """
@@ -94,7 +94,7 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEqual(advisors, set([51261]))
         self.assertEqual(descendents, set([]))
 
-    def test007_extract_info_no_inst(self):
+    def test_extract_info_no_inst(self):
         """Test the extract_node_information() method for a record with no
         institution."""
         # This test is also missing additional information already tested.
@@ -108,7 +108,7 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEqual(descendents, set([52996]))
 
     # Tests for special (from my point of view) characters:
-    def test008_slash_l(self):
+    def test_slash_l(self):
         """Test the extract_node_information() method for a record
         # containing a slash l character. Example:
         # http://www.genealogy.math.ndsu.nodak.edu/id.php?id=7383."""
@@ -124,7 +124,7 @@ class TestGrabberMethods(unittest.TestCase):
                                            36991, 17851, 127470, 51907,
                                            15165, 89841, 84016]))
 
-    def test009_multiple_advisors(self):
+    def test_multiple_advisors(self):
         """Test for multiple advisors."""
         grabber = Grabber(19964)
         [name, institution, year, advisors,

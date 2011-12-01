@@ -11,7 +11,7 @@ class TestGeneagrapherMethods(unittest.TestCase):
     def setUp(self):
         self.ggrapher = geneagrapher.Geneagrapher()
 
-    def test001_init(self):
+    def test_init(self):
         """Test constructor."""
         self.assertEqual(isinstance(self.ggrapher.graph, Graph), True)
         self.assertEqual(self.ggrapher.seed_ids, [])
@@ -20,7 +20,7 @@ class TestGeneagrapherMethods(unittest.TestCase):
         self.assertEqual(self.ggrapher.verbose, False)
         self.assertEqual(self.ggrapher.write_filename, None)
 
-    def test002_parse_empty(self):
+    def test_parse_empty(self):
         """Test parse_input() with no arguments."""
         sys.argv = ['geneagrapher']
 
@@ -41,7 +41,7 @@ geneagrapher: error: no record IDs given
 
         sys.stderr = stderr
 
-    def test003_parse_default(self):
+    def test_parse_default(self):
         """Test parse_input() with no options."""
         sys.argv = ['geneagrapher', '3']
         self.ggrapher.get_ancestors = False
@@ -54,7 +54,7 @@ geneagrapher: error: no record IDs given
         self.assertEqual(self.ggrapher.write_filename, None)
         self.assertEqual(self.ggrapher.seed_ids, [3])
 
-    def test004_parse_options(self):
+    def test_parse_options(self):
         """Test parse_input() with options."""
         sys.argv = ['geneagrapher', '--with-ancestors', '--with-descendants',
                     '--file=filler', '--verbose', '3', '43']
@@ -65,7 +65,7 @@ geneagrapher: error: no record IDs given
         self.assertEqual(self.ggrapher.write_filename, "filler")
         self.assertEqual(self.ggrapher.seed_ids, [3, 43])
 
-    def test005_parse_short_options(self):
+    def test_parse_short_options(self):
         """Test parse_input() with short versions of the options."""
         sys.argv = ['geneagrapher', '-a', '-d', '-f', 'filler', '-v', '3',
                     '43']
@@ -76,7 +76,7 @@ geneagrapher: error: no record IDs given
         self.assertEqual(self.ggrapher.write_filename, "filler")
         self.assertEqual(self.ggrapher.seed_ids, [3, 43])
 
-    def test006_build_graph_only_self(self):
+    def test_build_graph_only_self(self):
         """Graph building with no ancestors or descendants."""
         self.ggrapher.seed_ids.append(127946)
         self.ggrapher.build_graph()
@@ -94,7 +94,7 @@ geneagrapher: error: no record IDs given
         self.assertEqual(record.year, 1672)
         self.assertEqual(record.id, 127946)
 
-    def test007_build_graph_only_self_verbose(self):
+    def test_build_graph_only_self_verbose(self):
         """Graph building with no ancestors or descendants."""
         self.ggrapher.verbose = True
         self.ggrapher.seed_ids.append(127946)
@@ -123,7 +123,7 @@ geneagrapher: error: no record IDs given
         self.assertEqual(stdout_intercept.getvalue().decode('utf-8'),
                          u"Grabbing record #127946\n")
 
-    def test008_build_graph_with_ancestors(self):
+    def test_build_graph_with_ancestors(self):
         """Graph building with ancestors."""
         self.ggrapher.seed_ids.append(127946)
         self.ggrapher.get_ancestors = True
@@ -175,7 +175,7 @@ geneagrapher: error: no record IDs given
         self.assertEqual(record.year, None)
         self.assertEqual(record.id, 143630)
 
-    def test009_build_graph_with_descendants(self):
+    def test_build_graph_with_descendants(self):
         """Graph building with descendants."""
         self.ggrapher.seed_ids.append(79568)
         self.ggrapher.get_descendants = True
@@ -216,7 +216,7 @@ geneagrapher: error: no record IDs given
         self.assertEqual(record.year, 2003)
         self.assertEqual(record.id, 99457)
 
-    def test010_build_graph_bad_id(self):
+    def test_build_graph_bad_id(self):
         """Graph building with a bad ID."""
         self.ggrapher.seed_ids.append(79568583832)
         self.assertRaises(ValueError, self.ggrapher.build_graph)
@@ -228,7 +228,7 @@ geneagrapher: error: no record IDs given
         else:
             self.fail()
 
-    def test011_end_to_end_self_stdout(self):
+    def test_end_to_end_self_stdout(self):
         """Complete test getting no ancestors or descendants and writing the
         result to stdout."""
         sys.argv = ['geneagrapher', '30484']
@@ -260,7 +260,7 @@ geneagrapher: error: no record IDs given
 """
         self.assertEqual(stdout_intercept.getvalue().decode('utf-8'), expected)
 
-    def test012_end_to_end_ancestors_stdout(self):
+    def test_end_to_end_ancestors_stdout(self):
         """
         Complete test getting with ancestors, writing the result to stdout.
         """
@@ -298,7 +298,7 @@ geneagrapher: error: no record IDs given
 """
         self.assertEqual(stdout_intercept.getvalue().decode('utf-8'), expected)
 
-    def test013_end_to_end_descendants_stdout(self):
+    def test_end_to_end_descendants_stdout(self):
         """
         Complete test getting with descendants, writing the result to stdout.
         """
@@ -334,7 +334,7 @@ geneagrapher: error: no record IDs given
 """
         self.assertEqual(stdout_intercept.getvalue().decode('utf-8'), expected)
 
-    def test014_end_to_end_self_file(self):
+    def test_end_to_end_self_file(self):
         """Complete test getting no ancestors or descendants and writing the
         # result to stdout."""
         outfname = 'outfile.test'
@@ -363,7 +363,7 @@ geneagrapher: error: no record IDs given
             self.assertEqual(fin.read().decode('utf-8'), expected)
         os.remove(outfname)
 
-    def test015_end_to_end_through_ggrapher_self_stdout(self):
+    def test_end_to_end_through_ggrapher_self_stdout(self):
         """Complete test calling ggrapher getting no ancestors or descendants
         and writing the result to stdout."""
         sys.argv = ['geneagrapher', '30484']
