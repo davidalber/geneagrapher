@@ -3,9 +3,7 @@ from geneagrapher.graph import DuplicateNodeError, Graph, Node, Record
 
 
 class TestGraphMethods(unittest.TestCase):
-    """
-    Unit tests for the Graph class.
-    """
+    """Unit tests for the Graph class."""
     def setUp(self):
         self.record1 = Record(u"Carl Friedrich Gau\xdf",
                               u"Universit\xe4t Helmstedt", 1799, 18231)
@@ -13,71 +11,75 @@ class TestGraphMethods(unittest.TestCase):
         self.graph1 = Graph(set([self.node1]))
 
     def test001_init_empty(self):
-        # Test the constructor.
+        """Test the constructor with an empty seeds set."""
         graph = Graph()
         self.assertEqual(graph.seeds, set())
 
     def test002_init(self):
-        # Test the constructor.
+        """Test the constructor."""
         self.assertEqual(self.graph1.seeds, set([18231]))
         self.assertEqual(self.graph1.keys(), [18231])
         self.assertEqual(self.graph1[18231], self.node1)
 
     def test003_init_bad_seeds(self):
-        # Test the constructor when passed a bad type for the seeds parameter.
+        """
+        Test the constructor when passed a bad type for the seeds parameter.
+        """
         self.assertRaises(TypeError, Graph, 3)
 
     def test004_has_node_true(self):
-        # Test the has_node() method for a True case.
+        """Test the has_node() method for a True case."""
         self.assertEqual(self.graph1.has_node(18231), True)
 
     def test005_has_node_false(self):
-        # Test the has_node() method for a False case.
+        """Test the has_node() method for a False case."""
         self.assertEqual(self.graph1.has_node(1), False)
 
     def test004_has_node_true(self):
-        # Test the __contains__() method for a True case.
+        """Test the __contains__() method for a True case."""
         self.assertEqual(18231 in self.graph1, True)
 
     def test005_has_node_false(self):
-        # Test the __contains__() method for a False case.
+        """Test the __contains__() method for a False case."""
         self.assertEqual(1 in self.graph1, False)
 
     def test006_get_node(self):
-        # Test the get_node() method.
+        """Test the get_node() method."""
         node = self.graph1.get_node(18231)
         self.assert_(node == self.node1)
 
     def test007_get_node_not_found(self):
-        # Test the get_node() method for a case where the node does not exist.
+        """
+        Test the get_node() method for a case where the node does not exist.
+        """
         self.assertRaises(KeyError, self.graph1.get_node, 1)
 
     def test008_get_node_list(self):
-        # Test the get_node_list() method.
+        """Test the get_node_list() method."""
         self.assertEqual(self.graph1.get_node_list(), [18231])
 
     def test008_get_node_list_empty(self):
-        # Test the get_node_list() method for an empty graph.
+        """Test the get_node_list() method for an empty graph."""
         graph = Graph()
         self.assertEqual(graph.get_node_list(), [])
 
     def test009_add_node(self):
-        # Test the add_node() method.
+        """Test the add_node() method."""
         self.graph1.add_node("Leonhard Euler", "Universitaet Basel", 1726,
                              38586, set(), set())
         self.assertEqual([38586, 18231], self.graph1.get_node_list())
         self.assertEqual(self.graph1.seeds, set([18231]))
 
     def test010_add_second_node_seed(self):
-        # Test the add_node() method when adding a second node and
-        # marking it as a seed node.
+        """Test the add_node() method when adding a second node and
+        marking it as a seed node."""
         self.graph1.add_node("Leonhard Euler", "Universitaet Basel", 1726,
                              38586, set(), set(), True)
         self.assertEqual([38586, 18231], self.graph1.get_node_list())
         self.assertEqual(self.graph1.seeds, set([18231, 38586]))
 
     def test011_add_node_seed(self):
-        # Test the add_node() method when no seeds exist.
+        """Test the add_node() method when no seeds exist."""
         graph = Graph()
         self.assertEqual(graph.seeds, set())
         graph.add_node("Leonhard Euler", "Universitaet Basel", 1726,
@@ -85,6 +87,7 @@ class TestGraphMethods(unittest.TestCase):
         self.assertEqual(graph.seeds, set([38586]))
 
     def test012_add_node_already_present(self):
+        """Test for expected exception when adding a duplicate node."""
         self.graph1.add_node("Leonhard Euler", "Universitaet Basel", 1726,
                              38586, set(), set())
         self.assertEqual([38586, 18231], self.graph1.get_node_list())
@@ -102,7 +105,7 @@ class TestGraphMethods(unittest.TestCase):
             self.fail()
 
     def test013_add_node_object(self):
-        # Test the add_node_object() method.
+        """Test the add_node_object() method."""
         record = Record("Leonhard Euler", "Universitaet Basel", 1726, 38586)
         node = Node(record, set(), set())
         self.graph1.add_node_object(node)
@@ -110,7 +113,7 @@ class TestGraphMethods(unittest.TestCase):
         self.assertEqual(self.graph1.seeds, set([18231]))
 
     def test014_generate_dot_file(self):
-        # Test the generate_dot_file() method.
+        """Test the generate_dot_file() method."""
         dotfileexpt = u"""digraph genealogy {
     graph [charset="utf-8"];
     node [shape=plaintext];
@@ -124,7 +127,7 @@ class TestGraphMethods(unittest.TestCase):
         self.assertEqual(dotfile, dotfileexpt)
 
     def test015_generate_dot_file(self):
-        # Test the generate_dot_file() method.
+        """Test the generate_dot_file() method."""
         graph = Graph()
         graph.add_node(u"Carl Friedrich Gau\xdf", u"Universit\xe4t Helmstedt",
                        1799, 18231, set([18230]), set())
@@ -168,8 +171,8 @@ Halle-Wittenberg (1713)"];
         self.assertEqual(dotfile, dotfileexpt)
 
     def test016_incremental_ancestor_descendant_check(self):
-        # Test the contents of the ancestors and descendants members of a
-        # graph's nodes as they are added.
+        """Test the contents of the ancestors and descendants members of a
+        graph's nodes as they are added."""
         graph = Graph()
         graph.add_node(u"Carl Friedrich Gau\xdf", u"Universit\xe4t Helmstedt",
                        1799, 18231, set([18230]), set([18603, 18233, 62547]))
@@ -241,9 +244,9 @@ Halle-Wittenberg (1713)"];
         self.assertEqual(node6.descendants, set([72669]))
 
     def test017_incremental_ancestor_descendant_check2(self):
-        # Test the contents of the ancestors and descendants members of a
+        """Test the contents of the ancestors and descendants members of a
         # graph's nodes as they are added inserted in a different ofder than
-        # in the previous test.
+        # in the previous test."""
         graph = Graph()
         graph.add_node(u"Abraham Gotthelf Kaestner", u"Universit\xe4t Leipzig",
                        1739, 66476, set([57670]), set([18230]))

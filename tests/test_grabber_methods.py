@@ -3,14 +3,12 @@ from geneagrapher.grabber import Grabber
 
 
 class TestGrabberMethods(unittest.TestCase):
-    """
-    Unit tests for the Grabber class.
-    """
+    """Unit tests for the Grabber class."""
     def setUp(self):
         self.grabber = Grabber(18231)
 
     def test001_init(self):
-        # Test constructor.
+        """Test constructor."""
         self.assertEqual(self.grabber.id, 18231)
         self.assertEqual(self.grabber.name, None)
         self.assertEqual(self.grabber.institution, None)
@@ -19,7 +17,7 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEqual(self.grabber.descendants, set([]))
 
     def test002_extract_info_bad(self):
-        # Verify exception thrown for bad id.
+        """Verify exception thrown for bad id."""
         grabber = Grabber(999999999)
         self.assertRaises(ValueError, grabber.extract_node_information)
 
@@ -31,8 +29,8 @@ class TestGrabberMethods(unittest.TestCase):
             self.fail()
 
     def test003_extract_info_all_fields(self):
-        # Test the extract_node_information() method for a record containing
-        # all fields.
+        """Test the extract_node_information() method for a record containing
+        all fields."""
         [name, institution, year, advisors,
          descendents] = self.grabber.extract_node_information()
         self.assertEqual(name, self.grabber.name)
@@ -58,8 +56,8 @@ class TestGrabberMethods(unittest.TestCase):
                                            29458, 19953, 18232, 151876]))
 
     def test004_extract_info_no_advisor(self):
-        # Test the extract_node_information() method for a record with no
-        # advisor.
+        """Test the extract_node_information() method for a record with no
+        advisor."""
         grabber = Grabber(137717)
         [name, institution, year, advisors,
          descendents] = grabber.extract_node_information()
@@ -70,9 +68,8 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEqual(descendents, set([127946]))
 
     def test005_extract_info_no_descendants(self):
-        # Test the extract_node_information() method for a record with no
-        # descendants.
-
+        """Test the extract_node_information() method for a record with no
+        descendants."""
         # This is currently identical to the extract_info_no_year test.
         grabber = Grabber(53658)
         [name, institution, year, advisors,
@@ -84,7 +81,9 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEqual(descendents, set([]))
 
     def test006_extract_info_no_year(self):
-        # Test the extract_node_information() method for a record with no year.
+        """
+        Test the extract_node_information() method for a record with no year.
+        """
         # This example also has no descendents.
         grabber = Grabber(53658)
         [name, institution, year, advisors,
@@ -96,8 +95,8 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEqual(descendents, set([]))
 
     def test007_extract_info_no_inst(self):
-        # Test the extract_node_information() method for a record with no
-        # institution.
+        """Test the extract_node_information() method for a record with no
+        institution."""
         # This test is also missing additional information already tested.
         grabber = Grabber(52965)
         [name, institution, year, advisors,
@@ -110,9 +109,9 @@ class TestGrabberMethods(unittest.TestCase):
 
     # Tests for special (from my point of view) characters:
     def test008_slash_l(self):
-        # Test the extract_node_information() method for a record
+        """Test the extract_node_information() method for a record
         # containing a slash l character. Example:
-        # http://www.genealogy.math.ndsu.nodak.edu/id.php?id=7383.
+        # http://www.genealogy.math.ndsu.nodak.edu/id.php?id=7383."""
         grabber = Grabber(7383)
         [name, institution, year, advisors,
          descendents] = grabber.extract_node_information()
@@ -126,7 +125,7 @@ class TestGrabberMethods(unittest.TestCase):
                                            15165, 89841, 84016]))
 
     def test009_multiple_advisors(self):
-        # Test for multiple advisors.
+        """Test for multiple advisors."""
         grabber = Grabber(19964)
         [name, institution, year, advisors,
          descendents] = grabber.extract_node_information()
