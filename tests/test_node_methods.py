@@ -13,9 +13,9 @@ class TestNodeMethods(unittest.TestCase):
     def test001_init(self):
         # Test the constructor.
         node = Node(self.record, set(), set())
-        self.assertEquals(node.record, self.record)
-        self.assertEquals(node.ancestors, set())
-        self.assertEquals(node.descendants, set())
+        self.assertEqual(node.record, self.record)
+        self.assertEqual(node.ancestors, set())
+        self.assertEqual(node.descendants, set())
 
     def test002_init_bad_record(self):
         # Test the constructor for a case where the record passed is not a
@@ -38,7 +38,7 @@ class TestNodeMethods(unittest.TestCase):
         nodestr = node.__unicode__()
         nodestrexpt = u"Carl Friedrich Gau\xdf \\nUniversit\xe4t Helmstedt \
 (1799)"
-        self.assertEquals(nodestr, nodestrexpt)
+        self.assertEqual(nodestr, nodestrexpt)
 
     def test005_unicode_no_year(self):
         # Test __unicode__() method for Node containing record without year.
@@ -46,7 +46,7 @@ class TestNodeMethods(unittest.TestCase):
         node = Node(record, set(), set())
         nodestr = node.__unicode__()
         nodestrexpt = u"Carl Friedrich Gau\xdf \\nUniversit\xe4t Helmstedt"
-        self.assertEquals(nodestr, nodestrexpt)
+        self.assertEqual(nodestr, nodestrexpt)
 
     def test006_unicode_no_inst(self):
         # Test __unicode__() method for Node containing record without
@@ -55,7 +55,7 @@ class TestNodeMethods(unittest.TestCase):
         node = Node(record, set(), set())
         nodestr = node.__unicode__()
         nodestrexpt = u"Carl Friedrich Gau\xdf \\n(1799)"
-        self.assertEquals(nodestr, nodestrexpt)
+        self.assertEqual(nodestr, nodestrexpt)
 
     def test007_unicode_no_inst_no_id(self):
         # Test __unicode__() method for Node containing record without
@@ -64,7 +64,7 @@ class TestNodeMethods(unittest.TestCase):
         node = Node(record, set(), set())
         nodestr = node.__unicode__()
         nodestrexpt = u"Carl Friedrich Gau\xdf"
-        self.assertEquals(nodestr, nodestrexpt)
+        self.assertEqual(nodestr, nodestrexpt)
 
     def test008_cmp_equal(self):
         # Test comparison method for Nodes with identical records.
@@ -85,7 +85,7 @@ class TestNodeMethods(unittest.TestCase):
         # Test the add_ancestor() method.
         node = Node(self.record, set(), set())
         node.add_ancestor(5)
-        self.assertEquals(node.ancestors, set([5]))
+        self.assertEqual(node.ancestors, set([5]))
 
     def test011_add_ancestor_bad_type(self):
         # Test the add_ancestor() method for a case where the parameter type
@@ -95,14 +95,14 @@ class TestNodeMethods(unittest.TestCase):
 
     def test012_get_id(self):
         node = Node(self.record, set(), set())
-        self.assertEquals(node.get_id(), 18231)
+        self.assertEqual(node.get_id(), 18231)
 
     def test013_set_id(self):
         # Test the set_id() method.
         node = Node(self.record, set(), set())
-        self.assertEquals(node.get_id(), 18231)
+        self.assertEqual(node.get_id(), 18231)
         node.set_id(15)
-        self.assertEquals(node.get_id(), 15)
+        self.assertEqual(node.get_id(), 15)
 
 if __name__ == '__main__':
     unittest.main()

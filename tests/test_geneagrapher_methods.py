@@ -15,12 +15,12 @@ class TestGeneagrapherMethods(unittest.TestCase):
 
     def test001_init(self):
         # Test constructor.
-        self.assertEquals(isinstance(self.ggrapher.graph, Graph), True)
-        self.assertEquals(self.ggrapher.seed_ids, [])
-        self.assertEquals(self.ggrapher.get_ancestors, False)
-        self.assertEquals(self.ggrapher.get_descendants, False)
-        self.assertEquals(self.ggrapher.verbose, False)
-        self.assertEquals(self.ggrapher.write_filename, None)
+        self.assertEqual(isinstance(self.ggrapher.graph, Graph), True)
+        self.assertEqual(self.ggrapher.seed_ids, [])
+        self.assertEqual(self.ggrapher.get_ancestors, False)
+        self.assertEqual(self.ggrapher.get_descendants, False)
+        self.assertEqual(self.ggrapher.verbose, False)
+        self.assertEqual(self.ggrapher.write_filename, None)
 
     def test002_parse_empty(self):
         # Test parse_input() with no arguments.
@@ -38,8 +38,8 @@ geneagrapher: error: no record IDs given
         try:
             self.ggrapher.parse_input()
         except SystemExit:
-            self.assertEquals(stderr_intercept.getvalue().decode('utf-8'),
-                              expected)
+            self.assertEqual(stderr_intercept.getvalue().decode('utf-8'),
+                             expected)
 
         sys.stderr = stderr
 
@@ -50,51 +50,51 @@ geneagrapher: error: no record IDs given
         self.ggrapher.get_descendents = True
         self.ggrapher.write_filename = "filler"
         self.ggrapher.parse_input()
-        self.assertEquals(self.ggrapher.get_ancestors, False)
-        self.assertEquals(self.ggrapher.get_descendants, False)
-        self.assertEquals(self.ggrapher.verbose, False)
-        self.assertEquals(self.ggrapher.write_filename, None)
-        self.assertEquals(self.ggrapher.seed_ids, [3])
+        self.assertEqual(self.ggrapher.get_ancestors, False)
+        self.assertEqual(self.ggrapher.get_descendants, False)
+        self.assertEqual(self.ggrapher.verbose, False)
+        self.assertEqual(self.ggrapher.write_filename, None)
+        self.assertEqual(self.ggrapher.seed_ids, [3])
 
     def test004_parse_options(self):
         # Test parse_input() with options.
         sys.argv = ['geneagrapher', '--with-ancestors', '--with-descendants',
                     '--file=filler', '--verbose', '3', '43']
         self.ggrapher.parse_input()
-        self.assertEquals(self.ggrapher.get_ancestors, True)
-        self.assertEquals(self.ggrapher.get_descendants, True)
-        self.assertEquals(self.ggrapher.verbose, True)
-        self.assertEquals(self.ggrapher.write_filename, "filler")
-        self.assertEquals(self.ggrapher.seed_ids, [3, 43])
+        self.assertEqual(self.ggrapher.get_ancestors, True)
+        self.assertEqual(self.ggrapher.get_descendants, True)
+        self.assertEqual(self.ggrapher.verbose, True)
+        self.assertEqual(self.ggrapher.write_filename, "filler")
+        self.assertEqual(self.ggrapher.seed_ids, [3, 43])
 
     def test005_parse_short_options(self):
         # Test parse_input() with short versions of the options.
         sys.argv = ['geneagrapher', '-a', '-d', '-f', 'filler', '-v', '3',
                     '43']
         self.ggrapher.parse_input()
-        self.assertEquals(self.ggrapher.get_ancestors, True)
-        self.assertEquals(self.ggrapher.get_descendants, True)
-        self.assertEquals(self.ggrapher.verbose, True)
-        self.assertEquals(self.ggrapher.write_filename, "filler")
-        self.assertEquals(self.ggrapher.seed_ids, [3, 43])
+        self.assertEqual(self.ggrapher.get_ancestors, True)
+        self.assertEqual(self.ggrapher.get_descendants, True)
+        self.assertEqual(self.ggrapher.verbose, True)
+        self.assertEqual(self.ggrapher.write_filename, "filler")
+        self.assertEqual(self.ggrapher.seed_ids, [3, 43])
 
     def test006_build_graph_only_self(self):
         # Graph building with no ancestors or descendants.
         self.ggrapher.seed_ids.append(127946)
         self.ggrapher.build_graph()
         graph = self.ggrapher.graph
-        self.assertEquals(len(graph), 1)
+        self.assertEqual(len(graph), 1)
         self.assertTrue(127946 in graph)
 
         node = graph[127946]
-        self.assertEquals(node.ancestors, set())
-        self.assertEquals(node.descendants, set())
+        self.assertEqual(node.ancestors, set())
+        self.assertEqual(node.descendants, set())
 
         record = node.record
-        self.assertEquals(record.name, "Christian   Thomasius")
-        self.assertEquals(record.institution, None)
-        self.assertEquals(record.year, 1672)
-        self.assertEquals(record.id, 127946)
+        self.assertEqual(record.name, "Christian   Thomasius")
+        self.assertEqual(record.institution, None)
+        self.assertEqual(record.year, 1672)
+        self.assertEqual(record.id, 127946)
 
     def test007_build_graph_only_self_verbose(self):
         # Graph building with no ancestors or descendants.
@@ -109,21 +109,21 @@ geneagrapher: error: no record IDs given
         sys.stdout = stdout
 
         graph = self.ggrapher.graph
-        self.assertEquals(len(graph), 1)
+        self.assertEqual(len(graph), 1)
         self.assertTrue(127946 in graph)
 
         node = graph[127946]
-        self.assertEquals(node.ancestors, set())
-        self.assertEquals(node.descendants, set())
+        self.assertEqual(node.ancestors, set())
+        self.assertEqual(node.descendants, set())
 
         record = node.record
-        self.assertEquals(record.name, "Christian   Thomasius")
-        self.assertEquals(record.institution, None)
-        self.assertEquals(record.year, 1672)
-        self.assertEquals(record.id, 127946)
+        self.assertEqual(record.name, "Christian   Thomasius")
+        self.assertEqual(record.institution, None)
+        self.assertEqual(record.year, 1672)
+        self.assertEqual(record.id, 127946)
 
-        self.assertEquals(stdout_intercept.getvalue().decode('utf-8'),
-                          u"Grabbing record #127946\n")
+        self.assertEqual(stdout_intercept.getvalue().decode('utf-8'),
+                         u"Grabbing record #127946\n")
 
     def test008_build_graph_with_ancestors(self):
         # Graph building with ancestors.
@@ -131,51 +131,51 @@ geneagrapher: error: no record IDs given
         self.ggrapher.get_ancestors = True
         self.ggrapher.build_graph()
         graph = self.ggrapher.graph
-        self.assertEquals(len(graph), 4)
+        self.assertEqual(len(graph), 4)
         self.assertTrue(127946 in graph)
         self.assertTrue(137717 in graph)
         self.assertTrue(137705 in graph)
         self.assertTrue(143630 in graph)
 
         node = graph[127946]
-        self.assertEquals(node.ancestors, set([137717, 137705]))
-        self.assertEquals(node.descendants, set())
+        self.assertEqual(node.ancestors, set([137717, 137705]))
+        self.assertEqual(node.descendants, set())
 
         record = node.record
-        self.assertEquals(record.name, "Christian   Thomasius")
-        self.assertEquals(record.institution, None)
-        self.assertEquals(record.year, 1672)
-        self.assertEquals(record.id, 127946)
+        self.assertEqual(record.name, "Christian   Thomasius")
+        self.assertEqual(record.institution, None)
+        self.assertEqual(record.year, 1672)
+        self.assertEqual(record.id, 127946)
 
         node = graph[137717]
-        self.assertEquals(node.ancestors, set([]))
-        self.assertEquals(node.descendants, set([127946]))
+        self.assertEqual(node.ancestors, set([]))
+        self.assertEqual(node.descendants, set([127946]))
 
         record = node.record
-        self.assertEquals(record.name, "Valentin  Alberti")
-        self.assertEquals(record.institution, u"Universit\xe4t Leipzig")
-        self.assertEquals(record.year, 1678)
-        self.assertEquals(record.id, 137717)
+        self.assertEqual(record.name, "Valentin  Alberti")
+        self.assertEqual(record.institution, u"Universit\xe4t Leipzig")
+        self.assertEqual(record.year, 1678)
+        self.assertEqual(record.id, 137717)
 
         node = graph[137705]
-        self.assertEquals(node.ancestors, set([143630]))
-        self.assertEquals(node.descendants, set([127946]))
+        self.assertEqual(node.ancestors, set([143630]))
+        self.assertEqual(node.descendants, set([127946]))
 
         record = node.record
-        self.assertEquals(record.name, "Jakob  Thomasius")
-        self.assertEquals(record.institution, u"Universit\xe4t Leipzig")
-        self.assertEquals(record.year, 1643)
-        self.assertEquals(record.id, 137705)
+        self.assertEqual(record.name, "Jakob  Thomasius")
+        self.assertEqual(record.institution, u"Universit\xe4t Leipzig")
+        self.assertEqual(record.year, 1643)
+        self.assertEqual(record.id, 137705)
 
         node = graph[143630]
-        self.assertEquals(node.ancestors, set([]))
-        self.assertEquals(node.descendants, set([137705]))
+        self.assertEqual(node.ancestors, set([]))
+        self.assertEqual(node.descendants, set([137705]))
 
         record = node.record
-        self.assertEquals(record.name, "Friedrich  Leibniz")
-        self.assertEquals(record.institution, None)
-        self.assertEquals(record.year, None)
-        self.assertEquals(record.id, 143630)
+        self.assertEqual(record.name, "Friedrich  Leibniz")
+        self.assertEqual(record.institution, None)
+        self.assertEqual(record.year, None)
+        self.assertEqual(record.id, 143630)
 
     def test009_build_graph_with_descendants(self):
         # Graph building with descendants.
@@ -183,40 +183,40 @@ geneagrapher: error: no record IDs given
         self.ggrapher.get_descendants = True
         self.ggrapher.build_graph()
         graph = self.ggrapher.graph
-        self.assertEquals(len(graph), 3)
+        self.assertEqual(len(graph), 3)
         self.assertTrue(79568 in graph)
         self.assertTrue(79562 in graph)
         self.assertTrue(99457 in graph)
 
         node = graph[79568]
-        self.assertEquals(node.ancestors, set())
-        self.assertEquals(node.descendants, set([79562, 99457]))
+        self.assertEqual(node.ancestors, set())
+        self.assertEqual(node.descendants, set([79562, 99457]))
 
         record = node.record
-        self.assertEquals(record.name, "Ramdas  Kumaresan")
-        self.assertEquals(record.institution, u"University of Rhode Island")
-        self.assertEquals(record.year, 1982)
-        self.assertEquals(record.id, 79568)
+        self.assertEqual(record.name, "Ramdas  Kumaresan")
+        self.assertEqual(record.institution, u"University of Rhode Island")
+        self.assertEqual(record.year, 1982)
+        self.assertEqual(record.id, 79568)
 
         node = graph[79562]
-        self.assertEquals(node.ancestors, set([79568]))
-        self.assertEquals(node.descendants, set([]))
+        self.assertEqual(node.ancestors, set([79568]))
+        self.assertEqual(node.descendants, set([]))
 
         record = node.record
-        self.assertEquals(record.name, "C. S. Ramalingam")
-        self.assertEquals(record.institution, u"University of Rhode Island")
-        self.assertEquals(record.year, 1995)
-        self.assertEquals(record.id, 79562)
+        self.assertEqual(record.name, "C. S. Ramalingam")
+        self.assertEqual(record.institution, u"University of Rhode Island")
+        self.assertEqual(record.year, 1995)
+        self.assertEqual(record.id, 79562)
 
         node = graph[99457]
-        self.assertEquals(node.ancestors, set([79568]))
-        self.assertEquals(node.descendants, set([]))
+        self.assertEqual(node.ancestors, set([79568]))
+        self.assertEqual(node.descendants, set([]))
 
         record = node.record
-        self.assertEquals(record.name, "Yadong  Wang")
-        self.assertEquals(record.institution, u"University of Rhode Island")
-        self.assertEquals(record.year, 2003)
-        self.assertEquals(record.id, 99457)
+        self.assertEqual(record.name, "Yadong  Wang")
+        self.assertEqual(record.institution, u"University of Rhode Island")
+        self.assertEqual(record.year, 2003)
+        self.assertEqual(record.id, 99457)
 
     def test010_build_graph_bad_id(self):
         # Graph building with a bad ID.
@@ -226,7 +226,7 @@ geneagrapher: error: no record IDs given
         try:
             self.ggrapher.build_graph()
         except ValueError as e:
-            self.assertEquals(str(e), "Invalid id 79568583832")
+            self.assertEqual(str(e), "Invalid id 79568583832")
         else:
             self.fail()
 
@@ -235,11 +235,11 @@ geneagrapher: error: no record IDs given
         # result to stdout.
         sys.argv = ['geneagrapher', '30484']
         self.ggrapher.parse_input()
-        self.assertEquals(self.ggrapher.get_ancestors, False)
-        self.assertEquals(self.ggrapher.get_descendants, False)
-        self.assertEquals(self.ggrapher.verbose, False)
-        self.assertEquals(self.ggrapher.write_filename, None)
-        self.assertEquals(self.ggrapher.seed_ids, [30484])
+        self.assertEqual(self.ggrapher.get_ancestors, False)
+        self.assertEqual(self.ggrapher.get_descendants, False)
+        self.assertEqual(self.ggrapher.verbose, False)
+        self.assertEqual(self.ggrapher.write_filename, None)
+        self.assertEqual(self.ggrapher.seed_ids, [30484])
 
         self.ggrapher.build_graph()
 
@@ -260,18 +260,17 @@ geneagrapher: error: no record IDs given
 
 }
 """
-        self.assertEquals(stdout_intercept.getvalue().decode('utf-8'),
-                          expected)
+        self.assertEqual(stdout_intercept.getvalue().decode('utf-8'), expected)
 
     def test012_end_to_end_ancestors_stdout(self):
         # Complete test getting with ancestors, writing the result to stdout.
         sys.argv = ['geneagrapher', '-a', '127946']
         self.ggrapher.parse_input()
-        self.assertEquals(self.ggrapher.get_ancestors, True)
-        self.assertEquals(self.ggrapher.get_descendants, False)
-        self.assertEquals(self.ggrapher.verbose, False)
-        self.assertEquals(self.ggrapher.write_filename, None)
-        self.assertEquals(self.ggrapher.seed_ids, [127946])
+        self.assertEqual(self.ggrapher.get_ancestors, True)
+        self.assertEqual(self.ggrapher.get_descendants, False)
+        self.assertEqual(self.ggrapher.verbose, False)
+        self.assertEqual(self.ggrapher.write_filename, None)
+        self.assertEqual(self.ggrapher.seed_ids, [127946])
 
         self.ggrapher.build_graph()
 
@@ -297,18 +296,17 @@ geneagrapher: error: no record IDs given
     143630 -> 137705;
 }
 """
-        self.assertEquals(stdout_intercept.getvalue().decode('utf-8'),
-                          expected)
+        self.assertEqual(stdout_intercept.getvalue().decode('utf-8'), expected)
 
     def test013_end_to_end_descendants_stdout(self):
         # Complete test getting with descendants, writing the result to stdout.
         sys.argv = ['geneagrapher', '-d', '79568']
         self.ggrapher.parse_input()
-        self.assertEquals(self.ggrapher.get_ancestors, False)
-        self.assertEquals(self.ggrapher.get_descendants, True)
-        self.assertEquals(self.ggrapher.verbose, False)
-        self.assertEquals(self.ggrapher.write_filename, None)
-        self.assertEquals(self.ggrapher.seed_ids, [79568])
+        self.assertEqual(self.ggrapher.get_ancestors, False)
+        self.assertEqual(self.ggrapher.get_descendants, True)
+        self.assertEqual(self.ggrapher.verbose, False)
+        self.assertEqual(self.ggrapher.write_filename, None)
+        self.assertEqual(self.ggrapher.seed_ids, [79568])
 
         self.ggrapher.build_graph()
 
@@ -332,8 +330,7 @@ geneagrapher: error: no record IDs given
     79568 -> 99457;
 }
 """
-        self.assertEquals(stdout_intercept.getvalue().decode('utf-8'),
-                          expected)
+        self.assertEqual(stdout_intercept.getvalue().decode('utf-8'), expected)
 
     def test014_end_to_end_self_file(self):
         # Complete test getting no ancestors or descendants and writing the
@@ -341,11 +338,11 @@ geneagrapher: error: no record IDs given
         outfname = 'outfile.test'
         sys.argv = ['geneagrapher', '-f', outfname, '30484']
         self.ggrapher.parse_input()
-        self.assertEquals(self.ggrapher.get_ancestors, False)
-        self.assertEquals(self.ggrapher.get_descendants, False)
-        self.assertEquals(self.ggrapher.verbose, False)
-        self.assertEquals(self.ggrapher.write_filename, outfname)
-        self.assertEquals(self.ggrapher.seed_ids, [30484])
+        self.assertEqual(self.ggrapher.get_ancestors, False)
+        self.assertEqual(self.ggrapher.get_descendants, False)
+        self.assertEqual(self.ggrapher.verbose, False)
+        self.assertEqual(self.ggrapher.write_filename, outfname)
+        self.assertEqual(self.ggrapher.seed_ids, [30484])
 
         self.ggrapher.build_graph()
         self.ggrapher.generate_dot_file()
@@ -361,7 +358,7 @@ geneagrapher: error: no record IDs given
 }
 """
         with open(outfname, 'r') as fin:
-            self.assertEquals(fin.read().decode('utf-8'), expected)
+            self.assertEqual(fin.read().decode('utf-8'), expected)
         os.remove(outfname)
 
     def test015_end_to_end_through_ggrapher_self_stdout(self):
@@ -386,8 +383,7 @@ geneagrapher: error: no record IDs given
 
 }
 """
-        self.assertEquals(stdout_intercept.getvalue().decode('utf-8'),
-                          expected)
+        self.assertEqual(stdout_intercept.getvalue().decode('utf-8'), expected)
 
 if __name__ == '__main__':
     unittest.main()
