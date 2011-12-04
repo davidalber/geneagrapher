@@ -1,3 +1,5 @@
 *.pyc
 .cache
 Geneagrapher.egg-info
+
+dist
