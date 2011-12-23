@@ -57,7 +57,7 @@ in graph")
         self.write_filename = options.filename
         self.seed_ids = [int(arg) for arg in args]
 
-    def build_graph_portion(self, grab_queue, is_seed, **kwargs):
+    def build_graph_portion(self, grab_queue, is_seed, grabber, **kwargs):
         """Handle grabbing and storing nodes in the graph. Depending on the
         arguments, this method handles seed nodes, ancestors, or
         descendants."""
@@ -65,11 +65,10 @@ in graph")
             id = grab_queue.popleft()
             if not self.graph.has_node(id):
                 # Then this information has not yet been grabbed.
-                grabber = Grabber(id)
                 if self.verbose:
                     print "Grabbing record #{}".format(id)
                 [name, institution, year, advisors,
-                 descendants] = grabber.extract_node_information()
+                 descendants] = grabber.get_record(id)
                 self.graph.add_node(name, institution, year, id, advisors,
                                     descendants, is_seed)
                 if self.get_ancestors and 'ancestor_queue' in kwargs:
@@ -77,7 +76,7 @@ in graph")
                 if self.get_descendants and 'descendant_queue' in kwargs:
                     kwargs['descendant_queue'].extend(descendants)
 
-    def build_graph(self):
+    def build_graph(self, record_grabber=Grabber, **kwargs):
         """
         Populate the graph member by grabbing the mathematician
         pages and extracting relevant data.
@@ -85,21 +84,21 @@ in graph")
         seed_queue = deque(self.seed_ids)
         ancestor_queue = deque()
         descendant_queue = deque()
-
-        # Grab "seed" nodes.
-        self.build_graph_portion(seed_queue, True,
-                                 ancestor_queue=ancestor_queue,
-                                 descendant_queue=descendant_queue)
-
-        # Grab ancestors of seed nodes.
-        if self.get_ancestors:
-            self.build_graph_portion(ancestor_queue, False,
-                                     ancestor_queue=ancestor_queue)
-
-        # Grab descendants of seed nodes.
-        if self.get_descendants:
-            self.build_graph_portion(descendant_queue, False,
+        with record_grabber(**kwargs) as grabber:
+            # Grab "seed" nodes.
+            self.build_graph_portion(seed_queue, True, grabber,
+                                     ancestor_queue=ancestor_queue,
                                      descendant_queue=descendant_queue)
+
+            # Grab ancestors of seed nodes.
+            if self.get_ancestors:
+                self.build_graph_portion(ancestor_queue, False, grabber,
+                                         ancestor_queue=ancestor_queue)
+
+            # Grab descendants of seed nodes.
+            if self.get_descendants:
+                self.build_graph_portion(descendant_queue, False, grabber,
+                                         descendant_queue=descendant_queue)
 
     def generate_dot_file(self):
         dotfile = self.graph.generate_dot_file(self.get_ancestors,
