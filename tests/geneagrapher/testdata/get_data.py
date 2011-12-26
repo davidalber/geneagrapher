@@ -9,7 +9,8 @@ if __name__ == '__main__':
                   79568583832]
 
     for record_id in record_ids:
-        url = 'http://genealogy.math.ndsu.nodak.edu/id.php?id='+str(record_id)
+        url_base = 'http://genealogy.math.ndsu.nodak.edu/id.php?id='
+        url = '{0}{1}'.format(url_base, record_id)
         print 'Getting record {}'.format(record_id)
         page = urllib2.urlopen(url)
         with open('{}.html'.format(record_id), 'w') as fout:
