@@ -1,6 +1,30 @@
 News
 ====
 
+1.0
+---
+
+*Release date: unreleased*
+
+*Redesigned data-grabbing interface to allow for the introduction of
+new data grabbers.
+
+*Added local test data, allowing for many tests that were previously
+ making network requests to simply load local data. This speeds up
+ running the test suite substantially.
+
+*Substantial refactoring and internal changes, including:
+
+ -Better code coverage by the tests.
+
+ -Updated packaging to more modern standards.
+
+ -Improved test documentation and naming.
+
+ -Internal graph structure now only stores the genealogy
+  graph. Previously, the graph structure retained all edges from the
+  Math Genealogy Project information.
+
 0.2.1-r2
 --------
 
