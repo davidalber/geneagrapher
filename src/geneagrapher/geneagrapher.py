@@ -112,10 +112,10 @@ in graph")
             print dotfile,
 
 
-def ggrapher():
+def ggrapher(record_grabber=Grabber):
     """Function to run the Geneagrapher. This is the function called when
     the ggrapher script is run."""
     ggrapher = Geneagrapher()
     ggrapher.parse_input()
-    ggrapher.build_graph()
+    ggrapher.build_graph(record_grabber)
     ggrapher.generate_dot_file()

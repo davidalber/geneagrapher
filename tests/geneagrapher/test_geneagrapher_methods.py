@@ -4,6 +4,7 @@ import unittest
 import StringIO
 from geneagrapher import geneagrapher
 from geneagrapher.graph import Graph
+from local_data_grabber import LocalDataGrabber
 
 
 class TestGeneagrapherMethods(unittest.TestCase):
@@ -79,7 +80,7 @@ geneagrapher: error: no record IDs given
     def test_build_graph_only_self(self):
         """Graph building with no ancestors or descendants."""
         self.ggrapher.seed_ids.append(127946)
-        self.ggrapher.build_graph()
+        self.ggrapher.build_graph(LocalDataGrabber)
         graph = self.ggrapher.graph
         self.assertEqual(len(graph), 1)
         self.assertTrue(127946 in graph)
@@ -103,7 +104,7 @@ geneagrapher: error: no record IDs given
         stdout = sys.stdout
         stdout_intercept = StringIO.StringIO()
         sys.stdout = stdout_intercept
-        self.ggrapher.build_graph()
+        self.ggrapher.build_graph(LocalDataGrabber)
         sys.stdout = stdout
 
         graph = self.ggrapher.graph
@@ -127,7 +128,7 @@ geneagrapher: error: no record IDs given
         """Graph building with ancestors."""
         self.ggrapher.seed_ids.append(127946)
         self.ggrapher.get_ancestors = True
-        self.ggrapher.build_graph()
+        self.ggrapher.build_graph(LocalDataGrabber)
         graph = self.ggrapher.graph
         self.assertEqual(len(graph), 4)
         self.assertTrue(127946 in graph)
@@ -179,7 +180,7 @@ geneagrapher: error: no record IDs given
         """Graph building with descendants."""
         self.ggrapher.seed_ids.append(79568)
         self.ggrapher.get_descendants = True
-        self.ggrapher.build_graph()
+        self.ggrapher.build_graph(LocalDataGrabber)
         graph = self.ggrapher.graph
         self.assertEqual(len(graph), 3)
         self.assertTrue(79568 in graph)
@@ -219,10 +220,11 @@ geneagrapher: error: no record IDs given
     def test_build_graph_bad_id(self):
         """Graph building with a bad ID."""
         self.ggrapher.seed_ids.append(79568583832)
-        self.assertRaises(ValueError, self.ggrapher.build_graph)
+        self.assertRaises(ValueError, self.ggrapher.build_graph,
+                          LocalDataGrabber)
 
         try:
-            self.ggrapher.build_graph()
+            self.ggrapher.build_graph(LocalDataGrabber)
         except ValueError as e:
             self.assertEqual(str(e), "Invalid id 79568583832")
         else:
@@ -239,7 +241,7 @@ geneagrapher: error: no record IDs given
         self.assertEqual(self.ggrapher.write_filename, None)
         self.assertEqual(self.ggrapher.seed_ids, [30484])
 
-        self.ggrapher.build_graph()
+        self.ggrapher.build_graph(LocalDataGrabber)
 
         # Redirect stdout to capture output.
         stdout = sys.stdout
@@ -272,7 +274,7 @@ geneagrapher: error: no record IDs given
         self.assertEqual(self.ggrapher.write_filename, None)
         self.assertEqual(self.ggrapher.seed_ids, [127946])
 
-        self.ggrapher.build_graph()
+        self.ggrapher.build_graph(LocalDataGrabber)
 
         # Redirect stdout to capture output.
         stdout = sys.stdout
@@ -310,7 +312,7 @@ geneagrapher: error: no record IDs given
         self.assertEqual(self.ggrapher.write_filename, None)
         self.assertEqual(self.ggrapher.seed_ids, [79568])
 
-        self.ggrapher.build_graph()
+        self.ggrapher.build_graph(LocalDataGrabber)
 
         # Redirect stdout to capture output.
         stdout = sys.stdout
@@ -346,7 +348,7 @@ geneagrapher: error: no record IDs given
         self.assertEqual(self.ggrapher.write_filename, outfname)
         self.assertEqual(self.ggrapher.seed_ids, [30484])
 
-        self.ggrapher.build_graph()
+        self.ggrapher.build_graph(LocalDataGrabber)
         self.ggrapher.generate_dot_file()
 
         expected = u"""digraph genealogy {
@@ -372,7 +374,7 @@ geneagrapher: error: no record IDs given
         stdout = sys.stdout
         stdout_intercept = StringIO.StringIO()
         sys.stdout = stdout_intercept
-        geneagrapher.ggrapher()
+        geneagrapher.ggrapher(LocalDataGrabber)
         sys.stdout = stdout
 
         expected = u"""digraph genealogy {
