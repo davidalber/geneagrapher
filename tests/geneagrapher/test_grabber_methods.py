@@ -3,17 +3,18 @@ import sys
 from BeautifulSoup import BeautifulSoup
 import unittest
 from geneagrapher.grabber import *
+from local_data_grabber import LocalDataGrabber
 
 
 class TestGrabberMethods(unittest.TestCase):
+    def data_file(self, filename):
+        """Return the absolute path to the data file with given name."""
+        return LocalDataGrabber.data_file(filename)
+
     def test_init(self):
         """Test constructor."""
         grabber = Grabber()
         self.assertIsInstance(grabber, Grabber)
-
-    def data_file(self, filename):
-        """Return the absolute path to the data file with given name."""
-        return os.path.join(self.data_path, filename)
 
     def test_get_record_bad(self):
         """Verify exception thrown from get_record() method for bad id."""
@@ -169,11 +170,6 @@ class TestGrabberMethods(unittest.TestCase):
 
 if __name__ == '__main__':
     file_path = os.path.abspath(sys.argv[0])
-    TestGrabberMethods.data_path = os.path.join(os.path.dirname(file_path),
-                                                'testdata')
     unittest.main()
 else:
     file_path = os.path.abspath(sys.argv[0])
-    TestGrabberMethods.data_path = os.path.join(os.path.dirname(file_path),
-                                                'tests', 'geneagrapher',
-                                                'testdata')
