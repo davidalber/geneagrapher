@@ -28,43 +28,70 @@ class Grabber:
         soup = BeautifulSoup(page, convertEntities='html')
         page.close()
 
-        if soup.firstText().text == u"You have specified an ID that does not \
-exist in the database. Please back up and try again.":
-            # Then a bad URL (e.g., a bad record id) was given. Throw an
-            # exception.
-            msg = "Invalid id {}".format(id)
-            raise ValueError(msg)
+        return get_record_from_tree(soup, id)
 
-        # Get mathematician name.
-        name = soup.find('h2').getText()
 
-        # Get institution name (or None, if it there is no institution name).
-        institution = soup.find('div', style="line-height: 30px; \
+def get_record_from_tree(soup, id):
+    """Extract and return the fields in the mathematician record using the
+    input tree."""
+    if not has_record(soup):
+        # Then a bad record id was given. Raise an exception.
+        msg = "Invalid id {}".format(id)
+        raise ValueError(msg)
+
+    name = get_name(soup)
+    institution = get_institution(soup)
+    year = get_year(soup)
+    advisors = get_advisors(soup)
+    descendants = get_descendants(soup)
+    return [name, institution, year, advisors, descendants]
+
+
+def has_record(soup):
+    """Return True if the input tree contains a mathematician record and False
+    otherwise."""
+    return not soup.firstText().text == u"You have specified an ID that does \
+not exist in the database. Please back up and try again."
+
+
+def get_name(soup):
+    """Extract the name from the given tree."""
+    return soup.find('h2').getText()
+
+
+def get_institution(soup):
+    """Return institution name (or None, if there is no institution name)."""
+    institution = soup.find('div', style="line-height: 30px; \
 text-align: center; margin-bottom: 1ex").find('span').find('span').text
-        if institution == u'':
-            institution = None
+    if institution == u'':
+        institution = None
+    return institution
 
-        # Get graduation year, if present.
-        inst_year = soup.find('div', style="line-height: 30px; text-align: \
+
+def get_year(soup):
+    """Return graduation year (or None, if there is no graduation year)."""
+    inst_year = soup.find('div', style="line-height: 30px; text-align: \
 center; margin-bottom: 1ex").find('span').contents[-1].strip()
-        if inst_year.isdigit():
-            year = int(inst_year)
-        else:
-            year = None
+    if inst_year.isdigit():
+        return int(inst_year)
+    else:
+        return None
 
-        # Get advisor IDs.
-        advisors = set([extract_id(info.findNext()) for info in
-                             soup.findAll(text=re.compile('Advisor'))
-                             if 'Advisor: Unknown' not in info])
 
-        # Get descendant IDs.
-        if soup.find('table') is not None:
-            descendants = set([extract_id(info) for info in
-                                    soup.find('table').findAll('a')])
-        else:
-            descendants = set([])
+def get_advisors(soup):
+    """Return the set of advisors."""
+    return set([extract_id(info.findNext()) for info in
+                soup.findAll(text=re.compile('Advisor'))
+                if 'Advisor: Unknown' not in info])
 
-        return [name, institution, year, advisors, descendants]
+
+def get_descendants(soup):
+    """Return the set of descendants."""
+    if soup.find('table') is not None:
+        return set([extract_id(info) for info in
+                    soup.find('table').findAll('a')])
+    else:
+        return set([])
 
 
 def extract_id(tag):

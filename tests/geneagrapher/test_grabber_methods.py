@@ -1,18 +1,22 @@
+import os
+import sys
+from BeautifulSoup import BeautifulSoup
 import unittest
-from geneagrapher.grabber import Grabber
+from geneagrapher.grabber import *
 
 
 class TestGrabberMethods(unittest.TestCase):
-    """Unit tests for the Grabber class."""
-    def setUp(self):
-        self.grabber = Grabber()
-
     def test_init(self):
         """Test constructor."""
-        self.assertIsInstance(self.grabber, Grabber)
+        grabber = Grabber()
+        self.assertIsInstance(grabber, Grabber)
+
+    def data_file(self, filename):
+        """Return the absolute path to the data file with given name."""
+        return os.path.join(self.data_path, filename)
 
     def test_get_record_bad(self):
-        """Verify exception thrown for bad id."""
+        """Verify exception thrown from get_record() method for bad id."""
         grabber = Grabber()
         self.assertRaises(ValueError, grabber.get_record, 999999999)
 
@@ -25,8 +29,9 @@ class TestGrabberMethods(unittest.TestCase):
 
     def test_get_record_all_fields(self):
         """Test the get_record() method for a record containing all fields."""
+        grabber = Grabber()
         [name, institution, year, advisors,
-         descendents] = self.grabber.get_record(18231)
+         descendents] = grabber.get_record(18231)
         self.assertEqual(name, u"Carl Friedrich Gau\xdf")
         self.assertEqual(institution, u"Universit\xe4t Helmstedt")
         self.assertEqual(year, 1799)
@@ -34,9 +39,27 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEqual(descendents, set([18603, 18233, 62547, 29642, 55175,
                                            29458, 19953, 18232, 151876]))
 
-        # Verify calling get_record() twice does not have side effect.
+    def test_get_record_from_tree_bad(self):
+        """Verify exception thrown from get_record_from_tree() method for bad
+        id."""
+        with open(self.data_file('999999999.html'), 'r') as fin:
+            soup = BeautifulSoup(fin, convertEntities='html')
+        self.assertRaises(ValueError, get_record_from_tree, soup, 999999999)
+
+        try:
+            get_record_from_tree(soup, 999999999)
+        except ValueError as e:
+            self.assertEqual(str(e), "Invalid id 999999999")
+        else:
+            self.fail()
+
+    def test_get_record_from_tree_all_fields(self):
+        """Test the get_record_from_tree() method for a record containing all
+        fields."""
+        with open(self.data_file('18231.html'), 'r') as fin:
+            soup = BeautifulSoup(fin, convertEntities='html')
         [name, institution, year, advisors,
-         descendents] = self.grabber.get_record(18231)
+         descendents] = get_record_from_tree(soup, 18231)
         self.assertEqual(name, u"Carl Friedrich Gau\xdf")
         self.assertEqual(institution, u"Universit\xe4t Helmstedt")
         self.assertEqual(year, 1799)
@@ -44,79 +67,113 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEqual(descendents, set([18603, 18233, 62547, 29642, 55175,
                                            29458, 19953, 18232, 151876]))
 
-    def test_get_record_no_advisor(self):
-        """Test the get_record() method for a record with no advisor."""
-        grabber = Grabber()
+        # Verify calling get_record_from_tree() twice does not have side
+        # effect.
         [name, institution, year, advisors,
-         descendents] = grabber.get_record(137717)
-        self.assertEqual(name, u"Valentin  Alberti")
-        self.assertEqual(institution, u"Universit\xe4t Leipzig")
-        self.assertEqual(year, 1678)
-        self.assertEqual(advisors, set([]))
-        self.assertEqual(descendents, set([127946]))
+         descendents] = get_record_from_tree(soup, 18231)
+        self.assertEqual(name, u"Carl Friedrich Gau\xdf")
+        self.assertEqual(institution, u"Universit\xe4t Helmstedt")
+        self.assertEqual(year, 1799)
+        self.assertEqual(advisors, set([18230]))
+        self.assertEqual(descendents, set([18603, 18233, 62547, 29642, 55175,
+                                           29458, 19953, 18232, 151876]))
 
-    def test_get_record_no_descendants(self):
-        """Test the get_record() method for a record with no descendants."""
-        # This is currently identical to the get_record_no_year test.
-        grabber = Grabber()
-        [name, institution, year, advisors,
-         descendents] = grabber.get_record(53658)
-        self.assertEqual(name, u"S.  Cingolani")
-        self.assertEqual(institution, u"Scuola Normale Superiore di Pisa")
-        self.assertEqual(year, None)
-        self.assertEqual(advisors, set([51261]))
-        self.assertEqual(descendents, set([]))
+    def test_has_record_true(self):
+        """Test the has_record() method with a tree containing a
+        mathematician record."""
+        with open(self.data_file('137717.html'), 'r') as fin:
+            soup = BeautifulSoup(fin, convertEntities='html')
+            self.assertTrue(has_record(soup))
 
-    def test_get_record_no_year(self):
-        """Test the get_record() method for a record with no year."""
-        # This example also has no descendents.
-        grabber = Grabber()
-        [name, institution, year, advisors,
-         descendents] = grabber.get_record(53658)
-        self.assertEqual(name, u"S.  Cingolani")
-        self.assertEqual(institution, u"Scuola Normale Superiore di Pisa")
-        self.assertEqual(year, None)
-        self.assertEqual(advisors, set([51261]))
-        self.assertEqual(descendents, set([]))
+    def test_has_record_false(self):
+        """Test the record_exists() method with a tree not containing a
+        mathematician record."""
+        with open(self.data_file('137717.html'), 'r') as fin:
+            soup = BeautifulSoup(fin, convertEntities='html')
+            self.assertTrue(has_record(soup))
 
-    def test_get_record_no_inst(self):
-        """Test the get_record() method for a record with no institution."""
-        # This test is also missing additional information already tested.
-        grabber = Grabber()
-        [name, institution, year, advisors,
-         descendents] = grabber.get_record(52965)
-        self.assertEqual(name, u"Walter  Mayer")
-        self.assertEqual(institution, None)
-        self.assertEqual(year, None)
-        self.assertEqual(advisors, set([]))
-        self.assertEqual(descendents, set([52996]))
+    def test_get_name(self):
+        """Test the get_name() method."""
+        with open(self.data_file('137717.html'), 'r') as fin:
+            soup = BeautifulSoup(fin, convertEntities='html')
+            self.assertEqual(u"Valentin  Alberti", get_name(soup))
 
-    # Tests for special (from my point of view) characters:
-    def test_slash_l(self):
-        """Test the get_record() method for a record containing a slash l
-        character. Example:
-        http://www.genealogy.math.ndsu.nodak.edu/id.php?id=7383."""
-        grabber = Grabber()
-        [name, institution, year, advisors,
-         descendents] = grabber.get_record(7383)
-        self.assertEqual(name, u"W\u0142adys\u0142aw Hugo Dyonizy Steinhaus")
-        self.assertEqual(institution,
-                         u"Georg-August-Universit\xe4t G\xf6ttingen")
-        self.assertEqual(year, 1911)
-        self.assertEqual(advisors, set([7298]))
-        self.assertEqual(descendents, set([12681, 28292, 10275, 79297,
-                                           36991, 17851, 127470, 51907,
-                                           15165, 89841, 84016]))
+    def test_get_name_slash_l(self):
+        """Test the get_name() method for a record containing a non-ASCII
+        character."""
+        with open(self.data_file('7383.html'), 'r') as fin:
+            soup = BeautifulSoup(fin, convertEntities='html')
+            self.assertEqual(u"W\u0142adys\u0142aw Hugo Dyonizy Steinhaus",
+                             get_name(soup))
 
-    def test_multiple_advisors(self):
-        """Test for multiple advisors."""
-        grabber = Grabber()
-        [name, institution, year, advisors,
-         descendents] = grabber.get_record(19964)
-        self.assertEqual(name, u"Rudolf Otto Sigismund Lipschitz")
-        self.assertEqual(institution, u"Universit\xe4t Berlin")
-        self.assertEqual(year, 1853)
-        self.assertEqual(advisors, set([17946, 47064]))
+    def test_get_institution(self):
+        """Test the get_institution() method for a record with an
+        institution."""
+        with open(self.data_file('137717.html'), 'r') as fin:
+            soup = BeautifulSoup(fin, convertEntities='html')
+            self.assertEqual(u"Universit\xe4t Leipzig", get_institution(soup))
+
+    def test_get_institution_no_institution(self):
+        """Test the get_institution() method for a record with no
+        institution."""
+        with open(self.data_file('52965.html'), 'r') as fin:
+            soup = BeautifulSoup(fin, convertEntities='html')
+            self.assertIsNone(get_institution(soup))
+
+    def test_get_year(self):
+        """Test the get_year() method for a record with a graduation year."""
+        with open(self.data_file('137717.html'), 'r') as fin:
+            soup = BeautifulSoup(fin, convertEntities='html')
+            self.assertEqual(get_year(soup), 1678)
+
+    def test_get_year_no_year(self):
+        """Test the get_year() method for a record with no graduation year."""
+        with open(self.data_file('53658.html'), 'r') as fin:
+            soup = BeautifulSoup(fin, convertEntities='html')
+            self.assertIsNone(get_year(soup))
+
+    def test_get_advisors(self):
+        """Test the get_advisors() method for a record with advisors."""
+        with open(self.data_file('18231.html'), 'r') as fin:
+            soup = BeautifulSoup(fin, convertEntities='html')
+            self.assertEqual(get_advisors(soup), set([18230]))
+
+    def test_get_advisors_multiple(self):
+        """Test the get_advisors() method for a record with multiple
+        advisors."""
+        with open(self.data_file('19964.html'), 'r') as fin:
+            soup = BeautifulSoup(fin, convertEntities='html')
+            self.assertEqual(get_advisors(soup), set([17946, 47064]))
+
+    def test_get_advisors_no_advisors(self):
+        """Test the get_advisors() method for a record with no advisors."""
+        with open(self.data_file('137717.html'), 'r') as fin:
+            soup = BeautifulSoup(fin, convertEntities='html')
+            self.assertEqual(get_advisors(soup), set([]))
+
+    def test_get_descendants(self):
+        """Test the get_descendants() method for a record with descendants."""
+        expected_descendants = set([18603, 18233, 62547, 29642, 55175, 29458,
+                                    19953, 18232, 151876])
+        with open(self.data_file('18231.html'), 'r') as fin:
+            soup = BeautifulSoup(fin, convertEntities='html')
+            self.assertEqual(get_descendants(soup), expected_descendants)
+
+    def test_get_descendants_no_descendants(self):
+        """Test the get_descendants() method for a record with no
+        descendants."""
+        with open(self.data_file('53658.html'), 'r') as fin:
+            soup = BeautifulSoup(fin, convertEntities='html')
+            self.assertEqual(get_descendants(soup), set([]))
+
 
 if __name__ == '__main__':
+    file_path = os.path.abspath(sys.argv[0])
+    TestGrabberMethods.data_path = os.path.join(os.path.dirname(file_path),
+                                                'testdata')
     unittest.main()
+else:
+    file_path = os.path.abspath(sys.argv[0])
+    TestGrabberMethods.data_path = os.path.join(os.path.dirname(file_path),
+                                                'tests', 'geneagrapher',
+                                                'testdata')
