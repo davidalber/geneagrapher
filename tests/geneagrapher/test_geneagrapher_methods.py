@@ -30,9 +30,9 @@ class TestGeneagrapherMethods(unittest.TestCase):
         stderr_intercept = StringIO.StringIO()
         sys.stderr = stderr_intercept
 
-        expected = """Usage: geneagrapher [options] ID [ID...]
-
-geneagrapher: error: no record IDs given
+        expected = """usage: geneagrapher [-h] [--version] [-f FILE] [-a] \
+[-d] [-v] ID [ID ...]
+geneagrapher: error: too few arguments
 """
         try:
             self.ggrapher.parse_input()

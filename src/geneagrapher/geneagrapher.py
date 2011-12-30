@@ -1,4 +1,4 @@
-from optparse import OptionParser
+from argparse import ArgumentParser
 from collections import deque
 import pkg_resources
 from graph import Graph
@@ -23,39 +23,40 @@ class Geneagrapher:
         Parse command-line information.
         """
         pkg_env = pkg_resources.Environment()
-        self.parser = OptionParser(version="{}".format(
-            pkg_env[self.__module__.split('.')[0]][0].version))
+        description = 'Create a Graphviz "dot" file for a mathematics \
+genealogy, where ID is a record identifier from the Mathematics Genealogy \
+Project. Multiple IDs may be passed.'
+        self.parser = ArgumentParser(description=description)
 
-        self.parser.set_usage("%prog [options] ID [ID...]")
-        self.parser.set_description('Create a Graphviz "dot" file for a \
-mathematics genealogy, where ID is a record identifier from the Mathematics \
-Genealogy Project. Multiple IDs may be passed.')
-
-        self.parser.add_option("-f", "--file", dest="filename",
-                               help="write output to FILE [default: stdout]",
-                               metavar="FILE", default=None)
-        self.parser.add_option("-a", "--with-ancestors", action="store_true",
-                               dest="get_ancestors", default=False,
-                               help="retrieve ancestors of IDs and include in \
-graph")
-        self.parser.add_option("-d", "--with-descendants", action="store_true",
-                               dest="get_descendants", default=False,
-                               help="retrieve descendants of IDs and include \
+        version = "{}".format(pkg_env[self.__module__.split('.')[0]][0].
+                              version)
+        self.parser.add_argument('--version', action='version',
+                                 version='%(prog)s {0}'.format(version))
+        self.parser.add_argument("-f", "--file", dest="filename",
+                                 help="write output to FILE [default: stdout]",
+                                 metavar="FILE", default=None)
+        self.parser.add_argument("-a", "--with-ancestors", action="store_true",
+                                 dest="get_ancestors", default=False,
+                                 help="retrieve ancestors of IDs and include \
 in graph")
-        self.parser.add_option("--verbose", "-v", action="store_true",
-                               dest="verbose", default=False,
-                               help="list nodes being retrieved")
+        self.parser.add_argument("-d", "--with-descendants",
+                                 action="store_true", dest="get_descendants",
+                                 default=False,
+                                 help="retrieve descendants of IDs and \
+include in graph")
+        self.parser.add_argument("-v", "--verbose", action="store_true",
+                                 dest="verbose", default=False,
+                                 help="list nodes being retrieved")
+        self.parser.add_argument('ids', metavar='ID', type=int, nargs='+',
+                            help='mathematician record ID')
 
-        (options, args) = self.parser.parse_args()
+        args = self.parser.parse_args()
 
-        if len(args) == 0:
-            self.parser.error("no record IDs given")
-
-        self.get_ancestors = options.get_ancestors
-        self.get_descendants = options.get_descendants
-        self.verbose = options.verbose
-        self.write_filename = options.filename
-        self.seed_ids = [int(arg) for arg in args]
+        self.get_ancestors = args.get_ancestors
+        self.get_descendants = args.get_descendants
+        self.verbose = args.verbose
+        self.write_filename = args.filename
+        self.seed_ids = [int(arg) for arg in args.ids]
 
     def build_graph_portion(self, grab_queue, is_seed, grabber, **kwargs):
         """Handle grabbing and storing nodes in the graph. Depending on the
