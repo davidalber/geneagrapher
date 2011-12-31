@@ -19,7 +19,7 @@ class Geneagrapher:
         self.get_descendants = False
         self.verbose = False
         self.write_filename = None
-        self.use_cache = False
+        self.use_cache = True
         self.cache_file = 'geneacache'
 
     def parse_input(self):
@@ -48,8 +48,8 @@ in graph")
                                  default=False,
                                  help="retrieve descendants of IDs and \
 include in graph")
-        self.parser.add_argument('-c', '--cache', action='store_true',
-                                 dest='use_cache', default=False,
+        self.parser.add_argument('--disable-cache', action='store_false',
+                                 dest='use_cache', default=True,
                                  help='store records in local cache')
         self.parser.add_argument('--cache-file', dest='cache_file',
                                  help='write cache to FILE [default: \
