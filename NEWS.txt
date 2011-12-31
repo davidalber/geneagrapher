@@ -9,6 +9,10 @@ News
 *Redesigned data-grabbing interface to allow for the introduction of
 new data grabbers.
 
+*Added a new data grabber that builds a local cache of records. This
+ allows subsequent geneagrapher calls to obtain cached records and
+ avoiding a request over the network.
+
 *Added local test data, allowing for many tests that were previously
  making network requests to simply load local data. This speeds up
  running the test suite substantially.
