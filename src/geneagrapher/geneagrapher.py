@@ -50,7 +50,7 @@ in graph")
 include in graph")
         self.parser.add_argument('--disable-cache', action='store_false',
                                  dest='use_cache', default=True,
-                                 help='store records in local cache')
+                                 help='do not store records in local cache')
         self.parser.add_argument('--cache-file', dest='cache_file',
                                  help='write cache to FILE [default: \
 geneacache]',
