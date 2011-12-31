@@ -1,6 +1,7 @@
 from argparse import ArgumentParser
 from collections import deque
 import pkg_resources
+import sys
 from graph import Graph
 from grabber import Grabber
 
@@ -67,9 +68,17 @@ include in graph")
             if not self.graph.has_node(id):
                 # Then this information has not yet been grabbed.
                 if self.verbose:
-                    print "Grabbing record #{}".format(id)
-                [name, institution, year, advisors,
-                 descendants] = grabber.get_record(id)
+                    sys.stdout.write('Grabbing record #{}...'.format(id))
+                record = grabber.get_record(id)
+                if len(record) == 5:
+                    [name, institution, year, advisors,
+                     descendants] = record
+                    grab_msg = ''
+                elif len(record) == 6:
+                    [name, institution, year, advisors,
+                     descendants, grab_msg] = record
+                if self.verbose:
+                    print grab_msg
                 self.graph.add_node(name, institution, year, id, advisors,
                                     descendants, is_seed)
                 if self.get_ancestors and 'ancestor_queue' in kwargs:

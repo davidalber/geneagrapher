@@ -33,13 +33,14 @@ class CacheGrabber():
         if self.is_cached(id_str):
             d = self.cache[id_str]
             return [d['name'], d['institution'], d['year'], d['advisors'],
-                    d['descendants']]
+                    d['descendants'], 'cache hit']
         else:
             [name, institution, year, advisors,
              descendants] = self.grabber.get_record(id)
             self.load_into_cache(id, name, institution, year, advisors,
                                  descendants)
-            return [name, institution, year, advisors, descendants]
+            return [name, institution, year, advisors, descendants,
+                    'cache miss']
 
     def is_cached(self, id):
         """Return True if an item with the given id is in the cache and has

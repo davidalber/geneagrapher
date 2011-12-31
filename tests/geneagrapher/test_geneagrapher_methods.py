@@ -3,6 +3,7 @@ import sys
 import unittest
 import StringIO
 from geneagrapher import geneagrapher
+from geneagrapher.cache_grabber import CacheGrabber
 from geneagrapher.graph import Graph
 from local_data_grabber import LocalDataGrabber
 
@@ -95,6 +96,24 @@ geneagrapher: error: too few arguments
         self.assertEqual(record.year, 1672)
         self.assertEqual(record.id, 127946)
 
+    def test_build_graph_only_self_verbose_cache_grabber(self):
+        """Graph building with no ancestors or descendants using the cache
+        grabber to verify its verbose printing."""
+        self.ggrapher.verbose = True
+        self.ggrapher.seed_ids.append(127946)
+
+        # Redirect stdout to capture output.
+        stdout = sys.stdout
+        stdout_intercept = StringIO.StringIO()
+        sys.stdout = stdout_intercept
+        cache_fname = LocalDataGrabber.data_file(
+            'geneagrapher_verbose_cache_grabber_test')
+        self.ggrapher.build_graph(CacheGrabber, filename=cache_fname)
+        sys.stdout = stdout
+
+        self.assertEqual(stdout_intercept.getvalue().decode('utf-8'),
+                         u"Grabbing record #127946...cache hit\n")
+
     def test_build_graph_only_self_verbose(self):
         """Graph building with no ancestors or descendants."""
         self.ggrapher.verbose = True
@@ -122,7 +141,7 @@ geneagrapher: error: too few arguments
         self.assertEqual(record.id, 127946)
 
         self.assertEqual(stdout_intercept.getvalue().decode('utf-8'),
-                         u"Grabbing record #127946\n")
+                         u"Grabbing record #127946...\n")
 
     def test_build_graph_with_ancestors(self):
         """Graph building with ancestors."""
