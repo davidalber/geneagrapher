@@ -2,6 +2,7 @@ from argparse import ArgumentParser
 from collections import deque
 import pkg_resources
 import sys
+from cache_grabber import CacheGrabber
 from graph import Graph
 from grabber import Grabber
 
@@ -18,6 +19,8 @@ class Geneagrapher:
         self.get_descendants = False
         self.verbose = False
         self.write_filename = None
+        self.use_cache = False
+        self.cache_file = 'geneacache'
 
     def parse_input(self):
         """
@@ -45,6 +48,13 @@ in graph")
                                  default=False,
                                  help="retrieve descendants of IDs and \
 include in graph")
+        self.parser.add_argument('-c', '--cache', action='store_true',
+                                 dest='use_cache', default=False,
+                                 help='store records in local cache')
+        self.parser.add_argument('--cache-file', dest='cache_file',
+                                 help='write cache to FILE [default: \
+geneacache]',
+                                 metavar='FILE', default='geneacache')
         self.parser.add_argument("-v", "--verbose", action="store_true",
                                  dest="verbose", default=False,
                                  help="list nodes being retrieved")
@@ -57,6 +67,8 @@ include in graph")
         self.get_descendants = args.get_descendants
         self.verbose = args.verbose
         self.write_filename = args.filename
+        self.use_cache = args.use_cache
+        self.cache_file = args.cache_file
         self.seed_ids = [int(arg) for arg in args.ids]
 
     def build_graph_portion(self, grab_queue, is_seed, grabber, **kwargs):
@@ -86,7 +98,7 @@ include in graph")
                 if self.get_descendants and 'descendant_queue' in kwargs:
                     kwargs['descendant_queue'].extend(descendants)
 
-    def build_graph(self, record_grabber=Grabber, **kwargs):
+    def build_graph_complete(self, record_grabber=Grabber, **kwargs):
         """
         Populate the graph member by grabbing the mathematician
         pages and extracting relevant data.
@@ -110,6 +122,15 @@ include in graph")
                 self.build_graph_portion(descendant_queue, False, grabber,
                                          descendant_queue=descendant_queue)
 
+    def build_graph(self):
+        """Call the graph builder method with the correct arguments, based
+        on the command-line arguments."""
+        if self.use_cache:
+            record_grabber = CacheGrabber
+        else:
+            record_grabber = Grabber
+        self.build_graph_complete(record_grabber, filename=self.cache_file)
+
     def generate_dot_file(self):
         dotfile = self.graph.generate_dot_file(self.get_ancestors,
                                                self.get_descendants)
@@ -122,10 +143,10 @@ include in graph")
             print dotfile,
 
 
-def ggrapher(record_grabber=Grabber):
+def ggrapher():
     """Function to run the Geneagrapher. This is the function called when
     the ggrapher script is run."""
     ggrapher = Geneagrapher()
     ggrapher.parse_input()
-    ggrapher.build_graph(record_grabber)
+    ggrapher.build_graph()
     ggrapher.generate_dot_file()
