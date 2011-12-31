@@ -21,7 +21,7 @@ class TestGeneagrapherMethods(unittest.TestCase):
         self.assertEqual(self.ggrapher.get_descendants, False)
         self.assertEqual(self.ggrapher.verbose, False)
         self.assertEqual(self.ggrapher.write_filename, None)
-        self.assertEqual(self.ggrapher.use_cache, False)
+        self.assertEqual(self.ggrapher.use_cache, True)
         self.assertEqual(self.ggrapher.cache_file, 'geneacache')
 
     def test_parse_empty(self):
@@ -34,7 +34,7 @@ class TestGeneagrapherMethods(unittest.TestCase):
         sys.stderr = stderr_intercept
 
         expected = """usage: geneagrapher [-h] [--version] [-f FILE] [-a] \
-[-d] [-c]
+[-d] [--disable-cache]
                     [--cache-file FILE] [-v]
                     ID [ID ...]
 geneagrapher: error: too few arguments
@@ -58,28 +58,28 @@ geneagrapher: error: too few arguments
         self.assertEqual(self.ggrapher.get_descendants, False)
         self.assertEqual(self.ggrapher.verbose, False)
         self.assertEqual(self.ggrapher.write_filename, None)
-        self.assertEqual(self.ggrapher.use_cache, False)
+        self.assertEqual(self.ggrapher.use_cache, True)
         self.assertEqual(self.ggrapher.cache_file, 'geneacache')
         self.assertEqual(self.ggrapher.seed_ids, [3])
 
     def test_parse_options(self):
         """Test parse_input() with options."""
         sys.argv = ['geneagrapher', '--with-ancestors', '--with-descendants',
-                    '--file=filler', '--verbose', '--cache', '--cache-file',
-                    'foo', '3', '43']
+                    '--file=filler', '--verbose', '--disable-cache',
+                    '--cache-file', 'foo', '3', '43']
         self.ggrapher.parse_input()
         self.assertEqual(self.ggrapher.get_ancestors, True)
         self.assertEqual(self.ggrapher.get_descendants, True)
         self.assertEqual(self.ggrapher.verbose, True)
         self.assertEqual(self.ggrapher.write_filename, "filler")
-        self.assertEqual(self.ggrapher.use_cache, True)
+        self.assertEqual(self.ggrapher.use_cache, False)
         self.assertEqual(self.ggrapher.cache_file, 'foo')
         self.assertEqual(self.ggrapher.seed_ids, [3, 43])
 
     def test_parse_short_options(self):
         """Test parse_input() with short versions of the options."""
-        sys.argv = ['geneagrapher', '-a', '-d', '-f', 'filler', '-v', '-c',
-                    '3', '43']
+        sys.argv = ['geneagrapher', '-a', '-d', '-f', 'filler', '-v', '3',
+                    '43']
         self.ggrapher.parse_input()
         self.assertEqual(self.ggrapher.get_ancestors, True)
         self.assertEqual(self.ggrapher.get_descendants, True)
@@ -111,7 +111,6 @@ geneagrapher: error: too few arguments
         """Graph building with no ancestors or descendants using the cache
         grabber to verify its verbose printing."""
         self.ggrapher.verbose = True
-        self.ggrapher.use_cache = True
         self.ggrapher.seed_ids.append(127946)
 
         # Redirect stdout to capture output.
@@ -293,13 +292,12 @@ geneagrapher: error: too few arguments
 """
         self.assertEqual(stdout_intercept.getvalue().decode('utf-8'), expected)
 
-    def test_end_to_end_self_stdout(self):
+    def test_end_to_end_cached_self_stdout(self):
         """Complete test using cache getting no ancestors or descendants and
         writing the result to stdout."""
         cache_fname = LocalDataGrabber.data_file(
             'end-to-end-30484')
-        sys.argv = ['geneagrapher', '-c', '--cache-file', cache_fname,
-                    '30484']
+        sys.argv = ['geneagrapher', '--cache-file', cache_fname, '30484']
         self.ggrapher.parse_input()
         self.assertEqual(self.ggrapher.get_ancestors, False)
         self.assertEqual(self.ggrapher.get_descendants, False)
@@ -436,8 +434,7 @@ geneagrapher: error: too few arguments
         and writing the result to stdout."""
         cache_fname = LocalDataGrabber.data_file(
             'end-to-end-30484')
-        sys.argv = ['geneagrapher', '-c', '--cache-file', cache_fname,
-                    '30484']
+        sys.argv = ['geneagrapher', '--cache-file', cache_fname, '30484']
 
         # Redirect stdout to capture output.
         stdout = sys.stdout
