@@ -39,12 +39,13 @@ def get_record_from_tree(soup, id):
         msg = "Invalid id {}".format(id)
         raise ValueError(msg)
 
-    name = get_name(soup)
-    institution = get_institution(soup)
-    year = get_year(soup)
-    advisors = get_advisors(soup)
-    descendants = get_descendants(soup)
-    return [name, institution, year, advisors, descendants]
+    record = {}
+    record['name'] = get_name(soup)
+    record['institution'] = get_institution(soup)
+    record['year'] = get_year(soup)
+    record['advisors'] = get_advisors(soup)
+    record['descendants'] = get_descendants(soup)
+    return record
 
 
 def has_record(soup):

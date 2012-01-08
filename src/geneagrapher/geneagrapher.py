@@ -82,21 +82,18 @@ geneacache]',
                 if self.verbose:
                     sys.stdout.write('Grabbing record #{}...'.format(id))
                 record = grabber.get_record(id)
-                if len(record) == 5:
-                    [name, institution, year, advisors,
-                     descendants] = record
-                    grab_msg = ''
-                elif len(record) == 6:
-                    [name, institution, year, advisors,
-                     descendants, grab_msg] = record
                 if self.verbose:
-                    print grab_msg
-                self.graph.add_node(name, institution, year, id, advisors,
-                                    descendants, is_seed)
+                    if 'message' in record:
+                        print record['message']
+                    else:
+                        print
+                self.graph.add_node(record['name'], record['institution'],
+                                    record['year'], id, record['advisors'],
+                                    record['descendants'], is_seed)
                 if self.get_ancestors and 'ancestor_queue' in kwargs:
-                    kwargs['ancestor_queue'].extend(advisors)
+                    kwargs['ancestor_queue'].extend(record['advisors'])
                 if self.get_descendants and 'descendant_queue' in kwargs:
-                    kwargs['descendant_queue'].extend(descendants)
+                    kwargs['descendant_queue'].extend(record['descendants'])
 
     def build_graph_complete(self, record_grabber=Grabber, **kwargs):
         """

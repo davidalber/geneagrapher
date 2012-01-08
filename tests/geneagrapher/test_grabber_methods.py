@@ -31,14 +31,15 @@ class TestGrabberMethods(unittest.TestCase):
     def test_get_record_all_fields(self):
         """Test the get_record() method for a record containing all fields."""
         grabber = Grabber()
-        [name, institution, year, advisors,
-         descendents] = grabber.get_record(18231)
-        self.assertEqual(name, u"Carl Friedrich Gau\xdf")
-        self.assertEqual(institution, u"Universit\xe4t Helmstedt")
-        self.assertEqual(year, 1799)
-        self.assertEqual(advisors, set([18230]))
-        self.assertEqual(descendents, set([18603, 18233, 62547, 29642, 55175,
-                                           29458, 19953, 18232, 151876]))
+        record = grabber.get_record(18231)
+        self.assertEqual(len(record), 5)
+        self.assertEqual(record['name'], u"Carl Friedrich Gau\xdf")
+        self.assertEqual(record['institution'], u"Universit\xe4t Helmstedt")
+        self.assertEqual(record['year'], 1799)
+        self.assertEqual(record['advisors'], set([18230]))
+        self.assertEqual(record['descendants'], set([18603, 18233, 62547,
+                                                     29642, 55175, 29458,
+                                                     19953, 18232, 151876]))
 
     def test_get_record_from_tree_bad(self):
         """Verify exception thrown from get_record_from_tree() method for bad
@@ -59,25 +60,27 @@ class TestGrabberMethods(unittest.TestCase):
         fields."""
         with open(self.data_file('18231.html'), 'r') as fin:
             soup = BeautifulSoup(fin, convertEntities='html')
-        [name, institution, year, advisors,
-         descendents] = get_record_from_tree(soup, 18231)
-        self.assertEqual(name, u"Carl Friedrich Gau\xdf")
-        self.assertEqual(institution, u"Universit\xe4t Helmstedt")
-        self.assertEqual(year, 1799)
-        self.assertEqual(advisors, set([18230]))
-        self.assertEqual(descendents, set([18603, 18233, 62547, 29642, 55175,
-                                           29458, 19953, 18232, 151876]))
+        record = get_record_from_tree(soup, 18231)
+        self.assertEqual(len(record), 5)
+        self.assertEqual(record['name'], u"Carl Friedrich Gau\xdf")
+        self.assertEqual(record['institution'], u"Universit\xe4t Helmstedt")
+        self.assertEqual(record['year'], 1799)
+        self.assertEqual(record['advisors'], set([18230]))
+        self.assertEqual(record['descendants'], set([18603, 18233, 62547,
+                                                     29642, 55175, 29458,
+                                                     19953, 18232, 151876]))
 
         # Verify calling get_record_from_tree() twice does not have side
         # effect.
-        [name, institution, year, advisors,
-         descendents] = get_record_from_tree(soup, 18231)
-        self.assertEqual(name, u"Carl Friedrich Gau\xdf")
-        self.assertEqual(institution, u"Universit\xe4t Helmstedt")
-        self.assertEqual(year, 1799)
-        self.assertEqual(advisors, set([18230]))
-        self.assertEqual(descendents, set([18603, 18233, 62547, 29642, 55175,
-                                           29458, 19953, 18232, 151876]))
+        record = get_record_from_tree(soup, 18231)
+        self.assertEqual(len(record), 5)
+        self.assertEqual(record['name'], u"Carl Friedrich Gau\xdf")
+        self.assertEqual(record['institution'], u"Universit\xe4t Helmstedt")
+        self.assertEqual(record['year'], 1799)
+        self.assertEqual(record['advisors'], set([18230]))
+        self.assertEqual(record['descendants'], set([18603, 18233, 62547,
+                                                     29642, 55175, 29458,
+                                                     19953, 18232, 151876]))
 
     def test_has_record_true(self):
         """Test the has_record() method with a tree containing a
