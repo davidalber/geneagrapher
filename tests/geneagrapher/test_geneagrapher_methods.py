@@ -305,7 +305,8 @@ geneagrapher: error: too few arguments
         self.assertEqual(self.ggrapher.write_filename, None)
         self.assertEqual(self.ggrapher.seed_ids, [30484])
 
-        self.ggrapher.build_graph_complete(LocalDataGrabber)
+        self.ggrapher.build_graph_complete(CacheGrabber,
+                                           filename=self.ggrapher.cache_file)
 
         # Redirect stdout to capture output.
         stdout = sys.stdout
