@@ -119,7 +119,7 @@ geneagrapher: error: too few arguments
         sys.stdout = stdout_intercept
         cache_fname = LocalDataGrabber.data_file(
             'geneagrapher_verbose_cache_grabber_test')
-        expiration = 1000000000000000
+        expiration = 1e15
         self.ggrapher.build_graph_complete(CacheGrabber, filename=cache_fname,
                                            expiration_interval=expiration)
         sys.stdout = stdout
