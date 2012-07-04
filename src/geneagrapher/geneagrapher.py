@@ -145,5 +145,9 @@ def ggrapher():
     the ggrapher script is run."""
     ggrapher = Geneagrapher()
     ggrapher.parse_input()
-    ggrapher.build_graph()
+
+    try:
+        ggrapher.build_graph()
+    except ValueError, e:
+        print e
     ggrapher.generate_dot_file()
