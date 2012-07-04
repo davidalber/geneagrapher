@@ -136,6 +136,15 @@ geneagrapher: error: too few arguments
         self.assertRaises(ValueError, self.ggrapher.build_graph_complete,
                           LocalDataGrabber)
 
+    def test_build_graph_complete_only_self_verbose_error_long(self):
+        """Graph building with no ancestors or descendants given a bad
+        ID of the long variety."""
+        self.ggrapher.verbose = True
+        self.ggrapher.seed_ids.append(999999999999999999999)
+
+        self.assertRaises(ValueError, self.ggrapher.build_graph_complete,
+                          LocalDataGrabber)
+
     def test_build_graph_complete_only_self_verbose(self):
         """Graph building with no ancestors or descendants."""
         self.ggrapher.verbose = True
