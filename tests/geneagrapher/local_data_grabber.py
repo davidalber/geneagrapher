@@ -1,6 +1,6 @@
 import os
 import sys
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 from geneagrapher.grabber import get_record_from_tree
 
 
@@ -24,7 +24,7 @@ class LocalDataGrabber:
         """Load the local data for the given id and use Grabber's functionas
         to extract the record data."""
         with open(self.data_file('{0}.html'.format(id)), 'r') as fin:
-            soup = BeautifulSoup(fin, convertEntities='html')
+            soup = BeautifulSoup(fin, 'lxml')
         return get_record_from_tree(soup, id)
 
 

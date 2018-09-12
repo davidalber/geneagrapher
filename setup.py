@@ -11,7 +11,7 @@ NEWS = open(os.path.join(here, 'NEWS.txt')).read()
 version = '1.0c2'
 
 install_requires = [
-    'BeautifulSoup >= 3.2.0'
+    'beautifulsoup4'
 ]
 
 
