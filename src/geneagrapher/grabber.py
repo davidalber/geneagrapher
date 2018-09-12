@@ -51,11 +51,11 @@ def get_record_from_tree(soup, id):
 def has_record(soup):
     """Return True if the input tree contains a mathematician record and False
     otherwise."""
-    if str(soup) == "Non-numeric id supplied. Aborting.":
+    if soup.p.string == "Non-numeric id supplied. Aborting.":
         # This is received, for instance, by going to
         # http://genealogy.math.ndsu.nodak.edu/id.php?id=999999999999999999999.
         return False
-    return not soup.firstText().text == u"You have specified an ID that does \
+    return not soup.p.string == u"You have specified an ID that does \
 not exist in the database. Please back up and try again."
 
 
