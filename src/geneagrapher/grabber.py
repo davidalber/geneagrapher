@@ -1,6 +1,6 @@
 import urllib
 import re
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 
 
 class Grabber:
@@ -25,7 +25,7 @@ class Grabber:
         """
         url = 'http://genealogy.math.ndsu.nodak.edu/id.php?id=' + str(id)
         page = urllib.urlopen(url)
-        soup = BeautifulSoup(page, convertEntities='html')
+        soup = BeautifulSoup(page, 'lxml')
         page.close()
 
         return get_record_from_tree(soup, id)
