@@ -110,10 +110,12 @@ class TestCacheGrabberMethods(unittest.TestCase):
                              u"Universit\xe4t Helmstedt")
             self.assertEqual(record['year'], 1799)
             self.assertEqual(record['advisors'], set([18230]))
-            self.assertEqual(record['descendants'], set([18603, 18233, 62547,
-                                                         29642, 55175, 29458,
-                                                         19953, 18232,
-                                                         151876]))
+            self.assertEqual(record['descendants'],  set([234500, 234374, 55175,
+                                                          151876, 29642, 18603,
+                                                          19953, 217618, 62547,
+                                                          225908, 166471, 18232,
+                                                          18233, 234267,
+                                                          165758]))
             self.assertEqual(record['message'], u"cache miss")
             self.assertEqual(len(cache.cache), 1)
 
@@ -127,10 +129,12 @@ class TestCacheGrabberMethods(unittest.TestCase):
             self.assertEqual(record['institution'], u"Rigged for test")
             self.assertEqual(record['year'], 1799)
             self.assertEqual(record['advisors'], set([18230]))
-            self.assertEqual(record['descendants'], set([18603, 18233, 62547,
-                                                         29642, 55175, 29458,
-                                                         19953, 18232,
-                                                         151876]))
+            self.assertEqual(record['descendants'], set([234500, 234374, 55175,
+                                                         151876, 29642, 18603,
+                                                         19953, 217618, 62547,
+                                                         225908, 166471, 18232,
+                                                         18233, 234267,
+                                                         165758]))
             self.assertEqual(record['message'], u"cache hit")
             self.assertEqual(len(cache.cache), 1)
 
@@ -147,10 +151,12 @@ class TestCacheGrabberMethods(unittest.TestCase):
             self.assertEqual(record['institution'], u"Rigged for test")
             self.assertEqual(record['year'], 1799)
             self.assertEqual(record['advisors'], set([18230]))
-            self.assertEqual(record['descendants'], set([18603, 18233, 62547,
-                                                         29642, 55175, 29458,
-                                                         19953, 18232,
-                                                         151876]))
+            self.assertEqual(record['descendants'], set([234500, 234374, 55175,
+                                                         151876, 29642, 18603,
+                                                         19953, 217618, 62547,
+                                                         225908, 166471, 18232,
+                                                         18233, 234267,
+                                                         165758]))
             self.assertEqual(record['message'], u"cache hit")
             self.assertEqual(len(cache.cache), 1)
 
@@ -165,10 +171,12 @@ class TestCacheGrabberMethods(unittest.TestCase):
                              u"Universit\xe4t Helmstedt")
             self.assertEqual(record['year'], 1799)
             self.assertEqual(record['advisors'], set([18230]))
-            self.assertEqual(record['descendants'], set([18603, 18233, 62547,
-                                                         29642, 55175, 29458,
-                                                         19953, 18232,
-                                                         151876]))
+            self.assertEqual(record['descendants'], set([234500, 234374, 55175,
+                                                         151876, 29642, 18603,
+                                                         19953, 217618, 62547,
+                                                         225908, 166471, 18232,
+                                                         18233, 234267,
+                                                         165758]))
             self.assertEqual(record['message'], u"cache miss")
             self.assertEqual(len(cache.cache), 1)
 

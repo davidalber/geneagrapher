@@ -1,8 +1,10 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html lang="en">
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
-<title>The Mathematics Genealogy Project - Carl Gauß</title>
+
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<title>Carl Gauß - The Mathematics Genealogy Project</title>
 <style type="text/css"> 
 body  {
 	margin: 0; /* it's good practice to zero the margin and padding of the body element to account for differing browser defaults */
@@ -112,33 +114,50 @@ th {
 /* the above proprietary zoom property gives IE the hasLayout it needs to avoid several bugs */
 </style>
 <![endif]-->
-<script src="SpryAssets/SpryMenuBar.js" type="text/javascript">//</script>
-<link href="SpryAssets/SpryMenuBarVertical.css" rel="stylesheet" type="text/css">
-<link href="SpryAssets/SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css">
+<script src="SpryAssets/SpryMenuBar.js" type="text/javascript"></script>
+<link href="SpryAssets/SpryMenuBarVertical.css" rel="stylesheet" type="text/css" />
+<link href="SpryAssets/SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css" />
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<link rel="stylesheet" type="text/css" href="jquery-eu-cookie-law-popup.css"/>
+<script src="jquery-eu-cookie-law-popup.js"></script>
   <script type="text/javascript"> 
 </script>
 
-<script type="text/javascript">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-16329138-2"></script>
+<script>
+	 window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+// Don’t call the init functions just yet:
+// gtag('js', new Date());
+// gtag('config', 'UA-XXXXXXXX-1');
 
-    var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-16329138-2']);
-_gaq.push(['_setDomainName','none']);
-_gaq.push(['setAllowLinker',true]);
-_gaq.push(['_trackPageview']);
+function initialiseGoogleAnalytics() {
+	gtag('js', new Date());
+	gtag('config', 'UA-16329138-2');
+}
 
-(function() {
-  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
- })();
+// Subscribe for the cookie consent events
+$(document).bind("user_cookie_already_accepted", function(event, object) {
+		initialiseGoogleAnalytics();
+	});
 
-</script></head>
+$(document).bind("user_cookie_consent_changed", function(event, object) {
+		const userConsentGiven = $(object).attr('consent');
+		if (userConsentGiven) {
+			// User clicked on enabling cookies. Now it's safe to call the
+			// init functions.
+			initialiseGoogleAnalytics();
+		}
+	});
+</script>
+</head>
 
-<body class="twoColFixLtHdr">
+<body class="twoColFixLtHdr eupopup eupopup-top">
 
 <div id="container">
   <div id="header">
-    <a href="index.php"><img src="images/tree-small.gif" alt="Tree" width="46" height="57" style="border: 0" class="fltlft" title="tree"></a>
+    <a href="index.php"><img src="images/tree-small.gif" alt="Tree" width="46" height="57" style="border: 0" class="fltlft" title="tree" /></a>
     <h1>Mathematics Genealogy Project</h1>
   <!-- end #header --></div>
   <div id="column-tile">
@@ -151,6 +170,8 @@ _gaq.push(['_trackPageview']);
       <li><a href="about.php" class="MenuBarItemSubmenu">About MGP</a>
         <ul>
           <li><a href="mission.php">Mission</a></li>
+	<li><a href="http://www.ams.org/notices/200708/tx070801002p.pdf">History (PDF)</a></li>
+<li><a href="https://epayment.ndus.nodak.edu/C22800_ustores/web/product_detail.jsp?PRODUCTID=2989&amp;SINGLESTORE=true">Support Us</a></li>
             <li><a href="news.php" title="Announcements">News</a></li>
             <li><a href="staff.php">Staff</a></li>
             <li><a href="recognition.php">Recognition</a></li>
@@ -161,6 +182,7 @@ _gaq.push(['_trackPageview']);
       <li><a href="faq.php" title="Frequently Asked Questions">FAQs</a></li>
       <li><a href="posters.php">Posters</a></li>
       <li><a href="submit.php">Submit Data</a></li>
+      <li><a href="contact.php">Contact</a></li>
       <li><a href="mirrors.php" class="MenuBarItemSubmenu">Mirrors</a>
         <ul>
 
@@ -169,37 +191,56 @@ _gaq.push(['_trackPageview']);
           <li><a href="http://www.math.uni-bielefeld.de/genealogy" onclick="pageTracker._link(this.href); return false;">Bielefeld</a></li>
           <li><a href="http://genealogy.impa.br/" onclick="pageTracker._link(this.href); return false;">IMPA</a></li>
         </ul>
+	<li><a href="https://epayment.ndus.nodak.edu/C22800_ustores/web/product_detail.jsp?PRODUCTID=2989&SINGLESTORE=true">Donate</a></li>
       </li>
     </ul>
 
 <p>A 
-service of the <a href="http://www.ndsu.edu/">NDSU</a> <a href="http://www.math.ndsu.nodak.edu/">Department of Mathematics</a>, in association with the <a href="http://www.ams.org/">American Mathematical Society</a>.</p>
-    <p>Please <a href="mailto:project&#064;genealogy&#046;math&#046;ndsu&#046;nodak&#046;edu">email us</a> with feedback.</p>
+service of the <a href="https://www.ndsu.edu/">NDSU</a> <a href="https://www.ndsu.edu/math/">Department of Mathematics</a>, in association with the <a href="http://www.ams.org/">American Mathematical Society</a>.</p>
+
   <!-- end #sidebar1 --></div>
   <div id="mainContent"><div id="paddingWrapper">
-<script type="text/javascript" src="jquery.js"></script>
-<script type="text/javascript" src="mathjax/MathJax.js">
+<script type="text/x-mathjax-config">
   MathJax.Hub.Config({
-    extensions: ["tex2jax.js"],
-    jax: ["input/TeX","output/HTML-CSS"],
-    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
-  });
-
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+	  processEscapes: true
+	  }
+    });
 </script>
+<script type="text/javascript">// https://codepen.io/pkra/pen/GWePxW, by Peter Krautzberger, 2017-04-04
+  // helper: insert MathJax script tage using CDNJS and 
+var insertMathJax = function(version) {
+	script = document.createElement('script');
+	script.type = 'text/javascript';
+	script.async = true;
+	script.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/' + version + '/MathJax.js?config=TeX-AMS_CHTML-full';
+	document.getElementsByTagName('head')[0].appendChild(script);
+}
+
+// Look up latest version on CDNJS and insertMathJax
+var xmlHttp = new XMLHttpRequest();
+xmlHttp.onreadystatechange = function() {
+	if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+		insertMathJax(JSON.parse(xmlHttp.responseText).version);
+}
+	xmlHttp.open('GET', 'https://api.cdnjs.com/libraries/mathjax?fields=version', true); 
+xmlHttp.send(null);
+</script>
+
 <h2 style="text-align: center; margin-bottom: 0.5ex; margin-top: 1ex">
 Carl Friedrich Gauß </h2>
 
 <p style="text-align: center; margin-top: 0; margin-bottom: 0px; font-size: small">
-<a href="http://www-history.mcs.st-andrews.ac.uk/Mathematicians/Gauss.html">Biography</a> <a href="http://www.ams.org/mathscinet/search/author.html?mrauthid=71920&amp;Submit=Search">MathSciNet</a>
-</p>
+<a href="http://www-history.mcs.st-andrews.ac.uk/Mathematicians/Gauss.html">Biography</a></p>
 
-<div style="margin-left: auto; margin-right: auto; width: 300px"><hr style="width: 300px; height: 0; border-style: solid; border-width: 2px 0 0 0; color: gray; background-color: gray"></div>
+<div style="margin-left: auto; margin-right: auto; width: 300px"><hr style="width: 300px; height: 0; border-style: solid; border-width: 2px 0 0 0; color: gray; background-color: gray" /></div>
 
 <div style="line-height: 30px; text-align: center; margin-bottom: 1ex">
   <span style="margin-right: 0.5em">Ph.D. <span style="color:
   #006633; margin-left: 0.5em">Universit&auml;t Helmstedt</span> 1799</span>
 
-<img src="img/flags/Germany.gif" alt="Germany" width="50" height="30" style="border: 0; vertical-align: middle" title="Germany">
+<img src="img/flags/Germany.gif" alt="Germany" width="50" height="30" style="border: 0; vertical-align: middle" title="Germany" />
 </div>
 
 
@@ -207,10 +248,10 @@ Carl Friedrich Gauß </h2>
 
 Demonstratio nova theorematis omnem functionem algebraicam rationalem integram unius variabilis in factores reales primi vel secundi gradus resolvi posse</span></div>
 
-<p style="text-align: center; line-height: 2.75ex">Advisor: <a href="id.php?id=18230">Johann Friedrich Pfaff</a><br></p>
+<p style="text-align: center; line-height: 2.75ex">Advisor 1: <a href="id.php?id=18230">Johann Friedrich Pfaff</a><br /></p>
 
 <p style="text-align: center">Students:
-<br>
+<br />
 
 Click <a href="id.php?id=18231&amp;fChrono=1">
                 here</a> to see the students listed in chronological order.
@@ -218,35 +259,47 @@ Click <a href="id.php?id=18231&amp;fChrono=1">
 
 
 <table style="margin-left: auto; margin-right: auto">
-<tr><th>Name</th><th>School</th><th>Year</th><th>Descendants</th></tr><tr style="background-color: #E5E6CF;"><td><a href="id.php?id=18603">Friedrich Bessel</a></td><td>Georg-August-Universit&auml;t G&ouml;ttingen</td><td style="padding-left: 2px; padding-right: 2px">1810</td><td style="text-align: center">22367</td></tr>
+<tr><th>Name</th><th>School</th><th>Year</th><th>Descendants</th></tr><tr style="background-color: #E5E6CF;"><td><a href="id.php?id=18603">Bessel, Friedrich</a></td><td>Georg-August-Universit&auml;t G&ouml;ttingen</td><td style="padding-left: 2px; padding-right: 2px">1810</td><td style="text-align: center">38584</td></tr>
 
-<tr ><td><a href="id.php?id=18233">J. W. Richard Dedekind</a></td><td>Georg-August-Universit&auml;t G&ouml;ttingen</td><td style="padding-left: 2px; padding-right: 2px">1852</td><td style="text-align: center"></td></tr>
+<tr ><td><a href="id.php?id=18233">Dedekind, J. W. Richard</a></td><td>Georg-August-Universit&auml;t G&ouml;ttingen</td><td style="padding-left: 2px; padding-right: 2px">1852</td><td style="text-align: center"></td></tr>
 
-<tr style="background-color: #E5E6CF;"><td><a href="id.php?id=62547">Johann Encke</a></td><td>Universit&auml;t Berlin</td><td style="padding-left: 2px; padding-right: 2px">1844</td><td style="text-align: center">6408</td></tr>
+<tr style="background-color: #E5E6CF;"><td><a href="id.php?id=62547">Encke, Johann</a></td><td></td><td style="padding-left: 2px; padding-right: 2px"></td><td style="text-align: center">11355</td></tr>
 
-<tr ><td><a href="id.php?id=29642">Christian Gerling</a></td><td>Georg-August-Universit&auml;t G&ouml;ttingen</td><td style="padding-left: 2px; padding-right: 2px">1812</td><td style="text-align: center">35139</td></tr>
+<tr ><td><a href="id.php?id=29642">Gerling, Christian</a></td><td>Georg-August-Universit&auml;t G&ouml;ttingen</td><td style="padding-left: 2px; padding-right: 2px">1812</td><td style="text-align: center">63643</td></tr>
 
-<tr style="background-color: #E5E6CF;"><td><a href="id.php?id=55175">Sophie Germain</a></td><td>Georg-August-Universit&auml;t G&ouml;ttingen</td><td style="padding-left: 2px; padding-right: 2px">1830</td><td style="text-align: center"></td></tr>
+<tr style="background-color: #E5E6CF;"><td><a href="id.php?id=55175">Germain, Sophie</a></td><td>Georg-August-Universit&auml;t G&ouml;ttingen</td><td style="padding-left: 2px; padding-right: 2px">1830</td><td style="text-align: center"></td></tr>
 
-<tr ><td><a href="id.php?id=29458">Christoph Gudermann</a></td><td>Georg-August-Universit&auml;t G&ouml;ttingen</td><td style="padding-left: 2px; padding-right: 2px">1841</td><td style="text-align: center">18957</td></tr>
+<tr ><td><a href="id.php?id=225908">Gräffe, Carl</a></td><td>Georg-August-Universit&auml;t G&ouml;ttingen</td><td style="padding-left: 2px; padding-right: 2px">1825</td><td style="text-align: center"></td></tr>
 
-<tr style="background-color: #E5E6CF;"><td><a href="id.php?id=19953">Johann Listing</a></td><td>Georg-August-Universit&auml;t G&ouml;ttingen</td><td style="padding-left: 2px; padding-right: 2px">1834</td><td style="text-align: center"></td></tr>
+<tr style="background-color: #E5E6CF;"><td><a href="id.php?id=234267">Klinkerfues, Wilhelm</a></td><td>Georg-August-Universit&auml;t G&ouml;ttingen</td><td style="padding-left: 2px; padding-right: 2px">1855</td><td style="text-align: center"></td></tr>
 
-<tr ><td><a href="id.php?id=18232">Georg Riemann</a></td><td>Georg-August-Universit&auml;t G&ouml;ttingen</td><td style="padding-left: 2px; padding-right: 2px">1851</td><td style="text-align: center"></td></tr>
+<tr ><td><a href="id.php?id=19953">Listing, Johann</a></td><td>Georg-August-Universit&auml;t G&ouml;ttingen</td><td style="padding-left: 2px; padding-right: 2px">1834</td><td style="text-align: center">1786</td></tr>
 
-<tr style="background-color: #E5E6CF;"><td><a href="id.php?id=151876">Karl von Staudt</a></td><td>Friedrich-Alexander-Universit&auml;t Erlangen-N&uuml;rnberg</td><td style="padding-left: 2px; padding-right: 2px">1822</td><td style="text-align: center"></td></tr>
+<tr style="background-color: #E5E6CF;"><td><a href="id.php?id=18232">Riemann, Bernhard</a></td><td>Georg-August-Universit&auml;t G&ouml;ttingen</td><td style="padding-left: 2px; padding-right: 2px">1851</td><td style="text-align: center">2221</td></tr>
+
+<tr ><td><a href="id.php?id=234374">Schumacher, Heinrich</a></td><td>Georg-August-Universit&auml;t G&ouml;ttingen</td><td style="padding-left: 2px; padding-right: 2px">1806</td><td style="text-align: center">91</td></tr>
+
+<tr style="background-color: #E5E6CF;"><td><a href="id.php?id=217618">Spehr, Friedrich Wilhelm</a></td><td>Georg-August-Universit&auml;t G&ouml;ttingen</td><td style="padding-left: 2px; padding-right: 2px">1824</td><td style="text-align: center"></td></tr>
+
+<tr ><td><a href="id.php?id=165758">Stern, Moritz</a></td><td>Georg-August-Universit&auml;t G&ouml;ttingen</td><td style="padding-left: 2px; padding-right: 2px">1829</td><td style="text-align: center"></td></tr>
+
+<tr style="background-color: #E5E6CF;"><td><a href="id.php?id=234500">Svanberg, Gustaf</a></td><td>Georg-August-Universit&auml;t G&ouml;ttingen and Uppsala Universitet</td><td style="padding-left: 2px; padding-right: 2px">1825</td><td style="text-align: center">2</td></tr>
+
+<tr ><td><a href="id.php?id=151876">von Staudt, Karl</a></td><td>Friedrich-Alexander-Universit&auml;t Erlangen-N&uuml;rnberg</td><td style="padding-left: 2px; padding-right: 2px">1822</td><td style="text-align: center"></td></tr>
+
+<tr style="background-color: #E5E6CF;"><td><a href="id.php?id=166471">Wichmann, Moritz</a></td><td>Georg-August-Universit&auml;t G&ouml;ttingen</td><td style="padding-left: 2px; padding-right: 2px">1843</td><td style="text-align: center"></td></tr>
 
 
 </table>
 
-<p style="text-align: center">According to our current on-line database, Carl Gauß has 9 <a href="javascript:var x=window.open('students.php?name=&#67;&#97;&#114;&#108; &#71;&#97;&#117;&#223;','popup','width=250,height=120,menubar=no,scrollbars=yes,resizable=no,location=no');">students</a> and 50610 <a href="javascript:var x=window.open('descendants.php','popup','menubar=no,location=no,width=450,scrollbars=yes,height=225');"> descendants</a>.
-<br>
+<p style="text-align: center">According to our current on-line database, Carl Gauß has 15 <a href="javascript:var x=window.open('students.php?name=&#67;&#97;&#114;&#108; &#71;&#97;&#117;&#223;','popup','width=250,height=120,menubar=no,scrollbars=yes,resizable=no,location=no');">students</a> and 89321 <a href="javascript:var x=window.open('descendants.php','popup','menubar=no,location=no,width=450,scrollbars=yes,height=225');"> descendants</a>.
+<br />
 We welcome any additional information.</p>
 <p style="font-size: small; text-align: center">If you have additional information or
  corrections regarding this mathematician, please use the <a
  href="submit-data.php?id=18231&amp;edit=0">update form</a>. To submit students of this
  mathematician, please use the <a href="submit-data.php?id=NEW&amp;edit=0">new
- data form</a>.</p>
+	    data form</a>, noting this mathematician's MGP ID of 18231 for the advisor ID.</p>
 
 </div><!-- end #paddingWrapper -->
 
@@ -256,7 +309,6 @@ We welcome any additional information.</p>
   <div id="footer">
 <ul id="MenuBar2" class="MenuBarHorizontal">
       <li><a href="search.php">Search</a>        </li>
-      <li><a href="extrema.php">Extrema</a> </li>
       <li><a href="about.php" class="MenuBarItemSubmenu">About MGP</a>
           <ul>
             <li><a href="mission.php">Mission</a></li>
@@ -270,18 +322,19 @@ We welcome any additional information.</p>
       <li><a href="faq.php" title="Frequently Asked Questions">FAQs</a></li>
       <li><a href="posters.php">Posters</a></li>
       <li><a href="submit.php">Submit Data</a></li>
+      <li><a href="contact.php">Contact</a></li>
  
 </ul>
-<br>
+<br />
 <p>The Mathematics Genealogy Project is in need of funds 
 to help pay for student help and other associated costs. If you would like to 
 contribute, please <a href="https://epayment.ndus.nodak.edu/C22800_ustores/web/product_detail.jsp?PRODUCTID=2989&amp;SINGLESTORE=true">donate online</a> using credit card or bank transfer or mail  your tax-deductible contribution to:</p>
 
 <p>
-Mathematics Genealogy Project<br> 
-Department of Mathematics<br>
-North Dakota State University<br>
-P. O. Box 6050<br>
+Mathematics Genealogy Project<br /> 
+Department of Mathematics<br />
+North Dakota State University<br />
+P. O. Box 6050<br />
   Fargo, North Dakota 58108-6050</p>
 
 </div>
