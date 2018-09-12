@@ -61,25 +61,35 @@ not exist in the database. Please back up and try again."
 
 def get_name(soup):
     """Extract the name from the given tree."""
-    return soup.find('h2').getText(strip=True)
+    try:
+        name = soup.find('h2').getText(strip=True)
+    except AttributeError:
+        name = ''
+    return name
 
 
 def get_institution(soup):
     """Return institution name (or None, if there is no institution name)."""
-    institution = soup.find('div', style="line-height: 30px; \
+    try:
+        institution = soup.find('div', style="line-height: 30px; \
 text-align: center; margin-bottom: 1ex").find('span').find('span').text
-    if institution == u'':
+        if institution == u'':
+            institution = None
+    except AttributeError:
         institution = None
     return institution
 
 
 def get_year(soup):
     """Return graduation year (or None, if there is no graduation year)."""
-    inst_year = soup.find('div', style="line-height: 30px; text-align: \
+    try:
+        inst_year = soup.find('div', style="line-height: 30px; text-align: \
 center; margin-bottom: 1ex").find('span').contents[-1].strip()
-    if inst_year.isdigit():
-        return int(inst_year)
-    else:
+        if inst_year.isdigit():
+            return int(inst_year)
+        else:
+            return None
+    except AttributeError:
         return None
 
 
