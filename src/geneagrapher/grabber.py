@@ -101,4 +101,4 @@ def get_descendants(soup):
 
 def extract_id(tag):
     """Extract the ID from a tag with form <a href="id.php?id=7401">."""
-    return int(tag.attrs[0][-1].split('=')[-1])
+    return int(tag.attrs['href'].split('=')[-1])
