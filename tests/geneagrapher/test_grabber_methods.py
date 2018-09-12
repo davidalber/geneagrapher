@@ -37,9 +37,11 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEqual(record['institution'], u"Universit\xe4t Helmstedt")
         self.assertEqual(record['year'], 1799)
         self.assertEqual(record['advisors'], set([18230]))
-        self.assertEqual(record['descendants'], set([18603, 18233, 62547,
-                                                     29642, 55175, 29458,
-                                                     19953, 18232, 151876]))
+        self.assertEqual(record['descendants'], set([234500, 234374, 55175,
+                                                     151876, 29642, 18603,
+                                                     19953, 217618, 62547,
+                                                     225908, 166471, 18232,
+                                                     18233, 234267, 165758]))
 
     def test_get_record_from_tree_bad(self):
         """Verify exception thrown from get_record_from_tree() method for bad
@@ -66,9 +68,11 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEqual(record['institution'], u"Universit\xe4t Helmstedt")
         self.assertEqual(record['year'], 1799)
         self.assertEqual(record['advisors'], set([18230]))
-        self.assertEqual(record['descendants'], set([18603, 18233, 62547,
-                                                     29642, 55175, 29458,
-                                                     19953, 18232, 151876]))
+        self.assertEqual(record['descendants'], set([234500, 234374, 55175,
+                                                     151876, 29642, 18603,
+                                                     19953, 217618, 62547,
+                                                     225908, 166471, 18232,
+                                                     18233, 234267, 165758]))
 
         # Verify calling get_record_from_tree() twice does not have side
         # effect.
@@ -78,9 +82,11 @@ class TestGrabberMethods(unittest.TestCase):
         self.assertEqual(record['institution'], u"Universit\xe4t Helmstedt")
         self.assertEqual(record['year'], 1799)
         self.assertEqual(record['advisors'], set([18230]))
-        self.assertEqual(record['descendants'], set([18603, 18233, 62547,
-                                                     29642, 55175, 29458,
-                                                     19953, 18232, 151876]))
+        self.assertEqual(record['descendants'], set([234500, 234374, 55175,
+                                                     151876, 29642, 18603,
+                                                     19953, 217618, 62547,
+                                                     225908, 166471, 18232,
+                                                     18233, 234267, 165758]))
 
     def test_has_record_true(self):
         """Test the has_record() method with a tree containing a
@@ -157,8 +163,9 @@ class TestGrabberMethods(unittest.TestCase):
 
     def test_get_descendants(self):
         """Test the get_descendants() method for a record with descendants."""
-        expected_descendants = set([18603, 18233, 62547, 29642, 55175, 29458,
-                                    19953, 18232, 151876])
+        expected_descendants = set([234500, 234374, 55175, 151876, 29642, 18603,
+                                    19953, 217618, 62547, 225908, 166471, 18232,
+                                    18233, 234267, 165758])
         with open(self.data_file('18231.html'), 'r') as fin:
             soup = BeautifulSoup(fin, convertEntities='html')
             self.assertEqual(get_descendants(soup), expected_descendants)
