@@ -61,7 +61,7 @@ not exist in the database. Please back up and try again."
 
 def get_name(soup):
     """Extract the name from the given tree."""
-    return soup.find('h2').getText()
+    return soup.find('h2').getText(strip=True)
 
 
 def get_institution(soup):
