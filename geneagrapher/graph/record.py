@@ -2,6 +2,7 @@ class Record:
     """
     Container class storing record of a mathematician in the graph.
     """
+
     def __init__(self, name, institution=None, year=None, id=None):
         """
         Record class constructor.
@@ -20,18 +21,28 @@ class Record:
 
         # Verify we got the types wanted.
         if not isinstance(self.name, basestring):
-            raise TypeError("Unexpected parameter type: expected string value \
-for 'name'")
-        if not isinstance(self.institution, basestring) and self.institution \
-               is not None:
-            raise TypeError("Unexpected parameter type: expected string value \
-for 'institution'")
+            raise TypeError(
+                "Unexpected parameter type: expected string value \
+for 'name'"
+            )
+        if (
+            not isinstance(self.institution, basestring)
+            and self.institution is not None
+        ):
+            raise TypeError(
+                "Unexpected parameter type: expected string value \
+for 'institution'"
+            )
         if not isinstance(self.year, int) and self.year is not None:
-            raise TypeError("Unexpected parameter type: expected integer \
-value for 'year'")
+            raise TypeError(
+                "Unexpected parameter type: expected integer \
+value for 'year'"
+            )
         if not isinstance(self.id, int) and self.id is not None:
-            raise TypeError("Unexpected parameter type: expected integer \
-value for 'id'")
+            raise TypeError(
+                "Unexpected parameter type: expected integer \
+value for 'id'"
+            )
 
     def __cmp__(self, r2):
         """
@@ -42,13 +53,12 @@ value for 'id'")
     def __unicode__(self):
         if self.has_institution():
             if self.has_year():
-                return u'{} \\n{} ({})'.format(self.name, self.institution,
-                                               self.year)
+                return u"{} \\n{} ({})".format(self.name, self.institution, self.year)
             else:
-                return u'{} \\n{}'.format(self.name, self.institution)
+                return u"{} \\n{}".format(self.name, self.institution)
         else:
             if self.has_year():
-                return u'{} \\n({})'.format(self.name, self.year)
+                return u"{} \\n({})".format(self.name, self.year)
             else:
                 return self.name
 

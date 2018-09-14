@@ -14,6 +14,7 @@ class Graph(dict):
     """
     Class storing the representation of a genealogy graph.
     """
+
     def __init__(self, seed_nodes=None):
         """
         Graph class constructor.
@@ -27,12 +28,16 @@ class Graph(dict):
         # Verify type of seed_nodes is what we expect.
         if seed_nodes is not None:
             if not isinstance(seed_nodes, set):
-                raise TypeError("Unexpected argument type: expected set of \
-Node objects for 'seed_nodes'")
+                raise TypeError(
+                    "Unexpected argument type: expected set of \
+Node objects for 'seed_nodes'"
+                )
             for seed in seed_nodes:
                 if not isinstance(seed, Node):
-                    raise TypeError("Unexpected parameter type: expected set \
-of Node objects for 'seed_nodes'")
+                    raise TypeError(
+                        "Unexpected parameter type: expected set \
+of Node objects for 'seed_nodes'"
+                    )
 
         if seed_nodes is None:
             self.seeds = set()
@@ -61,8 +66,7 @@ of Node objects for 'seed_nodes'")
         """
         return self.keys()
 
-    def add_node(self, name, institution, year, id, advisors, advisees,
-                 is_seed=False):
+    def add_node(self, name, institution, year, id, advisors, advisees, is_seed=False):
         """
         Add a new node to the graph if a matching node is not already
         present.
@@ -70,16 +74,16 @@ of Node objects for 'seed_nodes'")
         record = Record(name, institution, year, id)
 
         # Ancestors is the set of advisors already in the graph.
-        graph_ancestors = set([advisor for advisor in advisors
-                               if advisor in self])
+        graph_ancestors = set([advisor for advisor in advisors if advisor in self])
         # For each ancestor, add this node's id to the ancestor's descendant
         # set.
         for ancestor in graph_ancestors:
             self[ancestor].descendants.add(id)
 
         # Descendants is the set of advisees already in the graph.
-        graph_descendants = set([descendant for descendant in advisees
-                                 if descendant in self])
+        graph_descendants = set(
+            [descendant for descendant in advisees if descendant in self]
+        )
         # For each descendant, add this node's id to the descendant's
         # ancestor set.
         for descendant in graph_descendants:
@@ -135,15 +139,18 @@ of Node objects for 'seed_nodes'")
             node = self.get_node(node_id)
             printed_nodes[node_id] = node
 
-            sorted_ancestors = sorted([a for a in node.ancestors if a in self],
-                                      lambda x, y:
-                                      cmp(self[x].record.name.split()[-1],
-                                          self[y].record.name.split()[-1]))
-            sorted_descendants = sorted([d for d in node.descendants if
-                                         d in self],
-                                        lambda x, y:
-                                        cmp(self[x].record.name.split()[-1],
-                                            self[y].record.name.split()[-1]))
+            sorted_ancestors = sorted(
+                [a for a in node.ancestors if a in self],
+                lambda x, y: cmp(
+                    self[x].record.name.split()[-1], self[y].record.name.split()[-1]
+                ),
+            )
+            sorted_descendants = sorted(
+                [d for d in node.descendants if d in self],
+                lambda x, y: cmp(
+                    self[x].record.name.split()[-1], self[y].record.name.split()[-1]
+                ),
+            )
 
             if include_ancestors:
                 # Add this node's advisors to queue.
@@ -154,7 +161,7 @@ of Node objects for 'seed_nodes'")
                 queue += sorted_descendants
 
             # Print this node's information.
-            nodestr = u"    {} [label=\"{}\"];".format(node_id, node)
+            nodestr = u'    {} [label="{}"];'.format(node_id, node)
             dotfile += nodestr
 
             # Store the connection information for this node.
