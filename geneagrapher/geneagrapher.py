@@ -32,8 +32,11 @@ genealogy, where ID is a record identifier from the Mathematics Genealogy \
 Project. Multiple IDs may be passed.'
         self.parser = ArgumentParser(description=description)
 
-        version = "{}".format(pkg_env[self.__module__.split('.')[0]][0].
-                              version)
+        try:
+            version = "{}".format(pkg_env[self.__module__.split('.')[0]][0].
+                                  version)
+        except IndexError:
+            version = 'dev'
         self.parser.add_argument('--version', action='version',
                                  version='%(prog)s {0}'.format(version))
         self.parser.add_argument("-f", "--file", dest="filename",
@@ -151,3 +154,6 @@ def ggrapher():
     except ValueError, e:
         print e
     ggrapher.generate_dot_file()
+
+if __name__ == '__main__':
+    ggrapher()
