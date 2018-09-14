@@ -151,7 +151,7 @@ def ggrapher():
 
     try:
         ggrapher.build_graph()
-    except ValueError, e:
+    except ValueError as e:
         print e
     ggrapher.generate_dot_file()
 
