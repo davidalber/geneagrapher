@@ -1,39 +1,26 @@
-from distribute_setup import use_setuptools
-use_setuptools()
-from setuptools import setup, find_packages
-import sys, os
+import setuptools
 
-here = os.path.abspath(os.path.dirname(__file__))
-README = open(os.path.join(here, 'README.rst')).read()
-NEWS = open(os.path.join(here, 'NEWS.txt')).read()
+with open("README.md", "r") as fh:
+    long_description = fh.read()
 
-
-version = '1.0c2'
-
-install_requires = [
-    'beautifulsoup4'
-]
-
-
-setup(name='geneagrapher',
-    version=version,
-    description="Generates mathematic genealogy graph files.",
-    long_description=README + '\n\n' + NEWS,
-    classifiers=[
-      # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
-    ],
-    keywords='',
-    author='David Alber',
-    author_email='alber.david@gmail.com',
-    url='http://www.davidalber.net/geneagrapher',
-    license='MIT',
-    packages=find_packages('src'),
-    package_dir = {'': 'src'},include_package_data=True,
-    zip_safe=False,
-    install_requires=install_requires,
+setuptools.setup(
+    name="geneagrapher",
+    version="1.0c2",
+    author="David Alber",
+    author_email="alber.david@gmail.com",
+    description="Mathematical genealogy grapher.",
     entry_points={
         'console_scripts':
             ['ggrapher=geneagrapher.geneagrapher:ggrapher']
     },
-    test_suite='tests.geneagrapher'
+    install_requires=['beautifulsoup4', 'lxml'],
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/davidalber/Geneagrapher",
+    packages=setuptools.find_packages(),
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+    ],
 )
