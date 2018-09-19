@@ -16,10 +16,11 @@ Each individual stored in the Mathematics Genealogy Project's website
 has a unique integer as an identifier, and this identifier is what is
 passed to the Geneagrapher for starting nodes. The identifier is
 embedded in the URL for records in the Mathematics Genealogy Project
-website. For example, Carl Gauß is ID 18231
-(https://genealogy.math.ndsu.nodak.edu/id.php?id=18231) and Leonhard
-Euler is ID 38586
-(https://genealogy.math.ndsu.nodak.edu/id.php?id=38586).
+website. For example, [Carl
+Gauß](https://genealogy.math.ndsu.nodak.edu/id.php?id=18231) is ID
+18231 and [Leonhard
+Euler](https://genealogy.math.ndsu.nodak.edu/id.php?id=38586) is ID
+38586.
 
 Before running the Geneagrapher, go to the [Mathematics Genealogy
 Project](https://genealogy.math.ndsu.nodak.edu/) and gather the
