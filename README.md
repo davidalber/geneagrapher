@@ -36,22 +36,26 @@ ggrapher --help
 should produce
 
 ```
-Usage: ggrapher [options] ID ...
+usage: ggrapher [-h] [--version] [-f FILE] [-a] [-d] [--disable-cache]
+                [--cache-file FILE] [-v]
+                ID [ID ...]
 
-Create a Graphviz "dot" file for a mathematics genealogy, where ID
-is a record identifier from the Mathematics Genealogy Project.
-Multiple IDs may be passed.
+Create a Graphviz "dot" file for a mathematics genealogy, where ID is a record
+identifier from the Mathematics Genealogy Project. Multiple IDs may be passed.
 
-Options:
+positional arguments:
+  ID                    mathematician record ID
+
+optional arguments:
   -h, --help            show this help message and exit
-  -f FILE, --file=FILE  write output to FILE [default: stdout]
-  -a, --with-ancestors  retrieve ancestors of IDs and include in
-                        graph
+  --version             show program's version number and exit
+  -f FILE, --file FILE  write output to FILE [default: stdout]
+  -a, --with-ancestors  retrieve ancestors of IDs and include in graph
   -d, --with-descendants
-                        retrieve descendants of IDs and include in
-                        graph
+                        retrieve descendants of IDs and include in graph
+  --disable-cache       do not store records in local cache
+  --cache-file FILE     write cache to FILE [default: geneacache]
   -v, --verbose         list nodes being retrieved
-  -V, --version         print version and exit
 ```
 
 Explanations of some of the options are given below, followed by
