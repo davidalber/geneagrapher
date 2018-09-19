@@ -96,20 +96,14 @@ dot -Tpng graph.dot > graph.png
 This command produces a PNG file containing the graph. That's really
 all there is to it. Almost.
 
-### A slightly more complicated process
-
-I find that nicer looking final images are produced by following a
-more circuitous route. In the example above, I would run
+By default, `dot` renders an image with 96dpi. This can look a little
+blurry at 100% on high-resolution displays. You might want to increase
+the resolution. You can do this with the `-Gdpi` flag. For instance,
+to produce a PNG with 150dpi, you can do
 
 ```
-dot -Tsvg graph.dot > graph.svg
+dot -Tpng -Gdpi=150 graph.dot > graph.png
 ```
-
-This produces an SVG file. At this point, I use
-[Inkscape](https://inkscape.org) to open the file and export a PNG
-file.
-
-A number of other ways to do this are available.
 
 ## Examples
 _Note: the Mathematics Genealogy Project has added new data since the
