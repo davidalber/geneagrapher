@@ -26,6 +26,16 @@ Before running the Geneagrapher, go to the [Mathematics Genealogy
 Project](https://genealogy.math.ndsu.nodak.edu/) and gather the
 identifiers of the starting nodes for the graph you have in mind.
 
+## Installation
+Geneagrapher is installed by pip. If your system does not have pip,
+see the instructions
+[here](https://pip.pypa.io/en/stable/installing/).
+
+Once pip is available on your system, install Geneagrapher with:
+```
+pip install geneagrapher
+```
+
 ## Geneagrapher Usage
 After installing the Geneagrapher, running
 
