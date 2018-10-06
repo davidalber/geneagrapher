@@ -1,7 +1,15 @@
+import re
 import setuptools
 
 with open("README.md", "r") as fin:
     long_description = fin.read()
+
+long_description = re.sub(
+    "^(!\[.*\]\()(.*\))",
+    lambda m: m.group(1) + "https://github.com/davidalber/geneagrapher/raw/master/" + m.group(2),
+    long_description,
+    flags=re.MULTILINE
+)
 
 setuptools.setup(
     name="geneagrapher",
