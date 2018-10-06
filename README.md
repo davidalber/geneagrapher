@@ -36,7 +36,7 @@ Once pip is available on your system, install Geneagrapher with:
 pip install geneagrapher
 ```
 
-## Geneagrapher Usage
+## Usage
 After installing the Geneagrapher, running
 
 ```
