@@ -1,6 +1,6 @@
 *.pyc
 .cache
-Geneagrapher.egg-info
+geneagrapher.egg-info
 
 dist
 build
