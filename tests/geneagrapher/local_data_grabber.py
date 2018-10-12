@@ -6,6 +6,7 @@ from geneagrapher.grabber import get_record_from_tree
 
 class LocalDataGrabber:
     """A class for grabbing locally-cached test data."""
+
     def __init__(self):
         pass
 
@@ -23,11 +24,10 @@ class LocalDataGrabber:
     def get_record(self, id):
         """Load the local data for the given id and use Grabber's functionas
         to extract the record data."""
-        with open(self.data_file('{0}.html'.format(id)), 'r') as fin:
-            soup = BeautifulSoup(fin, 'lxml')
+        with open(self.data_file("{0}.html".format(id)), "r") as fin:
+            soup = BeautifulSoup(fin, "lxml")
         return get_record_from_tree(soup, id)
 
 
 file_path = os.path.abspath(__file__)
-LocalDataGrabber.data_path = os.path.join(os.path.dirname(file_path),
-                                          'testdata')
+LocalDataGrabber.data_path = os.path.join(os.path.dirname(file_path), "testdata")

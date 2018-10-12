@@ -4,9 +4,11 @@ from geneagrapher.graph import Node, Record
 
 class TestNodeMethods(unittest.TestCase):
     """Unit tests for the Node class."""
+
     def setUp(self):
-        self.record = Record(u"Carl Friedrich Gau\xdf",
-                             u"Universit\xe4t Helmstedt", 1799, 18231)
+        self.record = Record(
+            u"Carl Friedrich Gau\xdf", u"Universit\xe4t Helmstedt", 1799, 18231
+        )
 
     def test_init(self):
         """Test the constructor."""
@@ -68,8 +70,7 @@ class TestNodeMethods(unittest.TestCase):
 
     def test_cmp_equal(self):
         """Test comparison method for Nodes with identical records."""
-        record2 = Record("Carl Friedrich Gauss", "Universitaet Helmstedt",
-                         1799, 18231)
+        record2 = Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
         node1 = Node(self.record, set(), set())
         node2 = Node(record2, set(), set())
         self.assert_(node1 == node2)
@@ -91,7 +92,7 @@ class TestNodeMethods(unittest.TestCase):
         """Test the add_ancestor() method for a case where the parameter type
         is incorrect."""
         node = Node(self.record, set(), set())
-        self.assertRaises(TypeError, node.add_ancestor, '5')
+        self.assertRaises(TypeError, node.add_ancestor, "5")
 
     def test_get_id(self):
         """Test the get_id() method."""
@@ -105,5 +106,6 @@ class TestNodeMethods(unittest.TestCase):
         node.set_id(15)
         self.assertEqual(node.get_id(), 15)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

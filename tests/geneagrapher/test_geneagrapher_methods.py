@@ -10,6 +10,7 @@ from local_data_grabber import LocalDataGrabber
 
 class TestGeneagrapherMethods(unittest.TestCase):
     """Unit tests for the geneagrapher.Geneagrapher class."""
+
     def setUp(self):
         self.ggrapher = geneagrapher.Geneagrapher()
 
@@ -22,11 +23,11 @@ class TestGeneagrapherMethods(unittest.TestCase):
         self.assertEqual(self.ggrapher.verbose, False)
         self.assertEqual(self.ggrapher.write_filename, None)
         self.assertEqual(self.ggrapher.use_cache, True)
-        self.assertEqual(self.ggrapher.cache_file, 'geneacache')
+        self.assertEqual(self.ggrapher.cache_file, "geneacache")
 
     def test_parse_empty(self):
         """Test parse_input() with no arguments."""
-        sys.argv = ['geneagrapher']
+        sys.argv = ["geneagrapher"]
 
         # Redirect stderr to capture output.
         stderr = sys.stderr
@@ -42,14 +43,13 @@ geneagrapher: error: too few arguments
         try:
             self.ggrapher.parse_input()
         except SystemExit:
-            self.assertEqual(stderr_intercept.getvalue().decode('utf-8'),
-                             expected)
+            self.assertEqual(stderr_intercept.getvalue().decode("utf-8"), expected)
 
         sys.stderr = stderr
 
     def test_parse_default(self):
         """Test parse_input() with no options."""
-        sys.argv = ['geneagrapher', '3']
+        sys.argv = ["geneagrapher", "3"]
         self.ggrapher.get_ancestors = False
         self.ggrapher.get_descendents = True
         self.ggrapher.write_filename = "filler"
@@ -59,34 +59,42 @@ geneagrapher: error: too few arguments
         self.assertEqual(self.ggrapher.verbose, False)
         self.assertEqual(self.ggrapher.write_filename, None)
         self.assertEqual(self.ggrapher.use_cache, True)
-        self.assertEqual(self.ggrapher.cache_file, 'geneacache')
+        self.assertEqual(self.ggrapher.cache_file, "geneacache")
         self.assertEqual(self.ggrapher.seed_ids, [3])
 
     def test_parse_options(self):
         """Test parse_input() with options."""
-        sys.argv = ['geneagrapher', '--with-ancestors', '--with-descendants',
-                    '--file=filler', '--verbose', '--disable-cache',
-                    '--cache-file', 'foo', '3', '43']
+        sys.argv = [
+            "geneagrapher",
+            "--with-ancestors",
+            "--with-descendants",
+            "--file=filler",
+            "--verbose",
+            "--disable-cache",
+            "--cache-file",
+            "foo",
+            "3",
+            "43",
+        ]
         self.ggrapher.parse_input()
         self.assertEqual(self.ggrapher.get_ancestors, True)
         self.assertEqual(self.ggrapher.get_descendants, True)
         self.assertEqual(self.ggrapher.verbose, True)
         self.assertEqual(self.ggrapher.write_filename, "filler")
         self.assertEqual(self.ggrapher.use_cache, False)
-        self.assertEqual(self.ggrapher.cache_file, 'foo')
+        self.assertEqual(self.ggrapher.cache_file, "foo")
         self.assertEqual(self.ggrapher.seed_ids, [3, 43])
 
     def test_parse_short_options(self):
         """Test parse_input() with short versions of the options."""
-        sys.argv = ['geneagrapher', '-a', '-d', '-f', 'filler', '-v', '3',
-                    '43']
+        sys.argv = ["geneagrapher", "-a", "-d", "-f", "filler", "-v", "3", "43"]
         self.ggrapher.parse_input()
         self.assertEqual(self.ggrapher.get_ancestors, True)
         self.assertEqual(self.ggrapher.get_descendants, True)
         self.assertEqual(self.ggrapher.verbose, True)
         self.assertEqual(self.ggrapher.write_filename, "filler")
         self.assertEqual(self.ggrapher.use_cache, True)
-        self.assertEqual(self.ggrapher.cache_file, 'geneacache')
+        self.assertEqual(self.ggrapher.cache_file, "geneacache")
         self.assertEqual(self.ggrapher.seed_ids, [3, 43])
 
     def test_build_graph_complete_only_self(self):
@@ -118,14 +126,18 @@ geneagrapher: error: too few arguments
         stdout_intercept = StringIO.StringIO()
         sys.stdout = stdout_intercept
         cache_fname = LocalDataGrabber.data_file(
-            'geneagrapher_verbose_cache_grabber_test')
+            "geneagrapher_verbose_cache_grabber_test"
+        )
         expiration = 1e15
-        self.ggrapher.build_graph_complete(CacheGrabber, filename=cache_fname,
-                                           expiration_interval=expiration)
+        self.ggrapher.build_graph_complete(
+            CacheGrabber, filename=cache_fname, expiration_interval=expiration
+        )
         sys.stdout = stdout
 
-        self.assertEqual(stdout_intercept.getvalue().decode('utf-8'),
-                         u"Grabbing record #127946...cache hit\n")
+        self.assertEqual(
+            stdout_intercept.getvalue().decode("utf-8"),
+            u"Grabbing record #127946...cache hit\n",
+        )
 
     def test_build_graph_complete_only_self_verbose_error(self):
         """Graph building with no ancestors or descendants given a bad
@@ -133,8 +145,9 @@ geneagrapher: error: too few arguments
         self.ggrapher.verbose = True
         self.ggrapher.seed_ids.append(999999999)
 
-        self.assertRaises(ValueError, self.ggrapher.build_graph_complete,
-                          LocalDataGrabber)
+        self.assertRaises(
+            ValueError, self.ggrapher.build_graph_complete, LocalDataGrabber
+        )
 
     def test_build_graph_complete_only_self_verbose_error_long(self):
         """Graph building with no ancestors or descendants given a bad
@@ -142,8 +155,9 @@ geneagrapher: error: too few arguments
         self.ggrapher.verbose = True
         self.ggrapher.seed_ids.append(999999999999999999999)
 
-        self.assertRaises(ValueError, self.ggrapher.build_graph_complete,
-                          LocalDataGrabber)
+        self.assertRaises(
+            ValueError, self.ggrapher.build_graph_complete, LocalDataGrabber
+        )
 
     def test_build_graph_complete_only_self_verbose(self):
         """Graph building with no ancestors or descendants."""
@@ -171,8 +185,9 @@ geneagrapher: error: too few arguments
         self.assertEqual(record.year, 1672)
         self.assertEqual(record.id, 127946)
 
-        self.assertEqual(stdout_intercept.getvalue().decode('utf-8'),
-                         u"Grabbing record #127946...\n")
+        self.assertEqual(
+            stdout_intercept.getvalue().decode("utf-8"), u"Grabbing record #127946...\n"
+        )
 
     def test_build_graph_complete_with_ancestors(self):
         """Graph building with ancestors."""
@@ -270,8 +285,9 @@ geneagrapher: error: too few arguments
     def test_build_graph_complete_bad_id(self):
         """Graph building with a bad ID."""
         self.ggrapher.seed_ids.append(79568583832)
-        self.assertRaises(ValueError, self.ggrapher.build_graph_complete,
-                          LocalDataGrabber)
+        self.assertRaises(
+            ValueError, self.ggrapher.build_graph_complete, LocalDataGrabber
+        )
 
         try:
             self.ggrapher.build_graph_complete(LocalDataGrabber)
@@ -283,7 +299,7 @@ geneagrapher: error: too few arguments
     def test_end_to_end_self_stdout(self):
         """Complete test getting no ancestors or descendants and writing the
         result to stdout."""
-        sys.argv = ['geneagrapher', '30484']
+        sys.argv = ["geneagrapher", "30484"]
         self.ggrapher.parse_input()
         self.assertEqual(self.ggrapher.get_ancestors, False)
         self.assertEqual(self.ggrapher.get_descendants, False)
@@ -310,14 +326,13 @@ geneagrapher: error: too few arguments
 
 }
 """
-        self.assertEqual(stdout_intercept.getvalue().decode('utf-8'), expected)
+        self.assertEqual(stdout_intercept.getvalue().decode("utf-8"), expected)
 
     def test_end_to_end_cached_self_stdout(self):
         """Complete test using cache getting no ancestors or descendants and
         writing the result to stdout."""
-        cache_fname = LocalDataGrabber.data_file(
-            'end-to-end-30484')
-        sys.argv = ['geneagrapher', '--cache-file', cache_fname, '30484']
+        cache_fname = LocalDataGrabber.data_file("end-to-end-30484")
+        sys.argv = ["geneagrapher", "--cache-file", cache_fname, "30484"]
         self.ggrapher.parse_input()
         self.assertEqual(self.ggrapher.get_ancestors, False)
         self.assertEqual(self.ggrapher.get_descendants, False)
@@ -325,8 +340,9 @@ geneagrapher: error: too few arguments
         self.assertEqual(self.ggrapher.write_filename, None)
         self.assertEqual(self.ggrapher.seed_ids, [30484])
 
-        self.ggrapher.build_graph_complete(CacheGrabber,
-                                           filename=self.ggrapher.cache_file)
+        self.ggrapher.build_graph_complete(
+            CacheGrabber, filename=self.ggrapher.cache_file
+        )
 
         # Redirect stdout to capture output.
         stdout = sys.stdout
@@ -345,13 +361,13 @@ geneagrapher: error: too few arguments
 
 }
 """
-        self.assertEqual(stdout_intercept.getvalue().decode('utf-8'), expected)
+        self.assertEqual(stdout_intercept.getvalue().decode("utf-8"), expected)
 
     def test_end_to_end_ancestors_stdout(self):
         """
         Complete test getting with ancestors, writing the result to stdout.
         """
-        sys.argv = ['geneagrapher', '-a', '127946']
+        sys.argv = ["geneagrapher", "-a", "127946"]
         self.ggrapher.parse_input()
         self.assertEqual(self.ggrapher.get_ancestors, True)
         self.assertEqual(self.ggrapher.get_descendants, False)
@@ -383,13 +399,13 @@ geneagrapher: error: too few arguments
     143630 -> 137705;
 }
 """
-        self.assertEqual(stdout_intercept.getvalue().decode('utf-8'), expected)
+        self.assertEqual(stdout_intercept.getvalue().decode("utf-8"), expected)
 
     def test_end_to_end_descendants_stdout(self):
         """
         Complete test getting with descendants, writing the result to stdout.
         """
-        sys.argv = ['geneagrapher', '-d', '79568']
+        sys.argv = ["geneagrapher", "-d", "79568"]
         self.ggrapher.parse_input()
         self.assertEqual(self.ggrapher.get_ancestors, False)
         self.assertEqual(self.ggrapher.get_descendants, True)
@@ -419,13 +435,13 @@ geneagrapher: error: too few arguments
     79568 -> 99457;
 }
 """
-        self.assertEqual(stdout_intercept.getvalue().decode('utf-8'), expected)
+        self.assertEqual(stdout_intercept.getvalue().decode("utf-8"), expected)
 
     def test_end_to_end_self_file(self):
         """Complete test getting no ancestors or descendants and writing the
         # result to stdout."""
-        outfname = 'outfile.test'
-        sys.argv = ['geneagrapher', '-f', outfname, '30484']
+        outfname = "outfile.test"
+        sys.argv = ["geneagrapher", "-f", outfname, "30484"]
         self.ggrapher.parse_input()
         self.assertEqual(self.ggrapher.get_ancestors, False)
         self.assertEqual(self.ggrapher.get_descendants, False)
@@ -446,16 +462,15 @@ geneagrapher: error: too few arguments
 
 }
 """
-        with open(outfname, 'r') as fin:
-            self.assertEqual(fin.read().decode('utf-8'), expected)
+        with open(outfname, "r") as fin:
+            self.assertEqual(fin.read().decode("utf-8"), expected)
         os.remove(outfname)
 
     def test_end_to_end_through_ggrapher_self_stdout(self):
         """Complete test calling ggrapher getting no ancestors or descendants
         and writing the result to stdout."""
-        cache_fname = LocalDataGrabber.data_file(
-            'end-to-end-30484')
-        sys.argv = ['geneagrapher', '--cache-file', cache_fname, '30484']
+        cache_fname = LocalDataGrabber.data_file("end-to-end-30484")
+        sys.argv = ["geneagrapher", "--cache-file", cache_fname, "30484"]
 
         # Redirect stdout to capture output.
         stdout = sys.stdout
@@ -474,7 +489,8 @@ geneagrapher: error: too few arguments
 
 }
 """
-        self.assertEqual(stdout_intercept.getvalue().decode('utf-8'), expected)
+        self.assertEqual(stdout_intercept.getvalue().decode("utf-8"), expected)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

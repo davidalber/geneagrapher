@@ -5,14 +5,15 @@ from geneagrapher.graph import Record
 # Unit tests for graph-related classes.
 class TestRecordMethods(unittest.TestCase):
     """Unit tests for the Record class."""
+
     def setUp(self):
-        self.record = Record(u"Carl Friedrich Gau\xdf",
-                             u"Universit\xe4t Helmstedt", 1799, 18231)
+        self.record = Record(
+            u"Carl Friedrich Gau\xdf", u"Universit\xe4t Helmstedt", 1799, 18231
+        )
 
     def test_init(self):
         """Test the constructor."""
-        record = Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799,
-                        18231)
+        record = Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
         self.assertEqual(record.name, "Carl Friedrich Gauss")
         self.assertEqual(record.institution, "Universitaet Helmstedt")
         self.assertEqual(record.year, 1799)
@@ -20,44 +21,50 @@ class TestRecordMethods(unittest.TestCase):
 
     def test_init_bad_name(self):
         """Test constructor with bad 'name' parameter."""
-        self.assertRaises(TypeError, Record, 1, "Universitaet Helmstedt", 1799,
-                          18231)
+        self.assertRaises(TypeError, Record, 1, "Universitaet Helmstedt", 1799, 18231)
 
     def test_init_bad_institution(self):
         """Test constructor with bad 'institution' parameter."""
-        self.assertRaises(TypeError, Record, "Carl Friedrich Gauss", 1, 1799,
-                          18231)
+        self.assertRaises(TypeError, Record, "Carl Friedrich Gauss", 1, 1799, 18231)
 
     def test_init_bad_year(self):
         """Test constructor with bad 'year' parameter."""
-        self.assertRaises(TypeError, Record, "Carl Friedrich Gauss",
-                          "Universitaet Helmstedt", "1799", 18231)
+        self.assertRaises(
+            TypeError,
+            Record,
+            "Carl Friedrich Gauss",
+            "Universitaet Helmstedt",
+            "1799",
+            18231,
+        )
 
     def test_init_bad_id(self):
         """Test constructor with bad 'id' parameter."""
-        self.assertRaises(TypeError, Record, "Carl Friedrich Gauss",
-                          "Universitaet Helmstedt", 1799, "18231")
+        self.assertRaises(
+            TypeError,
+            Record,
+            "Carl Friedrich Gauss",
+            "Universitaet Helmstedt",
+            1799,
+            "18231",
+        )
 
     def test_cmp_equal(self):
         """Verify two 'equal' records are compared correctly."""
-        record1 = Record("Carl Friedrich Gauss", "Universitaet Helmstedt",
-                         1799, 18231)
-        record2 = Record("Carl Friedrich Gauss", "Universitaet Helmstedt",
-                         1799, 18231)
+        record1 = Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
+        record2 = Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
         self.assert_(record1 == record2)
 
     def test_cmp_unequal(self):
         """Verify two 'unequal' records are compared correctly."""
-        record1 = Record("Carl Friedrich Gauss", "Universitaet Helmstedt",
-                         1799, 18231)
+        record1 = Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
         record2 = Record("Leonhard Euler", "Universitaet Basel", 1726, 38586)
         self.assert_(record1 < record2)
 
     def test_has_institution_yes(self):
         """Verify has_institution() method returns True when the conditions are
         right."""
-        record = Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799,
-                        18231)
+        record = Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
         self.assert_(record.has_institution())
 
     def test_has_institution_no(self):
@@ -70,16 +77,14 @@ class TestRecordMethods(unittest.TestCase):
         """
         Verify has_year() method returns True when the conditions are right.
         """
-        record = Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799,
-                        18231)
+        record = Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
         self.assert_(record.has_year())
 
     def test_has_year_no(self):
         """
         Verify has_year() method returns False when the conditions are right.
         """
-        record = Record("Carl Friedrich Gauss", "Universitaet Helmstedt", None,
-                        18231)
+        record = Record("Carl Friedrich Gauss", "Universitaet Helmstedt", None, 18231)
         self.assert_(not record.has_year())
 
     def test_unicode_full(self):
@@ -110,5 +115,6 @@ class TestRecordMethods(unittest.TestCase):
         recstrexpt = u"Carl Friedrich Gau\xdf"
         self.assertEqual(recstr, recstrexpt)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()
