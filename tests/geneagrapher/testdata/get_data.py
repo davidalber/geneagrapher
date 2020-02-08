@@ -1,4 +1,4 @@
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 if __name__ == '__main__':
     record_ids = [7298, 7383, 10275, 12681, 15165, 17851, 17946, 18230, 18231,
@@ -11,7 +11,7 @@ if __name__ == '__main__':
     for record_id in record_ids:
         url_base = 'http://genealogy.math.ndsu.nodak.edu/id.php?id='
         url = '{0}{1}'.format(url_base, record_id)
-        print 'Getting record {}'.format(record_id)
-        page = urllib2.urlopen(url)
+        print('Getting record {}'.format(record_id))
+        page = urllib.request.urlopen(url)
         with open('{}.html'.format(record_id), 'w') as fout:
             fout.write(page.read())

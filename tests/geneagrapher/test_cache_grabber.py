@@ -1,7 +1,7 @@
 import os
 from time import time
 import unittest
-from local_data_grabber import LocalDataGrabber
+from .local_data_grabber import LocalDataGrabber
 from geneagrapher.cache_grabber import CacheGrabber
 from geneagrapher.grabber import Grabber
 
@@ -10,8 +10,8 @@ class TestCacheGrabberMethods(unittest.TestCase):
     """Unit tests for the geneagrapher.CacheGrabber class."""
 
     def setUp(self):
-        self.name = u"Carl Friedrich Gau\xdf"
-        self.institution = u"Universit\xe4t Helmstedt"
+        self.name = "Carl Friedrich Gau\xdf"
+        self.institution = "Universit\xe4t Helmstedt"
         self.year = 1799
         self.advisors = set([18230])
         self.descendants = set(
@@ -62,7 +62,7 @@ class TestCacheGrabberMethods(unittest.TestCase):
         cache = CacheGrabber(record_grabber=LocalDataGrabber)
         self.assertEqual(len(cache.cache), 0)
         cache.close()
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValueError, "invalid operation on closed shelf", len, cache.cache
         )
 
@@ -100,7 +100,7 @@ class TestCacheGrabberMethods(unittest.TestCase):
         """Test the context manager methods."""
         with CacheGrabber(record_grabber=LocalDataGrabber) as cache:
             self.assertEqual(len(cache.cache), 0)
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValueError, "invalid operation on closed shelf", len, cache.cache
         )
 
@@ -108,7 +108,7 @@ class TestCacheGrabberMethods(unittest.TestCase):
         """Test the get_record method for a bad id."""
         with CacheGrabber(record_grabber=LocalDataGrabber) as cache:
             self.assertEqual(len(cache.cache), 0)
-            self.assertRaisesRegexp(
+            self.assertRaisesRegex(
                 ValueError, "Invalid id 999999999", cache.get_record, 999999999
             )
             self.assertEqual(len(cache.cache), 0)
@@ -118,8 +118,8 @@ class TestCacheGrabberMethods(unittest.TestCase):
         with CacheGrabber(record_grabber=LocalDataGrabber) as cache:
             record = cache.get_record(18231)
             self.assertEqual(len(record), 6)
-            self.assertEqual(record["name"], u"Carl Friedrich Gau\xdf")
-            self.assertEqual(record["institution"], u"Universit\xe4t Helmstedt")
+            self.assertEqual(record["name"], "Carl Friedrich Gau\xdf")
+            self.assertEqual(record["institution"], "Universit\xe4t Helmstedt")
             self.assertEqual(record["year"], 1799)
             self.assertEqual(record["advisors"], set([18230]))
             self.assertEqual(
@@ -149,12 +149,12 @@ class TestCacheGrabberMethods(unittest.TestCase):
 
             # Make the request again and verify the cached version is returned.
             d = cache.cache["18231"]
-            d["institution"] = u"Rigged for test"
+            d["institution"] = "Rigged for test"
             cache.cache["18231"] = d
             record = cache.get_record(18231)
             self.assertEqual(len(record), 6)
-            self.assertEqual(record["name"], u"Carl Friedrich Gau\xdf")
-            self.assertEqual(record["institution"], u"Rigged for test")
+            self.assertEqual(record["name"], "Carl Friedrich Gau\xdf")
+            self.assertEqual(record["institution"], "Rigged for test")
             self.assertEqual(record["year"], 1799)
             self.assertEqual(record["advisors"], set([18230]))
             self.assertEqual(
@@ -179,7 +179,7 @@ class TestCacheGrabberMethods(unittest.TestCase):
                     ]
                 ),
             )
-            self.assertEqual(record["message"], u"cache hit")
+            self.assertEqual(record["message"], "cache hit")
             self.assertEqual(len(cache.cache), 1)
 
         with CacheGrabber(record_grabber=LocalDataGrabber) as cache:
@@ -187,12 +187,12 @@ class TestCacheGrabberMethods(unittest.TestCase):
             # of the cache from disk.
             self.assertEqual(len(cache.cache), 1)
             d = cache.cache["18231"]
-            d["institution"] = u"Rigged for test"
+            d["institution"] = "Rigged for test"
             cache.cache["18231"] = d
             record = cache.get_record(18231)
             self.assertEqual(len(record), 6)
-            self.assertEqual(record["name"], u"Carl Friedrich Gau\xdf")
-            self.assertEqual(record["institution"], u"Rigged for test")
+            self.assertEqual(record["name"], "Carl Friedrich Gau\xdf")
+            self.assertEqual(record["institution"], "Rigged for test")
             self.assertEqual(record["year"], 1799)
             self.assertEqual(record["advisors"], set([18230]))
             self.assertEqual(
@@ -217,7 +217,7 @@ class TestCacheGrabberMethods(unittest.TestCase):
                     ]
                 ),
             )
-            self.assertEqual(record["message"], u"cache hit")
+            self.assertEqual(record["message"], "cache hit")
             self.assertEqual(len(cache.cache), 1)
 
             # Make another request, this time with the cached entry expired,
@@ -226,8 +226,8 @@ class TestCacheGrabberMethods(unittest.TestCase):
             cache.cache["18231"] = d
             record = cache.get_record(18231)
             self.assertEqual(len(record), 6)
-            self.assertEqual(record["name"], u"Carl Friedrich Gau\xdf")
-            self.assertEqual(record["institution"], u"Universit\xe4t Helmstedt")
+            self.assertEqual(record["name"], "Carl Friedrich Gau\xdf")
+            self.assertEqual(record["institution"], "Universit\xe4t Helmstedt")
             self.assertEqual(record["year"], 1799)
             self.assertEqual(record["advisors"], set([18230]))
             self.assertEqual(
@@ -252,7 +252,7 @@ class TestCacheGrabberMethods(unittest.TestCase):
                     ]
                 ),
             )
-            self.assertEqual(record["message"], u"cache miss")
+            self.assertEqual(record["message"], "cache miss")
             self.assertEqual(len(cache.cache), 1)
 
     def test_is_in_cache(self):

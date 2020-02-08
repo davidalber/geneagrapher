@@ -7,7 +7,7 @@ class TestNodeMethods(unittest.TestCase):
 
     def setUp(self):
         self.record = Record(
-            u"Carl Friedrich Gau\xdf", u"Universit\xe4t Helmstedt", 1799, 18231
+            "Carl Friedrich Gau\xdf", "Universit\xe4t Helmstedt", 1799, 18231
         )
 
     def test_init(self):
@@ -36,7 +36,7 @@ class TestNodeMethods(unittest.TestCase):
         """Test __unicode__() method for Node with complete record."""
         node = Node(self.record, set(), set())
         nodestr = node.__unicode__()
-        nodestrexpt = u"Carl Friedrich Gau\xdf \\nUniversit\xe4t Helmstedt \
+        nodestrexpt = "Carl Friedrich Gau\xdf \\nUniversit\xe4t Helmstedt \
 (1799)"
         self.assertEqual(nodestr, nodestrexpt)
 
@@ -47,7 +47,7 @@ class TestNodeMethods(unittest.TestCase):
         record = Record(self.record.name, self.record.institution, None, 18231)
         node = Node(record, set(), set())
         nodestr = node.__unicode__()
-        nodestrexpt = u"Carl Friedrich Gau\xdf \\nUniversit\xe4t Helmstedt"
+        nodestrexpt = "Carl Friedrich Gau\xdf \\nUniversit\xe4t Helmstedt"
         self.assertEqual(nodestr, nodestrexpt)
 
     def test_unicode_no_inst(self):
@@ -56,7 +56,7 @@ class TestNodeMethods(unittest.TestCase):
         record = Record(self.record.name, None, 1799, 18231)
         node = Node(record, set(), set())
         nodestr = node.__unicode__()
-        nodestrexpt = u"Carl Friedrich Gau\xdf \\n(1799)"
+        nodestrexpt = "Carl Friedrich Gau\xdf \\n(1799)"
         self.assertEqual(nodestr, nodestrexpt)
 
     def test_unicode_no_inst_no_id(self):
@@ -65,7 +65,7 @@ class TestNodeMethods(unittest.TestCase):
         record = Record(self.record.name, None, None, 18231)
         node = Node(record, set(), set())
         nodestr = node.__unicode__()
-        nodestrexpt = u"Carl Friedrich Gau\xdf"
+        nodestrexpt = "Carl Friedrich Gau\xdf"
         self.assertEqual(nodestr, nodestrexpt)
 
     def test_cmp_equal(self):
@@ -73,14 +73,14 @@ class TestNodeMethods(unittest.TestCase):
         record2 = Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
         node1 = Node(self.record, set(), set())
         node2 = Node(record2, set(), set())
-        self.assert_(node1 == node2)
+        self.assertTrue(node1 == node2)
 
     def test_cmp_unequal(self):
         """Test comparison method for Nodes with different records."""
         record2 = Record("Leonhard Euler", "Universitaet Basel", 1726, 38586)
         node1 = Node(self.record, set(), set())
         node2 = Node(record2, set(), set())
-        self.assert_(node1 < node2)
+        self.assertTrue(node1 < node2)
 
     def test_add_ancestor(self):
         """Test the add_ancestor() method."""

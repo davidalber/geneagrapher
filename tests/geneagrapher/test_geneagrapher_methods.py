@@ -1,11 +1,11 @@
 import os
 import sys
 import unittest
-import StringIO
+import io
 from geneagrapher import geneagrapher
 from geneagrapher.cache_grabber import CacheGrabber
 from geneagrapher.graph import Graph
-from local_data_grabber import LocalDataGrabber
+from .local_data_grabber import LocalDataGrabber
 
 
 class TestGeneagrapherMethods(unittest.TestCase):
@@ -31,7 +31,7 @@ class TestGeneagrapherMethods(unittest.TestCase):
 
         # Redirect stderr to capture output.
         stderr = sys.stderr
-        stderr_intercept = StringIO.StringIO()
+        stderr_intercept = io.StringIO()
         sys.stderr = stderr_intercept
 
         expected = """usage: geneagrapher [-h] [--version] [-f FILE] [-a] \
@@ -166,7 +166,7 @@ geneagrapher: error: too few arguments
 
         # Redirect stdout to capture output.
         stdout = sys.stdout
-        stdout_intercept = StringIO.StringIO()
+        stdout_intercept = io.StringIO()
         sys.stdout = stdout_intercept
         self.ggrapher.build_graph_complete(LocalDataGrabber)
         sys.stdout = stdout
@@ -186,8 +186,10 @@ geneagrapher: error: too few arguments
         self.assertEqual(record.id, 127946)
 
         self.assertEqual(
-            stdout_intercept.getvalue().decode("utf-8"), u"Grabbing record #127946...\n"
+            stdout_intercept.getvalue().decode("utf-8"), "Grabbing record #127946...\n"
         )
+        self.assertEqual(stdout_intercept.getvalue().decode('utf-8'),
+                         "Grabbing record #127946...\n")
 
     def test_build_graph_complete_with_ancestors(self):
         """Graph building with ancestors."""
@@ -217,7 +219,7 @@ geneagrapher: error: too few arguments
 
         record = node.record
         self.assertEqual(record.name, "Valentin  Alberti")
-        self.assertEqual(record.institution, u"Universit\xe4t Leipzig")
+        self.assertEqual(record.institution, "Universit\xe4t Leipzig")
         self.assertEqual(record.year, 1678)
         self.assertEqual(record.id, 137717)
 
@@ -227,7 +229,7 @@ geneagrapher: error: too few arguments
 
         record = node.record
         self.assertEqual(record.name, "Jakob  Thomasius")
-        self.assertEqual(record.institution, u"Universit\xe4t Leipzig")
+        self.assertEqual(record.institution, "Universit\xe4t Leipzig")
         self.assertEqual(record.year, 1643)
         self.assertEqual(record.id, 137705)
 
@@ -258,7 +260,7 @@ geneagrapher: error: too few arguments
 
         record = node.record
         self.assertEqual(record.name, "Ramdas  Kumaresan")
-        self.assertEqual(record.institution, u"University of Rhode Island")
+        self.assertEqual(record.institution, "University of Rhode Island")
         self.assertEqual(record.year, 1982)
         self.assertEqual(record.id, 79568)
 
@@ -268,7 +270,7 @@ geneagrapher: error: too few arguments
 
         record = node.record
         self.assertEqual(record.name, "C. S. Ramalingam")
-        self.assertEqual(record.institution, u"University of Rhode Island")
+        self.assertEqual(record.institution, "University of Rhode Island")
         self.assertEqual(record.year, 1995)
         self.assertEqual(record.id, 79562)
 
@@ -278,7 +280,7 @@ geneagrapher: error: too few arguments
 
         record = node.record
         self.assertEqual(record.name, "Yadong  Wang")
-        self.assertEqual(record.institution, u"University of Rhode Island")
+        self.assertEqual(record.institution, "University of Rhode Island")
         self.assertEqual(record.year, 2003)
         self.assertEqual(record.id, 99457)
 
@@ -311,12 +313,12 @@ geneagrapher: error: too few arguments
 
         # Redirect stdout to capture output.
         stdout = sys.stdout
-        stdout_intercept = StringIO.StringIO()
+        stdout_intercept = io.StringIO()
         sys.stdout = stdout_intercept
         self.ggrapher.generate_dot_file()
         sys.stdout = stdout
 
-        expected = u"""digraph genealogy {
+        expected = """digraph genealogy {
     graph [charset="utf-8"];
     node [shape=plaintext];
     edge [style=bold];
@@ -379,12 +381,12 @@ geneagrapher: error: too few arguments
 
         # Redirect stdout to capture output.
         stdout = sys.stdout
-        stdout_intercept = StringIO.StringIO()
+        stdout_intercept = io.StringIO()
         sys.stdout = stdout_intercept
         self.ggrapher.generate_dot_file()
         sys.stdout = stdout
 
-        expected = u"""digraph genealogy {
+        expected = """digraph genealogy {
     graph [charset="utf-8"];
     node [shape=plaintext];
     edge [style=bold];
@@ -417,12 +419,12 @@ geneagrapher: error: too few arguments
 
         # Redirect stdout to capture output.
         stdout = sys.stdout
-        stdout_intercept = StringIO.StringIO()
+        stdout_intercept = io.StringIO()
         sys.stdout = stdout_intercept
         self.ggrapher.generate_dot_file()
         sys.stdout = stdout
 
-        expected = u"""digraph genealogy {
+        expected = """digraph genealogy {
     graph [charset="utf-8"];
     node [shape=plaintext];
     edge [style=bold];
@@ -452,7 +454,7 @@ geneagrapher: error: too few arguments
         self.ggrapher.build_graph_complete(LocalDataGrabber)
         self.ggrapher.generate_dot_file()
 
-        expected = u"""digraph genealogy {
+        expected = """digraph genealogy {
     graph [charset="utf-8"];
     node [shape=plaintext];
     edge [style=bold];

@@ -1,6 +1,6 @@
 import shelve
 from time import time
-from grabber import Grabber
+from .grabber import Grabber
 
 
 class CacheGrabber:

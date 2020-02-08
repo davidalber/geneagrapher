@@ -7,7 +7,7 @@ class TestGraphMethods(unittest.TestCase):
 
     def setUp(self):
         self.record1 = Record(
-            u"Carl Friedrich Gau\xdf", u"Universit\xe4t Helmstedt", 1799, 18231
+            "Carl Friedrich Gau\xdf", u"Universit\xe4t Helmstedt", 1799, 18231
         )
         self.node1 = Node(self.record1, set(), set())
         self.graph1 = Graph(set([self.node1]))
@@ -20,7 +20,7 @@ class TestGraphMethods(unittest.TestCase):
     def test_init(self):
         """Test the constructor."""
         self.assertEqual(self.graph1.seeds, set([18231]))
-        self.assertEqual(self.graph1.keys(), [18231])
+        self.assertEqual(list(self.graph1.keys()), [18231])
         self.assertEqual(self.graph1[18231], self.node1)
 
     def test_init_bad_seeds(self):
@@ -48,7 +48,7 @@ class TestGraphMethods(unittest.TestCase):
     def test_get_node(self):
         """Test the get_node() method."""
         node = self.graph1.get_node(18231)
-        self.assert_(node == self.node1)
+        self.assertTrue(node == self.node1)
 
     def test_get_node_not_found(self):
         """
@@ -127,7 +127,7 @@ class TestGraphMethods(unittest.TestCase):
 
     def test_generate_dot_file(self):
         """Test the generate_dot_file() method."""
-        dotfileexpt = u"""digraph genealogy {
+        dotfileexpt = """digraph genealogy {
     graph [charset="utf-8"];
     node [shape=plaintext];
     edge [style=bold];
@@ -145,50 +145,50 @@ class TestGraphMethods(unittest.TestCase):
         This is a larger example than test_generate_dot_file()."""
         graph = Graph()
         graph.add_node(
-            u"Carl Friedrich Gau\xdf",
-            u"Universit\xe4t Helmstedt",
+            "Carl Friedrich Gau\xdf",
+            "Universit\xe4t Helmstedt",
             1799,
             18231,
             set([18230]),
             set(),
         )
         graph.add_node(
-            u"Johann Friedrich Pfaff",
-            u"Georg-August-Universit\xe4t Goettingen",
+            "Johann Friedrich Pfaff",
+            "Georg-August-Universit\xe4t Goettingen",
             1786,
             18230,
             set([66476]),
             set([18231]),
         )
         graph.add_node(
-            u"Abraham Gotthelf Kaestner",
-            u"Universit\xe4t Leipzig",
+            "Abraham Gotthelf Kaestner",
+            "Universit\xe4t Leipzig",
             1739,
             66476,
             set([57670]),
             set([18230]),
         )
         graph.add_node(
-            u"Christian August Hausen",
-            u"Martin-Luther-Universit\xe4t Halle-Wittenberg",
+            "Christian August Hausen",
+            "Martin-Luther-Universit\xe4t Halle-Wittenberg",
             1713,
             57670,
             set([72669]),
             set([66476]),
         )
         graph.add_node(
-            u"Johann Christoph Wichmannshausen",
-            u"Universit\xe4t Leipzig",
+            "Johann Christoph Wichmannshausen",
+            "Universit\xe4t Leipzig",
             1685,
             72669,
             set([21235]),
             set([57670]),
         )
         graph.add_node(
-            u"Otto Mencke", u"Universit\xe4t Leipzig", 1665, 21235, set(), set([72669])
+            "Otto Mencke", "Universit\xe4t Leipzig", 1665, 21235, set(), set([72669])
         )
 
-        dotfileexpt = u"""digraph genealogy {
+        dotfileexpt = """digraph genealogy {
     graph [charset="utf-8"];
     node [shape=plaintext];
     edge [style=bold];
@@ -218,8 +218,8 @@ Halle-Wittenberg (1713)"];
         graph's nodes as they are added."""
         graph = Graph()
         graph.add_node(
-            u"Carl Friedrich Gau\xdf",
-            u"Universit\xe4t Helmstedt",
+            "Carl Friedrich Gau\xdf",
+            "Universit\xe4t Helmstedt",
             1799,
             18231,
             set([18230]),
@@ -230,8 +230,8 @@ Halle-Wittenberg (1713)"];
         self.assertEqual(node1.descendants, set())
 
         graph.add_node(
-            u"Johann Friedrich Pfaff",
-            u"Georg-August-Universit\xe4t Goettingen",
+            "Johann Friedrich Pfaff",
+            "Georg-August-Universit\xe4t Goettingen",
             1786,
             18230,
             set([66476]),
@@ -244,8 +244,8 @@ Halle-Wittenberg (1713)"];
         self.assertEqual(node2.descendants, set([18231]))
 
         graph.add_node(
-            u"Abraham Gotthelf Kaestner",
-            u"Universit\xe4t Leipzig",
+            "Abraham Gotthelf Kaestner",
+            "Universit\xe4t Leipzig",
             1739,
             66476,
             set([57670]),
@@ -260,8 +260,8 @@ Halle-Wittenberg (1713)"];
         self.assertEqual(node3.descendants, set([18230]))
 
         graph.add_node(
-            u"Christian August Hausen",
-            u"Martin-Luther-Universit\xe4t Halle-Wittenberg",
+            "Christian August Hausen",
+            "Martin-Luther-Universit\xe4t Halle-Wittenberg",
             1713,
             57670,
             set([72669]),
@@ -278,8 +278,8 @@ Halle-Wittenberg (1713)"];
         self.assertEqual(node4.descendants, set([66476]))
 
         graph.add_node(
-            u"Johann Christoph Wichmannshausen",
-            u"Universit\xe4t Leipzig",
+            "Johann Christoph Wichmannshausen",
+            "Universit\xe4t Leipzig",
             1685,
             72669,
             set([21235]),
@@ -298,7 +298,7 @@ Halle-Wittenberg (1713)"];
         self.assertEqual(node5.descendants, set([57670]))
 
         graph.add_node(
-            u"Otto Mencke", u"Universit\xe4t Leipzig", 1665, 21235, set(), set([72669])
+            "Otto Mencke", "Universit\xe4t Leipzig", 1665, 21235, set(), set([72669])
         )
         node6 = graph[21235]
         self.assertEqual(node1.ancestors, set([18230]))
@@ -320,8 +320,8 @@ Halle-Wittenberg (1713)"];
         # in the previous test."""
         graph = Graph()
         graph.add_node(
-            u"Abraham Gotthelf Kaestner",
-            u"Universit\xe4t Leipzig",
+            "Abraham Gotthelf Kaestner",
+            "Universit\xe4t Leipzig",
             1739,
             66476,
             set([57670]),
@@ -332,8 +332,8 @@ Halle-Wittenberg (1713)"];
         self.assertEqual(node1.descendants, set())
 
         graph.add_node(
-            u"Johann Friedrich Pfaff",
-            u"Georg-August-Universit\xe4t Goettingen",
+            "Johann Friedrich Pfaff",
+            "Georg-August-Universit\xe4t Goettingen",
             1786,
             18230,
             set([66476]),
@@ -346,8 +346,8 @@ Halle-Wittenberg (1713)"];
         self.assertEqual(node2.descendants, set())
 
         graph.add_node(
-            u"Christian August Hausen",
-            u"Martin-Luther-Universit\xe4t Halle-Wittenberg",
+            "Christian August Hausen",
+            "Martin-Luther-Universit\xe4t Halle-Wittenberg",
             1713,
             57670,
             set([72669]),
@@ -362,8 +362,8 @@ Halle-Wittenberg (1713)"];
         self.assertEqual(node3.descendants, set([66476]))
 
         graph.add_node(
-            u"Johann Christoph Wichmannshausen",
-            u"Universit\xe4t Leipzig",
+            "Johann Christoph Wichmannshausen",
+            "Universit\xe4t Leipzig",
             1685,
             72669,
             set([21235]),
@@ -380,7 +380,7 @@ Halle-Wittenberg (1713)"];
         self.assertEqual(node4.descendants, set([57670]))
 
         graph.add_node(
-            u"Otto Mencke", u"Universit\xe4t Leipzig", 1665, 21235, set(), set([72669])
+            "Otto Mencke", "Universit\xe4t Leipzig", 1665, 21235, set(), set([72669])
         )
         node5 = graph[21235]
         self.assertEqual(node1.ancestors, set([57670]))
@@ -395,8 +395,8 @@ Halle-Wittenberg (1713)"];
         self.assertEqual(node5.descendants, set([72669]))
 
         graph.add_node(
-            u"Carl Friedrich Gau\xdf",
-            u"Universit\xe4t Helmstedt",
+            "Carl Friedrich Gau\xdf",
+            "Universit\xe4t Helmstedt",
             1799,
             18231,
             set([18230]),
