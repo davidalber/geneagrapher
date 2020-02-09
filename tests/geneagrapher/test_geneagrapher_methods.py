@@ -38,12 +38,12 @@ class TestGeneagrapherMethods(unittest.TestCase):
 [-d] [--disable-cache]
                     [--cache-file FILE] [-v]
                     ID [ID ...]
-geneagrapher: error: too few arguments
+geneagrapher: error: the following arguments are required: ID
 """
         try:
             self.ggrapher.parse_input()
         except SystemExit:
-            self.assertEqual(stderr_intercept.getvalue().decode("utf-8"), expected)
+            self.assertEqual(stderr_intercept.getvalue(), expected)
 
         sys.stderr = stderr
 
@@ -185,11 +185,7 @@ geneagrapher: error: too few arguments
         self.assertEqual(record.year, 1672)
         self.assertEqual(record.id, 127946)
 
-        self.assertEqual(
-            stdout_intercept.getvalue().decode("utf-8"), "Grabbing record #127946...\n"
-        )
-        self.assertEqual(stdout_intercept.getvalue().decode('utf-8'),
-                         "Grabbing record #127946...\n")
+        self.assertEqual(stdout_intercept.getvalue(), "Grabbing record #127946...\n")
 
     def test_build_graph_complete_with_ancestors(self):
         """Graph building with ancestors."""
@@ -328,7 +324,7 @@ geneagrapher: error: too few arguments
 
 }
 """
-        self.assertEqual(stdout_intercept.getvalue().decode("utf-8"), expected)
+        self.assertEqual(stdout_intercept.getvalue(), expected)
 
     def test_end_to_end_cached_self_stdout(self):
         """Complete test using cache getting no ancestors or descendants and
@@ -401,7 +397,7 @@ geneagrapher: error: too few arguments
     143630 -> 137705;
 }
 """
-        self.assertEqual(stdout_intercept.getvalue().decode("utf-8"), expected)
+        self.assertEqual(stdout_intercept.getvalue(), expected)
 
     def test_end_to_end_descendants_stdout(self):
         """
@@ -437,7 +433,7 @@ geneagrapher: error: too few arguments
     79568 -> 99457;
 }
 """
-        self.assertEqual(stdout_intercept.getvalue().decode("utf-8"), expected)
+        self.assertEqual(stdout_intercept.getvalue(), expected)
 
     def test_end_to_end_self_file(self):
         """Complete test getting no ancestors or descendants and writing the
@@ -465,7 +461,7 @@ geneagrapher: error: too few arguments
 }
 """
         with open(outfname, "r") as fin:
-            self.assertEqual(fin.read().decode("utf-8"), expected)
+            self.assertEqual(fin.read(), expected)
         os.remove(outfname)
 
     def test_end_to_end_through_ggrapher_self_stdout(self):

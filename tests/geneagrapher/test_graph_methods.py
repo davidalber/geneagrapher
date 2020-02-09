@@ -58,28 +58,26 @@ class TestGraphMethods(unittest.TestCase):
 
     def test_get_node_list(self):
         """Test the get_node_list() method."""
-        self.assertEqual(self.graph1.get_node_list(), [18231])
+        self.assertEqual(self.graph1.get_node_list(), set([18231]))
 
     def test_get_node_list_empty(self):
         """Test the get_node_list() method for an empty graph."""
         graph = Graph()
-        self.assertEqual(graph.get_node_list(), [])
+        self.assertEqual(graph.get_node_list(), set())
 
     def test_add_node(self):
         """Test the add_node() method."""
         self.graph1.add_node(
-            "Leonhard Euler", "Universitaet Basel", 1726, 38586, set(), set()
-        )
-        self.assertEqual([38586, 18231], self.graph1.get_node_list())
+            "Leonhard Euler", "Universitaet Basel", 1726, 38586, set(), set())
+        self.assertEqual(set([38586, 18231]), self.graph1.get_node_list())
         self.assertEqual(self.graph1.seeds, set([18231]))
 
     def test_add_second_node_seed(self):
         """Test the add_node() method when adding a second node and
         marking it as a seed node."""
         self.graph1.add_node(
-            "Leonhard Euler", "Universitaet Basel", 1726, 38586, set(), set(), True
-        )
-        self.assertEqual([38586, 18231], self.graph1.get_node_list())
+            "Leonhard Euler", "Universitaet Basel", 1726, 38586, set(), set(), True)
+        self.assertEqual(set([38586, 18231]), self.graph1.get_node_list())
         self.assertEqual(self.graph1.seeds, set([18231, 38586]))
 
     def test_add_node_seed(self):
@@ -94,9 +92,8 @@ class TestGraphMethods(unittest.TestCase):
     def test_add_node_already_present(self):
         """Test for expected exception when adding a duplicate node."""
         self.graph1.add_node(
-            "Leonhard Euler", "Universitaet Basel", 1726, 38586, set(), set()
-        )
-        self.assertEqual([38586, 18231], self.graph1.get_node_list())
+            "Leonhard Euler", "Universitaet Basel", 1726, 38586, set(), set())
+        self.assertEqual(set([38586, 18231]), self.graph1.get_node_list())
         self.assertRaises(
             DuplicateNodeError,
             self.graph1.add_node,
@@ -122,7 +119,7 @@ class TestGraphMethods(unittest.TestCase):
         record = Record("Leonhard Euler", "Universitaet Basel", 1726, 38586)
         node = Node(record, set(), set())
         self.graph1.add_node_object(node)
-        self.assertEqual([38586, 18231], self.graph1.get_node_list())
+        self.assertEqual(set([38586, 18231]), self.graph1.get_node_list())
         self.assertEqual(self.graph1.seeds, set([18231]))
 
     def test_generate_dot_file(self):

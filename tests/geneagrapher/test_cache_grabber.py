@@ -20,7 +20,7 @@ class TestCacheGrabberMethods(unittest.TestCase):
 
     def tearDown(self):
         try:
-            os.remove("geneacache")
+            os.remove("geneacache.db")
         except OSError:
             pass
 
@@ -39,7 +39,7 @@ class TestCacheGrabberMethods(unittest.TestCase):
         self.assertEqual(len(cache.cache), 0)
         self.assertIsInstance(cache.grabber, Grabber)
         self.assertEqual(cache.expiration_interval, 604800.)
-        os.remove("mycachename")
+        os.remove("mycachename.db")
 
     def test_init3(self):
         """Test constructor with non-default record grabber."""

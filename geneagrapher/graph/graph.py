@@ -64,7 +64,7 @@ of Node objects for 'seed_nodes'"
         """
         Return a list of the nodes in the graph.
         """
-        return list(self.keys())
+        return set(self.keys())
 
     def add_node(self, name, institution, year, id, advisors, advisees, is_seed=False):
         """
@@ -141,15 +141,11 @@ of Node objects for 'seed_nodes'"
 
             sorted_ancestors = sorted(
                 [a for a in node.ancestors if a in self],
-                lambda x, y: cmp(
-                    self[x].record.name.split()[-1], self[y].record.name.split()[-1]
-                ),
+                key=lambda n: self[n].record.name.split()[-1]
             )
             sorted_descendants = sorted(
                 [d for d in node.descendants if d in self],
-                lambda x, y: cmp(
-                    self[x].record.name.split()[-1], self[y].record.name.split()[-1]
-                ),
+                key=lambda n: self[n].record.name.split()[-1]
             )
 
             if include_ancestors:

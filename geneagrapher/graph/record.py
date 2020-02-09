@@ -1,3 +1,7 @@
+import functools
+
+
+@functools.total_ordering
 class Record:
     """
     Container class storing record of a mathematician in the graph.
@@ -44,13 +48,14 @@ value for 'year'"
 value for 'id'"
             )
 
-    def __cmp__(self, r2):
-        """
-        Compare a pair of mathematician records based on ids.
-        """
-        return self.id.__cmp__(r2.id)
+    def __eq__(self, r2):
+        return self.id == r2.id
 
-    def __unicode__(self):
+    def __lt__(self, r2):
+        return self.id < r2.id
+
+
+    def __str__(self):
         if self.has_institution():
             if self.has_year():
                 return "{} \\n{} ({})".format(self.name, self.institution, self.year)

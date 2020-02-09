@@ -1,6 +1,8 @@
+import functools
 from .record import Record
 
 
+@functools.total_ordering
 class Node:
     """
     Container class storing a node in the graph.
@@ -39,11 +41,14 @@ for 'ancestors'"
 for 'descendants'"
             )
 
-    def __unicode__(self):
-        return self.record.__unicode__()
+    def __str__(self):
+        return str(self.record)
 
-    def __cmp__(self, n2):
-        return self.record.__cmp__(n2.record)
+    def __eq__(self, n2):
+        return self.record == n2.record
+
+    def __lt__(self, n2):
+        return self.record < n2.record
 
     def __hash__(self):
         return hash(self.get_id())

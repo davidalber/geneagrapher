@@ -48,17 +48,19 @@ class TestRecordMethods(unittest.TestCase):
             "18231",
         )
 
-    def test_cmp_equal(self):
+    def test_equal(self):
         """Verify two 'equal' records are compared correctly."""
         record1 = Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
         record2 = Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
         self.assertTrue(record1 == record2)
 
-    def test_cmp_unequal(self):
+    def test_unequal(self):
         """Verify two 'unequal' records are compared correctly."""
         record1 = Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
         record2 = Record("Leonhard Euler", "Universitaet Basel", 1726, 38586)
         self.assertTrue(record1 < record2)
+        self.assertTrue(record1 != record2)
+        self.assertTrue(record2 > record1)
 
     def test_has_institution_yes(self):
         """Verify has_institution() method returns True when the conditions are
@@ -88,31 +90,31 @@ class TestRecordMethods(unittest.TestCase):
         record = Record("Carl Friedrich Gauss", "Universitaet Helmstedt", None, 18231)
         self.assertTrue(not record.has_year())
 
-    def test_unicode_full(self):
-        """Test __unicode__() method for complete record."""
-        recstr = self.record.__unicode__()
+    def test_str_full(self):
+        """Test __str__() method for complete record."""
+        recstr = str(self.record)
         recstrexpt = "Carl Friedrich Gau\xdf \\nUniversit\xe4t Helmstedt \
 (1799)"
         self.assertEqual(recstr, recstrexpt)
 
-    def test_unicode_no_year(self):
-        """Test __unicode__() method for record without year."""
+    def test_no_year(self):
+        """Test __str__() method for record without year."""
         record = Record(self.record.name, self.record.institution, None, 18231)
-        recstr = record.__unicode__()
+        recstr = str(record)
         recstrexpt = "Carl Friedrich Gau\xdf \\nUniversit\xe4t Helmstedt"
         self.assertEqual(recstr, recstrexpt)
 
-    def test_unicode_no_inst(self):
-        """Test __unicode__() method for record without institution."""
+    def test_no_inst(self):
+        """Test __str__() method for record without institution."""
         record = Record(self.record.name, None, 1799, 18231)
-        recstr = record.__unicode__()
+        recstr = str(record)
         recstrexpt = "Carl Friedrich Gau\xdf \\n(1799)"
         self.assertEqual(recstr, recstrexpt)
 
-    def test_unicode_no_inst_no_id(self):
+    def test_no_inst_no_id(self):
         """Test __unicode__() method for record without institution or year."""
         record = Record(self.record.name, None, None, 18231)
-        recstr = record.__unicode__()
+        recstr = str(record)
         recstrexpt = "Carl Friedrich Gau\xdf"
         self.assertEqual(recstr, recstrexpt)
 
