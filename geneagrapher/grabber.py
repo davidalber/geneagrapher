@@ -1,4 +1,4 @@
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import re
 from bs4 import BeautifulSoup
 
@@ -25,7 +25,7 @@ class Grabber:
         institution, and the year of the mathematician's degree.
         """
         url = "http://genealogy.math.ndsu.nodak.edu/id.php?id=" + str(id)
-        page = urllib.urlopen(url)
+        page = urllib.request.urlopen(url)
         soup = BeautifulSoup(page, "lxml")
         page.close()
 
@@ -58,7 +58,7 @@ def has_record(soup):
         return False
     return (
         not soup.p.string
-        == u"You have specified an ID that does \
+        == "You have specified an ID that does \
 not exist in the database. Please back up and try again."
     )
 
@@ -85,7 +85,7 @@ text-align: center; margin-bottom: 1ex",
             .find("span")
             .text
         )
-        if institution == u"":
+        if institution == "":
             institution = None
     except AttributeError:
         institution = None

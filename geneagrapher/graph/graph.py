@@ -1,5 +1,5 @@
-from node import Node
-from record import Record
+from .node import Node
+from .record import Record
 
 
 class DuplicateNodeError(Exception):
@@ -64,7 +64,7 @@ of Node objects for 'seed_nodes'"
         """
         Return a list of the nodes in the graph.
         """
-        return self.keys()
+        return set(self.keys())
 
     def add_node(self, name, institution, year, id, advisors, advisees, is_seed=False):
         """
@@ -122,7 +122,7 @@ of Node objects for 'seed_nodes'"
         edges = ""
         dotfile = ""
 
-        dotfile += u"""digraph genealogy {
+        dotfile += """digraph genealogy {
     graph [charset="utf-8"];
     node [shape=plaintext];
     edge [style=bold];\n\n"""
@@ -141,15 +141,11 @@ of Node objects for 'seed_nodes'"
 
             sorted_ancestors = sorted(
                 [a for a in node.ancestors if a in self],
-                lambda x, y: cmp(
-                    self[x].record.name.split()[-1], self[y].record.name.split()[-1]
-                ),
+                key=lambda n: self[n].record.name.split()[-1]
             )
             sorted_descendants = sorted(
                 [d for d in node.descendants if d in self],
-                lambda x, y: cmp(
-                    self[x].record.name.split()[-1], self[y].record.name.split()[-1]
-                ),
+                key=lambda n: self[n].record.name.split()[-1]
             )
 
             if include_ancestors:
@@ -161,7 +157,7 @@ of Node objects for 'seed_nodes'"
                 queue += sorted_descendants
 
             # Print this node's information.
-            nodestr = u'    {} [label="{}"];'.format(node_id, node)
+            nodestr = '    {} [label="{}"];'.format(node_id, node)
             dotfile += nodestr
 
             # Store the connection information for this node.

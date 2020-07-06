@@ -3,7 +3,7 @@ import sys
 from bs4 import BeautifulSoup
 import unittest
 from geneagrapher.grabber import *
-from local_data_grabber import LocalDataGrabber
+from .local_data_grabber import LocalDataGrabber
 
 
 class TestGrabberMethods(unittest.TestCase):
@@ -81,8 +81,8 @@ class TestGrabberMethods(unittest.TestCase):
             soup = BeautifulSoup(fin, "lxml")
         record = get_record_from_tree(soup, 18231)
         self.assertEqual(len(record), 5)
-        self.assertEqual(record["name"], u"Carl Friedrich Gau\xdf")
-        self.assertEqual(record["institution"], u"Universit\xe4t Helmstedt")
+        self.assertEqual(record["name"], "Carl Friedrich Gau\xdf")
+        self.assertEqual(record["institution"], "Universit\xe4t Helmstedt")
         self.assertEqual(record["year"], 1799)
         self.assertEqual(record["advisors"], set([18230]))
         self.assertEqual(
@@ -112,8 +112,8 @@ class TestGrabberMethods(unittest.TestCase):
         # effect.
         record = get_record_from_tree(soup, 18231)
         self.assertEqual(len(record), 5)
-        self.assertEqual(record["name"], u"Carl Friedrich Gau\xdf")
-        self.assertEqual(record["institution"], u"Universit\xe4t Helmstedt")
+        self.assertEqual(record["name"], "Carl Friedrich Gau\xdf")
+        self.assertEqual(record["institution"], "Universit\xe4t Helmstedt")
         self.assertEqual(record["year"], 1799)
         self.assertEqual(record["advisors"], set([18230]))
         self.assertEqual(
@@ -157,7 +157,10 @@ class TestGrabberMethods(unittest.TestCase):
         """Test the get_name() method."""
         with open(self.data_file("137717.html"), "r") as fin:
             soup = BeautifulSoup(fin, "lxml")
-            self.assertEqual(u"Valentin  Alberti", get_name(soup))
+            self.assertEqual("Valentin  Alberti", get_name(soup))
+        with open(self.data_file('137717.html'), 'r') as fin:
+            soup = BeautifulSoup(fin, 'lxml')
+            self.assertEqual("Valentin  Alberti", get_name(soup))
 
     def test_get_name_slash_l(self):
         """Test the get_name() method for a record containing a non-ASCII
@@ -165,15 +168,19 @@ class TestGrabberMethods(unittest.TestCase):
         with open(self.data_file("7383.html"), "r") as fin:
             soup = BeautifulSoup(fin, "lxml")
             self.assertEqual(
-                u"W\u0142adys\u0142aw Hugo Dyonizy Steinhaus", get_name(soup)
+                "W\u0142adys\u0142aw Hugo Dyonizy Steinhaus", get_name(soup)
             )
+        with open(self.data_file('7383.html'), 'r') as fin:
+            soup = BeautifulSoup(fin, 'lxml')
+            self.assertEqual("W\u0142adys\u0142aw Hugo Dyonizy Steinhaus",
+                             get_name(soup))
 
     def test_get_institution(self):
         """Test the get_institution() method for a record with an
         institution."""
         with open(self.data_file("137717.html"), "r") as fin:
             soup = BeautifulSoup(fin, "lxml")
-            self.assertEqual(u"Universit\xe4t Leipzig", get_institution(soup))
+            self.assertEqual("Universit\xe4t Leipzig", get_institution(soup))
 
     def test_get_institution_no_institution(self):
         """Test the get_institution() method for a record with no

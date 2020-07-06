@@ -1,3 +1,7 @@
+import functools
+
+
+@functools.total_ordering
 class Record:
     """
     Container class storing record of a mathematician in the graph.
@@ -20,13 +24,13 @@ class Record:
         self.id = id
 
         # Verify we got the types wanted.
-        if not isinstance(self.name, basestring):
+        if not isinstance(self.name, str):
             raise TypeError(
                 "Unexpected parameter type: expected string value \
 for 'name'"
             )
         if (
-            not isinstance(self.institution, basestring)
+            not isinstance(self.institution, str)
             and self.institution is not None
         ):
             raise TypeError(
@@ -44,21 +48,22 @@ value for 'year'"
 value for 'id'"
             )
 
-    def __cmp__(self, r2):
-        """
-        Compare a pair of mathematician records based on ids.
-        """
-        return self.id.__cmp__(r2.id)
+    def __eq__(self, r2):
+        return self.id == r2.id
 
-    def __unicode__(self):
+    def __lt__(self, r2):
+        return self.id < r2.id
+
+
+    def __str__(self):
         if self.has_institution():
             if self.has_year():
-                return u"{} \\n{} ({})".format(self.name, self.institution, self.year)
+                return "{} \\n{} ({})".format(self.name, self.institution, self.year)
             else:
-                return u"{} \\n{}".format(self.name, self.institution)
+                return "{} \\n{}".format(self.name, self.institution)
         else:
             if self.has_year():
-                return u"{} \\n({})".format(self.name, self.year)
+                return "{} \\n({})".format(self.name, self.year)
             else:
                 return self.name
 
