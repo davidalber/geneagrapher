@@ -1,5 +1,6 @@
 import urllib.request, urllib.parse, urllib.error
 import re
+import ssl
 from bs4 import BeautifulSoup
 
 
@@ -24,8 +25,8 @@ class Grabber:
         advisor ids, the mathematician name, the mathematician
         institution, and the year of the mathematician's degree.
         """
-        url = "http://genealogy.math.ndsu.nodak.edu/id.php?id=" + str(id)
-        page = urllib.request.urlopen(url)
+        url = "http://mathgenealogy.org/id.php?id=" + str(id)
+        page = urllib.request.urlopen(url, context=ssl._create_unverified_context())
         soup = BeautifulSoup(page, "lxml")
         page.close()
 
