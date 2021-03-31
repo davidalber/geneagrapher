@@ -21,7 +21,7 @@ setuptools.setup(
         'console_scripts':
             ['ggrapher=geneagrapher.geneagrapher:ggrapher']
     },
-    install_requires=['beautifulsoup4==4.6.3', 'lxml==4.2.5'],
+    install_requires=['beautifulsoup4==4.6.3', 'lxml==4.6.3'],
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/davidalber/geneagrapher",
