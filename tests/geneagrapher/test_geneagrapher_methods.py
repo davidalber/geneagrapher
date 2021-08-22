@@ -135,7 +135,7 @@ geneagrapher: error: the following arguments are required: ID
         sys.stdout = stdout
 
         self.assertEqual(
-            stdout_intercept.getvalue().decode("utf-8"),
+            stdout_intercept.getvalue(),
             u"Grabbing record #127946...cache hit\n",
         )
 
@@ -359,7 +359,7 @@ geneagrapher: error: the following arguments are required: ID
 
 }
 """
-        self.assertEqual(stdout_intercept.getvalue().decode("utf-8"), expected)
+        self.assertEqual(stdout_intercept.getvalue(), expected)
 
     def test_end_to_end_ancestors_stdout(self):
         """
@@ -487,7 +487,7 @@ geneagrapher: error: the following arguments are required: ID
 
 }
 """
-        self.assertEqual(stdout_intercept.getvalue().decode("utf-8"), expected)
+        self.assertEqual(stdout_intercept.getvalue(), expected)
 
 
 if __name__ == "__main__":
