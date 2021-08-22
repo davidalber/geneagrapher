@@ -66,7 +66,7 @@ class TestRecordMethods(unittest.TestCase):
         """Verify has_institution() method returns True when the conditions are
         right."""
         record = Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
-        self.assert_(record.has_institution())
+        self.assertTrue(record.has_institution())
         record = Record("Carl Friedrich Gauss", "Universitaet Helmstedt", 1799, 18231)
         self.assertTrue(record.has_institution())
 
