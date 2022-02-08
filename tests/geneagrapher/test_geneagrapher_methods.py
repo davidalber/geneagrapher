@@ -123,7 +123,7 @@ geneagrapher: error: the following arguments are required: ID
 
         # Redirect stdout to capture output.
         stdout = sys.stdout
-        stdout_intercept = StringIO.StringIO()
+        stdout_intercept = io.StringIO()
         sys.stdout = stdout_intercept
         cache_fname = LocalDataGrabber.data_file(
             "geneagrapher_verbose_cache_grabber_test"
@@ -135,7 +135,7 @@ geneagrapher: error: the following arguments are required: ID
         sys.stdout = stdout
 
         self.assertEqual(
-            stdout_intercept.getvalue().decode("utf-8"),
+            stdout_intercept.getvalue(),
             u"Grabbing record #127946...cache hit\n",
         )
 
@@ -344,7 +344,7 @@ geneagrapher: error: the following arguments are required: ID
 
         # Redirect stdout to capture output.
         stdout = sys.stdout
-        stdout_intercept = StringIO.StringIO()
+        stdout_intercept = io.StringIO()
         sys.stdout = stdout_intercept
         self.ggrapher.generate_dot_file()
         sys.stdout = stdout
@@ -359,7 +359,7 @@ geneagrapher: error: the following arguments are required: ID
 
 }
 """
-        self.assertEqual(stdout_intercept.getvalue().decode("utf-8"), expected)
+        self.assertEqual(stdout_intercept.getvalue(), expected)
 
     def test_end_to_end_ancestors_stdout(self):
         """
@@ -472,7 +472,7 @@ geneagrapher: error: the following arguments are required: ID
 
         # Redirect stdout to capture output.
         stdout = sys.stdout
-        stdout_intercept = StringIO.StringIO()
+        stdout_intercept = io.StringIO()
         sys.stdout = stdout_intercept
         geneagrapher.ggrapher()
         sys.stdout = stdout
@@ -487,7 +487,7 @@ geneagrapher: error: the following arguments are required: ID
 
 }
 """
-        self.assertEqual(stdout_intercept.getvalue().decode("utf-8"), expected)
+        self.assertEqual(stdout_intercept.getvalue(), expected)
 
 
 if __name__ == "__main__":
