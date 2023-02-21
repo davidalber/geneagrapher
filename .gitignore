@@ -2,5 +2,7 @@
 .cache
 geneagrapher.egg-info
 
+.projectile
+
 dist
 build
