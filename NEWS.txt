@@ -4,7 +4,7 @@ News
 1.0
 ---
 
-*Release date: unreleased*
+*Release date: 7-Oct-2018*
 
 *Redesigned data-grabbing interface to allow for the introduction of
 new data grabbers.
