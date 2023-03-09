@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "geneagrapher"
+version = "2.0.0"
+description = "Mathematical genealogy grapher."
+authors = ["David Alber <alber.david@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
