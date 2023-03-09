@@ -3,6 +3,7 @@
 geneagrapher.egg-info
 
 .projectile
+.python-version
 
 dist
 build
