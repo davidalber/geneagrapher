@@ -17,11 +17,10 @@ Released 7-Oct-2018
     graph. Previously, the graph structure retained all edges from the
     Math Genealogy Project information.
   - Data is now extracted from Math Genealogy Project web pages using
-    BeautifulSoup
-    (http://www.crummy.com/software/BeautifulSoup/). This means that
-    the Geneagrapher now has an external dependency, but I believe the
-    advantages for testing and code readability, for this case,
-    outweigh the disadvantage of taking a dependency.
+    [BeautifulSoup](http://www.crummy.com/software/BeautifulSoup/). This
+    means that the Geneagrapher now has an external dependency, but I
+    believe the advantages for testing and code readability, for this
+    case, outweigh the disadvantage of taking a dependency.
 
 # 0.2.1-r2
 Released 11-Aug-2011
