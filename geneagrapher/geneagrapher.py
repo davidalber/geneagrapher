@@ -4,7 +4,7 @@ import re
 import sys
 
 
-class RecordIdArg:
+class StartNodeArg:
     def __init__(self, val):
         # Validate the input.
         match = re.fullmatch(r"(\d+)(?::(a|d|ad|da))?", val)
@@ -63,7 +63,11 @@ Project. Multiple IDs may be passed.'
         help="do not display the progress bar",
     )
     parser.add_argument(
-        "ids", metavar="ID", type=RecordIdArg, nargs="+", help="mathematician record ID"
+        "ids",
+        metavar="ID",
+        type=StartNodeArg,
+        nargs="+",
+        help="mathematician record ID",
     )
 
     args = parser.parse_args()

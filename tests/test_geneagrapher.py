@@ -1,9 +1,9 @@
-from geneagrapher.geneagrapher import RecordIdArg
+from geneagrapher.geneagrapher import StartNodeArg
 
 import pytest
 
 
-class TestRecordIdArg:
+class TestStartNodeArg:
     @pytest.mark.parametrize(
         "record_id,record_id_valid",
         (
@@ -33,10 +33,10 @@ class TestRecordIdArg:
     )
     def test_init(self, record_id, record_id_valid, aux_config, aux_config_valid):
         if record_id_valid and aux_config_valid:
-            rid = RecordIdArg(record_id + aux_config)
+            rid = StartNodeArg(record_id + aux_config)
             assert rid.record_id == int(record_id)
             assert rid.request_advisors is ("a" in aux_config)
             assert rid.request_descendants is ("d" in aux_config)
         else:
             with pytest.raises(ValueError):
-                RecordIdArg(record_id + aux_config)
+                StartNodeArg(record_id + aux_config)
