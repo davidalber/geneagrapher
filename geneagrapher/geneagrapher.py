@@ -1,7 +1,5 @@
 from argparse import ArgumentParser
-from collections import deque
 from importlib.metadata import PackageNotFoundError, version
-import pkg_resources
 import re
 import sys
 
