@@ -16,6 +16,7 @@ class RecordIdArg:
         self.request_advisors = "a" in (match.group(2) or [])
         self.request_descendants = "d" in (match.group(2) or [])
 
+
 if __name__ == "__main__":
     description = 'Create a Graphviz "dot" file for a mathematics \
 genealogy, where ID is a record identifier from the Mathematics Genealogy \
@@ -37,7 +38,9 @@ Project. Multiple IDs may be passed.'
         metavar="FILE",
         default=sys.stdout,
     )
-    parser.add_argument("-ta", "--traverse-advisors", nargs="+", type=int, metavar="ID", default=[])
+    parser.add_argument(
+        "-ta", "--traverse-advisors", nargs="+", type=int, metavar="ID", default=[]
+    )
     parser.add_argument(
         "-a",
         "--with-ancestors",
