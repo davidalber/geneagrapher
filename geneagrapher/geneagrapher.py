@@ -2,10 +2,19 @@ from argparse import ArgumentParser
 from collections import deque
 from importlib.metadata import PackageNotFoundError, version
 import pkg_resources
+import re
 import sys
 
 
-
+class RecordIdArg:
+    def __init__(self, val):
+        # Validate the input.
+        match = re.fullmatch("(\d+)(?::(a|d|ad|da))?", val)
+        if match is None:
+            raise ValueError()
+        self.record_id = int(match.group(1))
+        self.request_advisors = "a" in (match.group(2) or [])
+        self.request_descendants = "d" in (match.group(2) or [])
 
 if __name__ == "__main__":
     description = 'Create a Graphviz "dot" file for a mathematics \
