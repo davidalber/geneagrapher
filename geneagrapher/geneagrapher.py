@@ -14,6 +14,14 @@ class StartNodeArg:
         self.request_advisors = "a" in (match.group(2) or [])
         self.request_descendants = "d" in (match.group(2) or [])
 
+    @property
+    def start_node(self):
+        return {
+            "recordId": self.record_id,
+            "getAdvisors": self.request_advisors,
+            "getDescendants": self.request_descendants,
+        }
+
 
 if __name__ == "__main__":
     description = 'Create a Graphviz "dot" file for a mathematics \

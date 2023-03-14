@@ -40,3 +40,17 @@ class TestStartNodeArg:
         else:
             with pytest.raises(ValueError):
                 StartNodeArg(record_id + aux_config)
+
+    @pytest.mark.parametrize(
+        "arg,expected",
+        (
+            ["32", {"recordId": 32, "getAdvisors": False, "getDescendants": False}],
+            ["32:a", {"recordId": 32, "getAdvisors": True, "getDescendants": False}],
+            ["32:d", {"recordId": 32, "getAdvisors": False, "getDescendants": True}],
+            ["32:ad", {"recordId": 32, "getAdvisors": True, "getDescendants": True}],
+            ["32:da", {"recordId": 32, "getAdvisors": True, "getDescendants": True}],
+        ),
+    )
+    def test_start_node(self, arg, expected):
+        sna = StartNodeArg(arg)
+        assert sna.start_node == expected
