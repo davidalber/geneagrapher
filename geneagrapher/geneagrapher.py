@@ -7,7 +7,7 @@ import sys
 class RecordIdArg:
     def __init__(self, val):
         # Validate the input.
-        match = re.fullmatch("(\d+)(?::(a|d|ad|da))?", val)
+        match = re.fullmatch(r"(\d+)(?::(a|d|ad|da))?", val)
         if match is None:
             raise ValueError()
         self.record_id = int(match.group(1))
