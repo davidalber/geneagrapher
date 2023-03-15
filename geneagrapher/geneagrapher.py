@@ -1,6 +1,6 @@
 from argparse import ArgumentParser
 from importlib.metadata import PackageNotFoundError, version
-from typing import TypedDict
+from typing import List, Literal, TypedDict
 import re
 import sys
 
@@ -9,6 +9,11 @@ class StartNodeRequest(TypedDict):
     recordId: int
     getAdvisors: bool
     getDescendants: bool
+
+
+class RequestPayload(TypedDict):
+    kind: Literal["build-graph"]
+    startNodes: List[StartNodeRequest]
 
 
 class StartNodeArg:
@@ -28,6 +33,13 @@ class StartNodeArg:
             "getAdvisors": self.request_advisors,
             "getDescendants": self.request_descendants,
         }
+
+
+def make_payload(start_nodes: List[StartNodeArg]) -> RequestPayload:
+    return {
+        "kind": "build-graph",
+        "startNodes": [sn.start_node for sn in start_nodes],
+    }
 
 
 if __name__ == "__main__":

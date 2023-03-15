@@ -1,6 +1,7 @@
-from geneagrapher.geneagrapher import StartNodeArg, StartNodeRequest
+from geneagrapher.geneagrapher import StartNodeArg, StartNodeRequest, make_payload
 
 import pytest
+from typing import List
 
 
 class TestStartNodeArg:
@@ -60,3 +61,12 @@ class TestStartNodeArg:
     def test_start_node(self, arg: str, expected: StartNodeRequest) -> None:
         sna = StartNodeArg(arg)
         assert sna.start_node == expected
+
+
+@pytest.mark.parametrize("start_nodes", ([], ["32"], ["32:a"], ["32:d", "14"]))
+def test_make_payload(start_nodes: List[str]) -> None:
+    start_node_args = [StartNodeArg(sn) for sn in start_nodes]
+    assert make_payload(start_node_args) == {
+        "kind": "build-graph",
+        "startNodes": [sn.start_node for sn in start_node_args],
+    }
