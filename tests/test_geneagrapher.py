@@ -1,4 +1,4 @@
-from geneagrapher.geneagrapher import StartNodeArg
+from geneagrapher.geneagrapher import StartNodeArg, StartNodeRequest
 
 import pytest
 
@@ -31,7 +31,13 @@ class TestStartNodeArg:
             [":Ad", False],
         ),
     )
-    def test_init(self, record_id, record_id_valid, aux_config, aux_config_valid):
+    def test_init(
+        self,
+        record_id: str,
+        record_id_valid: bool,
+        aux_config: str,
+        aux_config_valid: bool,
+    ) -> None:
         if record_id_valid and aux_config_valid:
             rid = StartNodeArg(record_id + aux_config)
             assert rid.record_id == int(record_id)
@@ -51,6 +57,6 @@ class TestStartNodeArg:
             ["32:da", {"recordId": 32, "getAdvisors": True, "getDescendants": True}],
         ),
     )
-    def test_start_node(self, arg, expected):
+    def test_start_node(self, arg: str, expected: StartNodeRequest) -> None:
         sna = StartNodeArg(arg)
         assert sna.start_node == expected

@@ -1,11 +1,18 @@
 from argparse import ArgumentParser
 from importlib.metadata import PackageNotFoundError, version
+from typing import TypedDict
 import re
 import sys
 
 
+class StartNodeRequest(TypedDict):
+    recordId: int
+    getAdvisors: bool
+    getDescendants: bool
+
+
 class StartNodeArg:
-    def __init__(self, val):
+    def __init__(self, val: str) -> None:
         # Validate the input.
         match = re.fullmatch(r"(\d+)(?::(a|d|ad|da))?", val)
         if match is None:
@@ -15,7 +22,7 @@ class StartNodeArg:
         self.request_descendants = "d" in (match.group(2) or [])
 
     @property
-    def start_node(self):
+    def start_node(self) -> StartNodeRequest:
         return {
             "recordId": self.record_id,
             "getAdvisors": self.request_advisors,
