@@ -64,25 +64,6 @@ Project. Multiple IDs may be passed.'
         default=sys.stdout,
     )
     parser.add_argument(
-        "-ta", "--traverse-advisors", nargs="+", type=int, metavar="ID", default=[]
-    )
-    parser.add_argument(
-        "-a",
-        "--with-ancestors",
-        action="store_true",
-        dest="get_ancestors",
-        default=False,
-        help="retrieve ancestors of IDs and include in graph",
-    )
-    parser.add_argument(
-        "-d",
-        "--with-descendants",
-        action="store_true",
-        dest="get_descendants",
-        default=False,
-        help="retrieve descendants of IDs and include in graph",
-    )
-    parser.add_argument(
         "-q",
         "--quiet",
         action="store_true",
