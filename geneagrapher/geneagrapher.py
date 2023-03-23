@@ -1,11 +1,16 @@
 from argparse import ArgumentParser
+import asyncio
 from importlib.metadata import PackageNotFoundError, version
+import json
 import textwrap
-from typing import Dict, List, Literal, TypedDict
+from typing import Dict, List, Literal, NewType, Optional, TypedDict
 import re
 import sys
+import websockets
+import websockets.client
 
 
+GGRAPHER_URI = "wss://placeholder"
 TEXTWRAP_WIDTH = 79
 
 
@@ -18,6 +23,26 @@ class StartNodeRequest(TypedDict):
 class RequestPayload(TypedDict):
     kind: Literal["build-graph"]
     startNodes: List[StartNodeRequest]
+
+
+# RecordId, Record, and Geneagraph mirror types of the same name in
+# geneagrapher-core.
+RecordId = NewType("RecordId", int)
+
+
+class Record(TypedDict):
+    id: RecordId
+    name: str
+    institution: Optional[str]
+    year: Optional[int]
+    descendants: List[int]
+    advisors: List[int]
+
+
+class Geneagraph(TypedDict):
+    start_nodes: List[RecordId]
+    nodes: Dict[RecordId, Record]
+    status: Literal["complete", "truncated"]
 
 
 class GgrapherError(Exception):
@@ -82,6 +107,25 @@ def make_payload(start_nodes: List[StartNodeArg]) -> RequestPayload:
         "kind": "build-graph",
         "startNodes": [sn.start_node for sn in start_nodes],
     }
+
+
+async def get_graph(payload: RequestPayload) -> Geneagraph:
+    try:
+        async with websockets.client.connect(GGRAPHER_URI) as ws:
+            await ws.send(json.dumps(payload))
+            response_json = await ws.recv()
+            response = json.loads(response_json)
+
+            if response["kind"] != "graph":
+                raise GgrapherError(
+                    "Request to Geneagrapher backend failed.",
+                    extra={"Response": str(response_json)},
+                )
+
+            graph: Geneagraph = response["payload"]
+            return graph
+    except websockets.exceptions.WebSocketException:
+        raise GgrapherError("Geneagrapher backend is currently unavailable.")
 
 
 if __name__ == "__main__":

@@ -2,12 +2,15 @@ from geneagrapher.geneagrapher import (
     GgrapherError,
     StartNodeArg,
     StartNodeRequest,
+    get_graph,
     make_payload,
 )
 
+import json
 import pytest
 from typing import Dict, List
-from unittest.mock import patch
+from unittest.mock import AsyncMock, patch, sentinel as s
+from websockets.exceptions import WebSocketException
 
 
 class TestStartNodeArg:
@@ -117,3 +120,58 @@ def test_make_payload(start_nodes: List[str]) -> None:
         "kind": "build-graph",
         "startNodes": [sn.start_node for sn in start_node_args],
     }
+
+
+class TestGetGraph:
+    @pytest.mark.asyncio
+    @patch("geneagrapher.geneagrapher.websockets.client.connect")
+    async def test_good(self, m_ws_connect) -> None:
+        request_payload = {"the": "payload"}
+        response_payload = {"kind": "graph", "payload": "the-payload"}
+
+        ws_conn = AsyncMock()
+        ws_conn.recv.return_value = json.dumps(response_payload)
+        m_ws_connect.return_value.__aenter__.return_value = ws_conn
+
+        with patch("geneagrapher.geneagrapher.GGRAPHER_URI", s.uri):
+            assert await get_graph(request_payload) == response_payload["payload"]
+
+        m_ws_connect.assert_called_once_with(s.uri)
+        ws_conn.send.assert_called_once_with(json.dumps(request_payload))
+        ws_conn.recv.assert_called_once_with()
+
+    @pytest.mark.asyncio
+    @patch("geneagrapher.geneagrapher.websockets.client.connect")
+    async def test_bad_request(self, m_ws_connect) -> None:
+        request_payload = {"the": "payload"}
+        response_payload_json = json.dumps({"kind": "something"})
+
+        ws_conn = AsyncMock()
+        ws_conn.recv.return_value = response_payload_json
+        m_ws_connect.return_value.__aenter__.return_value = ws_conn
+
+        with patch("geneagrapher.geneagrapher.GGRAPHER_URI", s.uri):
+            with pytest.raises(GgrapherError) as exc_info:
+                await get_graph(request_payload)
+
+        assert exc_info.value.msg == "Request to Geneagrapher backend failed."
+        assert exc_info.value.extra == {"Response": response_payload_json}
+
+        m_ws_connect.assert_called_once_with(s.uri)
+        ws_conn.send.assert_called_once_with(json.dumps(request_payload))
+        ws_conn.recv.assert_called_once_with()
+
+    @pytest.mark.asyncio
+    @patch("geneagrapher.geneagrapher.websockets.client.connect")
+    async def test_bad_socket(self, m_ws_connect) -> None:
+        request_payload = {"the": "payload"}
+
+        m_ws_connect.return_value.__aenter__.side_effect = WebSocketException()
+
+        with patch("geneagrapher.geneagrapher.GGRAPHER_URI", s.uri):
+            with pytest.raises(GgrapherError) as exc_info:
+                await get_graph(request_payload)
+
+        assert exc_info.value.msg == "Geneagrapher backend is currently unavailable."
+
+        m_ws_connect.assert_called_once_with(s.uri)
