@@ -1,7 +1,13 @@
-from geneagrapher.geneagrapher import StartNodeArg, StartNodeRequest, make_payload
+from geneagrapher.geneagrapher import (
+    GgrapherError,
+    StartNodeArg,
+    StartNodeRequest,
+    make_payload,
+)
 
 import pytest
-from typing import List
+from typing import Dict, List
+from unittest.mock import patch
 
 
 class TestStartNodeArg:
@@ -63,6 +69,45 @@ class TestStartNodeArg:
     def test_start_node(self, arg: str, expected: StartNodeRequest) -> None:
         sna = StartNodeArg(arg)
         assert sna.start_node == expected
+
+
+class TestGgrapherError:
+    @pytest.mark.parametrize(
+        "msg,extra,expected_str",
+        (
+            [
+                "The message",
+                {"Foo": "Blah", "Baz": "Bleh"},
+                """The message
+
+If this problem persists, please create an issue at
+https://github.com/davidalber/geneagrapher/issues/new, and include the
+following in the issue body:
+
+    Message: The message
+    Command: {command}
+    Foo:     Blah
+    Baz:     Bleh""",
+            ],
+            [
+                "The message",
+                {},
+                """The message
+
+If this problem persists, please create an issue at
+https://github.com/davidalber/geneagrapher/issues/new, and include the
+following in the issue body:
+
+    Message: The message
+    Command: {command}""",
+            ],
+        ),
+    )
+    def test_str(self, msg: str, extra: Dict[str, str], expected_str: str) -> None:
+        command = ["a", "b", "c"]
+        with patch("geneagrapher.geneagrapher.sys.argv", command):
+            e = GgrapherError(msg, extra=extra)
+            assert str(e) == expected_str.format(command=" ".join(command))
 
 
 @pytest.mark.parametrize("start_nodes", ([], ["32"], ["32:a"], ["32:d", "14"]))

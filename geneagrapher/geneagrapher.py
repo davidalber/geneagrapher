@@ -1,8 +1,12 @@
 from argparse import ArgumentParser
 from importlib.metadata import PackageNotFoundError, version
-from typing import List, Literal, TypedDict
+import textwrap
+from typing import Dict, List, Literal, TypedDict
 import re
 import sys
+
+
+TEXTWRAP_WIDTH = 79
 
 
 class StartNodeRequest(TypedDict):
@@ -14,6 +18,39 @@ class StartNodeRequest(TypedDict):
 class RequestPayload(TypedDict):
     kind: Literal["build-graph"]
     startNodes: List[StartNodeRequest]
+
+
+class GgrapherError(Exception):
+    def __init__(self, msg: str, *, extra: Dict[str, str] = {}) -> None:
+        self.msg = msg
+        self.extra = extra
+
+    def __str__(self) -> str:
+        ret_arr = [
+            textwrap.fill(self.msg, width=TEXTWRAP_WIDTH),
+            "",
+            textwrap.fill(
+                "If this problem persists, please create an issue at \
+https://github.com/davidalber/geneagrapher/issues/new, and include the following in \
+the issue body:",
+                width=TEXTWRAP_WIDTH,
+            ),
+        ]
+
+        # For the key-value arguments, determine the length of the
+        # longest key and use that information to align the columns.
+        extras_width = (
+            max([len(k) for k in ["Message", "Command"] + list(self.extra.keys())]) + 2
+        )  # The 2 is for ": "
+
+        ret_arr.append(f"\n    {'Message:':{extras_width}}{self.msg}")
+        ret_arr.append(f"    {'Command:':{extras_width}}{' '.join(sys.argv)}")
+
+        for k, v in self.extra.items():
+            key = f"{k}:"
+            ret_arr.append(f"    {key:{extras_width}}{v}")
+
+        return "\n".join(ret_arr)
 
 
 class StartNodeArg:
