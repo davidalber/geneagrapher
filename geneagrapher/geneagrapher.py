@@ -45,7 +45,7 @@ def make_payload(start_nodes: List[StartNodeArg]) -> RequestPayload:
 if __name__ == "__main__":
     description = 'Create a Graphviz "dot" file for a mathematics \
 genealogy, where ID is a record identifier from the Mathematics Genealogy \
-Project. Multiple IDs may be passed.'
+Project.'
     parser = ArgumentParser(description=description)
 
     try:
