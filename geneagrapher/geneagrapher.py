@@ -80,7 +80,9 @@ Project.'
         metavar="ID",
         type=StartNodeArg,
         nargs="+",
-        help="mathematician record ID",
+        help="mathematician record ID; valid formats are 'ID' for advisor traversal, \
+'ID:a' for advisor traversal, 'ID:d' for descendant traversal, or 'ID:ad' for advisor \
+and descendant traversal",
     )
 
     args = parser.parse_args()
