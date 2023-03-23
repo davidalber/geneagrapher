@@ -1,5 +1,8 @@
 from geneagrapher.geneagrapher import (
+    Geneagraph,
     GgrapherError,
+    RecordId,
+    RequestPayload,
     StartNodeArg,
     StartNodeRequest,
     get_graph,
@@ -125,9 +128,28 @@ def test_make_payload(start_nodes: List[str]) -> None:
 class TestGetGraph:
     @pytest.mark.asyncio
     @patch("geneagrapher.geneagrapher.websockets.client.connect")
-    async def test_good(self, m_ws_connect) -> None:
-        request_payload = {"the": "payload"}
-        response_payload = {"kind": "graph", "payload": "the-payload"}
+    async def test_good(self, m_ws_connect: AsyncMock) -> None:
+        request_payload: RequestPayload = {
+            "kind": "build-graph",
+            "startNodes": [
+                {"recordId": 6, "getAdvisors": True, "getDescendants": False}
+            ],
+        }
+        graph: Geneagraph = {
+            "start_nodes": [RecordId(6)],
+            "nodes": {
+                RecordId(6): {
+                    "id": RecordId(6),
+                    "name": "Name",
+                    "institution": None,
+                    "year": None,
+                    "descendants": [],
+                    "advisors": [],
+                }
+            },
+            "status": "complete",
+        }
+        response_payload = {"kind": "graph", "payload": graph}
 
         ws_conn = AsyncMock()
         ws_conn.recv.return_value = json.dumps(response_payload)
@@ -142,8 +164,13 @@ class TestGetGraph:
 
     @pytest.mark.asyncio
     @patch("geneagrapher.geneagrapher.websockets.client.connect")
-    async def test_bad_request(self, m_ws_connect) -> None:
-        request_payload = {"the": "payload"}
+    async def test_bad_request(self, m_ws_connect: AsyncMock) -> None:
+        request_payload: RequestPayload = {
+            "kind": "build-graph",
+            "startNodes": [
+                {"recordId": 6, "getAdvisors": True, "getDescendants": False}
+            ],
+        }
         response_payload_json = json.dumps({"kind": "something"})
 
         ws_conn = AsyncMock()
@@ -163,8 +190,13 @@ class TestGetGraph:
 
     @pytest.mark.asyncio
     @patch("geneagrapher.geneagrapher.websockets.client.connect")
-    async def test_bad_socket(self, m_ws_connect) -> None:
-        request_payload = {"the": "payload"}
+    async def test_bad_socket(self, m_ws_connect: AsyncMock) -> None:
+        request_payload: RequestPayload = {
+            "kind": "build-graph",
+            "startNodes": [
+                {"recordId": 6, "getAdvisors": True, "getDescendants": False}
+            ],
+        }
 
         m_ws_connect.return_value.__aenter__.side_effect = WebSocketException()
 
