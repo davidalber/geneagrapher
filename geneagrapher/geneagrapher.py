@@ -23,8 +23,13 @@ class StartNodeArg:
         if match is None:
             raise ValueError()
         self.record_id = int(match.group(1))
+
         self.request_advisors = "a" in (match.group(2) or [])
         self.request_descendants = "d" in (match.group(2) or [])
+
+        # If no traverse direction was specified, default to advisors.
+        if not self.request_advisors and not self.request_descendants:
+            self.request_advisors = True
 
     @property
     def start_node(self) -> StartNodeRequest:
