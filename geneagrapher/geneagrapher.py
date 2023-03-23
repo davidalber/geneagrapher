@@ -110,11 +110,23 @@ def make_payload(start_nodes: List[StartNodeArg]) -> RequestPayload:
 
 
 async def get_graph(payload: RequestPayload) -> Geneagraph:
+    def intify_record_keys(d):
+        """JSON object keys are strings, but the Geneagraph type
+        expects the keys of the nodes object to be integers. This
+        function converts those keys to ints during deserialization.
+        """
+        if "nodes" in d:
+            ret = {k: v for k,v in d.items() if k != "nodes"}
+            ret["nodes"] = {int(k): v for k,v in d["nodes"].items()}
+            return ret
+
+        return d
+
     try:
         async with websockets.client.connect(GGRAPHER_URI) as ws:
             await ws.send(json.dumps(payload))
             response_json = await ws.recv()
-            response = json.loads(response_json)
+            response = json.loads(response_json, object_hook=intify_record_keys)
 
             if response["kind"] != "graph":
                 raise GgrapherError(
