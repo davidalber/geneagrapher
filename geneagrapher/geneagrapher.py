@@ -116,8 +116,8 @@ async def get_graph(payload: RequestPayload) -> Geneagraph:
         function converts those keys to ints during deserialization.
         """
         if "nodes" in d:
-            ret = {k: v for k,v in d.items() if k != "nodes"}
-            ret["nodes"] = {int(k): v for k,v in d["nodes"].items()}
+            ret = {k: v for k, v in d.items() if k != "nodes"}
+            ret["nodes"] = {int(k): v for k, v in d["nodes"].items()}
             return ret
 
         return d
