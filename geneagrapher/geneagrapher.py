@@ -3,7 +3,7 @@ import asyncio
 from importlib.metadata import PackageNotFoundError, version
 import json
 import textwrap
-from typing import Any, Dict, List, Literal, NewType, Optional, TypedDict
+from typing import Any, Dict, List, Literal, NewType, Optional, TypedDict, Union, cast
 import re
 import sys
 import websockets
@@ -24,6 +24,12 @@ class RequestPayload(TypedDict):
     kind: Literal["build-graph"]
     options: Dict[Literal["reportingCallback"], bool]
     startNodes: List[StartNodeRequest]
+
+
+class ProgressCallback(TypedDict):
+    queued: int
+    fetching: int
+    done: int
 
 
 # RecordId, Record, and Geneagraph mirror types of the same name in
@@ -111,6 +117,22 @@ def make_payload(start_nodes: List[StartNodeArg]) -> RequestPayload:
     }
 
 
+def display_progress(queued: int, doing: int, done: int) -> None:
+    prefix = "Progress: "
+    size = 60
+    count = queued + doing + done
+
+    x = int(size * done / count)
+    y = int(size * doing / count)
+
+    print(
+        f"{prefix}[{u'█'*x}{u':'*y}{('.'*(size - x - y))}] {done}/{count}",
+        end="\r",
+        file=sys.stderr,
+        flush=True,
+    )
+
+
 async def get_graph(payload: RequestPayload) -> Geneagraph:
     def intify_record_keys(d: Dict[Any, Any]) -> Dict[Any, Any]:
         """JSON object keys are strings, but the Geneagraph type
@@ -127,17 +149,25 @@ async def get_graph(payload: RequestPayload) -> Geneagraph:
     try:
         async with websockets.client.connect(GGRAPHER_URI) as ws:
             await ws.send(json.dumps(payload))
-            response_json = await ws.recv()
-            response = json.loads(response_json, object_hook=intify_record_keys)
+            while True:
+                response_json = await ws.recv()
+                response = json.loads(response_json, object_hook=intify_record_keys)
+                response_payload: Union[
+                    Geneagraph, ProgressCallback, None
+                ] = response.get("payload")
 
-            if response["kind"] != "graph":
-                raise GgrapherError(
-                    "Request to Geneagrapher backend failed.",
-                    extra={"Response": str(response_json)},
-                )
-
-            graph: Geneagraph = response["payload"]
-            return graph
+                if response["kind"] == "graph":
+                    return cast(Geneagraph, response_payload)
+                elif response["kind"] == "progress":
+                    progress = cast(ProgressCallback, response_payload)
+                    display_progress(
+                        progress["queued"], progress["fetching"], progress["done"]
+                    )
+                else:
+                    raise GgrapherError(
+                        "Request to Geneagrapher backend failed.",
+                        extra={"Response": str(response_json)},
+                    )
     except websockets.exceptions.WebSocketException:
         raise GgrapherError("Geneagrapher backend is currently unavailable.")
 
