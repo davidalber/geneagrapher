@@ -3,7 +3,7 @@ import asyncio
 from importlib.metadata import PackageNotFoundError, version
 import json
 import textwrap
-from typing import Dict, List, Literal, NewType, Optional, TypedDict
+from typing import Any, Dict, List, Literal, NewType, Optional, TypedDict
 import re
 import sys
 import websockets
@@ -110,7 +110,7 @@ def make_payload(start_nodes: List[StartNodeArg]) -> RequestPayload:
 
 
 async def get_graph(payload: RequestPayload) -> Geneagraph:
-    def intify_record_keys(d):
+    def intify_record_keys(d: Dict[Any, Any]) -> Dict[Any, Any]:
         """JSON object keys are strings, but the Geneagraph type
         expects the keys of the nodes object to be integers. This
         function converts those keys to ints during deserialization.
