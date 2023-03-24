@@ -121,6 +121,7 @@ def test_make_payload(start_nodes: List[str]) -> None:
     start_node_args = [StartNodeArg(sn) for sn in start_nodes]
     assert make_payload(start_node_args) == {
         "kind": "build-graph",
+        "options": {"reportingCallback": True},
         "startNodes": [sn.start_node for sn in start_node_args],
     }
 
@@ -131,6 +132,7 @@ class TestGetGraph:
     async def test_good(self, m_ws_connect: AsyncMock) -> None:
         request_payload: RequestPayload = {
             "kind": "build-graph",
+            "options": {"reportingCallback": True},
             "startNodes": [
                 {"recordId": 6, "getAdvisors": True, "getDescendants": False}
             ],
@@ -167,6 +169,7 @@ class TestGetGraph:
     async def test_bad_request(self, m_ws_connect: AsyncMock) -> None:
         request_payload: RequestPayload = {
             "kind": "build-graph",
+            "options": {"reportingCallback": True},
             "startNodes": [
                 {"recordId": 6, "getAdvisors": True, "getDescendants": False}
             ],
@@ -193,6 +196,7 @@ class TestGetGraph:
     async def test_bad_socket(self, m_ws_connect: AsyncMock) -> None:
         request_payload: RequestPayload = {
             "kind": "build-graph",
+            "options": {"reportingCallback": True},
             "startNodes": [
                 {"recordId": 6, "getAdvisors": True, "getDescendants": False}
             ],

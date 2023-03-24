@@ -22,6 +22,7 @@ class StartNodeRequest(TypedDict):
 
 class RequestPayload(TypedDict):
     kind: Literal["build-graph"]
+    options: Dict[Literal["reportingCallback"], bool]
     startNodes: List[StartNodeRequest]
 
 
@@ -105,6 +106,7 @@ class StartNodeArg:
 def make_payload(start_nodes: List[StartNodeArg]) -> RequestPayload:
     return {
         "kind": "build-graph",
+        "options": {"reportingCallback": True},
         "startNodes": [sn.start_node for sn in start_nodes],
     }
 
