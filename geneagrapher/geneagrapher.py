@@ -109,10 +109,10 @@ class StartNodeArg:
         }
 
 
-def make_payload(start_nodes: List[StartNodeArg]) -> RequestPayload:
+def make_payload(start_nodes: List[StartNodeArg], quiet: bool) -> RequestPayload:
     return {
         "kind": "build-graph",
-        "options": {"reportingCallback": True},
+        "options": {"reportingCallback": not quiet},
         "startNodes": [sn.start_node for sn in start_nodes],
     }
 

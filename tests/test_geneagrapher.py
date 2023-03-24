@@ -117,11 +117,12 @@ following in the issue body:
 
 
 @pytest.mark.parametrize("start_nodes", ([], ["32"], ["32:a"], ["32:d", "14"]))
-def test_make_payload(start_nodes: List[str]) -> None:
+@pytest.mark.parametrize("quiet", [True, False])
+def test_make_payload(start_nodes: List[str], quiet: bool) -> None:
     start_node_args = [StartNodeArg(sn) for sn in start_nodes]
-    assert make_payload(start_node_args) == {
+    assert make_payload(start_node_args, quiet) == {
         "kind": "build-graph",
-        "options": {"reportingCallback": True},
+        "options": {"reportingCallback": not quiet},
         "startNodes": [sn.start_node for sn in start_node_args],
     }
 
