@@ -211,4 +211,16 @@ and descendant traversal",
     )
 
     args = parser.parse_args()
-    print(args)
+    payload = make_payload(args.ids, args.quiet)
+
+    async def build_graph():
+        graph = await get_graph(payload)
+
+        if not args.quiet:
+            # Output a line break to end the progress bar.
+            print(file=sys.stderr)
+
+    try:
+        asyncio.run(build_graph())
+    except GgrapherError as e:
+        print(e, file=sys.stderr)
