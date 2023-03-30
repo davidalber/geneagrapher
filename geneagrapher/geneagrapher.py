@@ -1,4 +1,4 @@
-from argparse import ArgumentParser
+from argparse import ArgumentParser, FileType
 import asyncio
 from importlib.metadata import PackageNotFoundError, version
 import json
@@ -188,8 +188,9 @@ Project.'
     parser.add_argument(
         "-o",
         "--out",
-        dest="filename",
+        dest="outfile",
         help="write output to FILE [default: stdout]",
+        type=FileType("w"),
         metavar="FILE",
         default=sys.stdout,
     )
