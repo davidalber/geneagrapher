@@ -1,3 +1,4 @@
+from .dot_output import DotOutput
 from .types import Geneagraph
 
 from argparse import ArgumentParser, FileType
@@ -223,6 +224,9 @@ and descendant traversal",
         if not args.quiet:
             # Output a line break to end the progress bar.
             print(file=sys.stderr)
+
+        outputter: OutputFormatter = DotOutput(graph)
+        print(outputter.output, file=args.outfile)
 
     try:
         asyncio.run(build_graph())
