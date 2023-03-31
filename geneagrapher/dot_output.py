@@ -1,5 +1,7 @@
 from .types import Record
 
+from typing import Generator
+
 
 def make_node_str(record: Record) -> str:
     label = record["name"]
@@ -11,3 +13,11 @@ def make_node_str(record: Record) -> str:
         label += "\\n" + " ".join(inst_comp + year_comp)
 
     return f'{record["id"]} [label="{label}"];'
+
+
+def make_edge_str(record: Record) -> Generator[str, None, None]:
+    for advisor in set(
+        record["advisors"]
+    ):  # using `set` to eliminate the occasional duplicate advisor (e.g., at this
+        # time, 125886)
+        yield f'{advisor} -> {record["id"]};'
