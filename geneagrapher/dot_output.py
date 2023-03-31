@@ -1,4 +1,4 @@
-from .types import Record
+from .types import Geneagraph, Record
 
 from typing import Generator
 
@@ -21,3 +21,27 @@ def make_edge_str(record: Record) -> Generator[str, None, None]:
     ):  # using `set` to eliminate the occasional duplicate advisor (e.g., at this
         # time, 125886)
         yield f'{advisor} -> {record["id"]};'
+
+
+class DotOutput:
+    def __init__(self, graph: Geneagraph) -> None:
+        self.graph = graph
+
+    @property
+    def output(self) -> str:
+        template = """digraph {{
+    node [shape=plaintext];
+    edge [style=bold];
+
+    {nodes}
+
+    {edges}
+}}"""
+        nodes = [make_node_str(record) for record in self.graph["nodes"].values()]
+        edges = [
+            edge_str
+            for record in self.graph["nodes"].values()
+            for edge_str in make_edge_str(record)
+        ]
+        prefix = "\n    "
+        return template.format(nodes=prefix.join(nodes), edges=prefix.join(edges))
