@@ -196,7 +196,7 @@ and descendant traversal",
     args = parser.parse_args()
     payload = make_payload(args.ids, args.quiet)
 
-    async def build_graph():
+    async def build_graph() -> None:
         graph = await get_graph(payload)
 
         if not args.quiet:
