@@ -5,7 +5,16 @@ import asyncio
 from importlib.metadata import PackageNotFoundError, version
 import json
 import textwrap
-from typing import Any, Dict, List, Literal, NewType, Optional, TypedDict, Union, cast
+from typing import (
+    Any,
+    Dict,
+    List,
+    Literal,
+    Protocol,
+    TypedDict,
+    Union,
+    cast,
+)
 import re
 import sys
 import websockets
@@ -14,6 +23,18 @@ import websockets.client
 
 GGRAPHER_URI = "wss://placeholder"
 TEXTWRAP_WIDTH = 79
+
+
+class OutputFormatter(Protocol):
+    """This defines an interface that output classes must implement."""
+
+    def __init__(self, graph: Geneagraph) -> None:
+        ...
+
+    @property
+    def output(self) -> str:
+        """Return the graph's formatted output."""
+        ...
 
 
 class StartNodeRequest(TypedDict):
