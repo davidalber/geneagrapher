@@ -1,13 +1,12 @@
 from geneagrapher.geneagrapher import (
-    Geneagraph,
     GgrapherError,
-    RecordId,
     RequestPayload,
     StartNodeArg,
     StartNodeRequest,
     get_graph,
     make_payload,
 )
+from geneagrapher.types import Geneagraph, RecordId
 
 import json
 import pytest

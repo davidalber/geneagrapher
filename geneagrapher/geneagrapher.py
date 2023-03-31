@@ -1,3 +1,5 @@
+from .types import Geneagraph
+
 from argparse import ArgumentParser, FileType
 import asyncio
 from importlib.metadata import PackageNotFoundError, version
@@ -30,26 +32,6 @@ class ProgressCallback(TypedDict):
     queued: int
     fetching: int
     done: int
-
-
-# RecordId, Record, and Geneagraph mirror types of the same name in
-# geneagrapher-core.
-RecordId = NewType("RecordId", int)
-
-
-class Record(TypedDict):
-    id: RecordId
-    name: str
-    institution: Optional[str]
-    year: Optional[int]
-    descendants: List[int]
-    advisors: List[int]
-
-
-class Geneagraph(TypedDict):
-    start_nodes: List[RecordId]
-    nodes: Dict[RecordId, Record]
-    status: Literal["complete", "truncated"]
 
 
 class GgrapherError(Exception):
