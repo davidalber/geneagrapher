@@ -5,6 +5,7 @@ from argparse import ArgumentParser, FileType
 import asyncio
 from importlib.metadata import PackageNotFoundError, version
 import json
+import platform
 import textwrap
 from typing import (
     Any,
@@ -151,7 +152,11 @@ async def get_graph(payload: RequestPayload) -> Geneagraph:
         return d
 
     try:
-        async with websockets.client.connect(GGRAPHER_URI) as ws:
+        async with websockets.client.connect(
+            GGRAPHER_URI,
+            user_agent_header=f"Python/{platform.python_version()} \
+Geneagrapher/{get_version()}",
+        ) as ws:
             await ws.send(json.dumps(payload))
             while True:
                 response_json = await ws.recv()
@@ -176,18 +181,21 @@ async def get_graph(payload: RequestPayload) -> Geneagraph:
         raise GgrapherError("Geneagrapher backend is currently unavailable.")
 
 
+def get_version() -> str:
+    try:
+        return version("geneagrapher")
+    except PackageNotFoundError:
+        return "dev"
+
+
 if __name__ == "__main__":
     description = 'Create a Graphviz "dot" file for a mathematics \
 genealogy, where ID is a record identifier from the Mathematics Genealogy \
 Project.'
     parser = ArgumentParser(description=description)
 
-    try:
-        pkg_version = version("geneagrapher")
-    except PackageNotFoundError:
-        pkg_version = "dev"
     parser.add_argument(
-        "--version", action="version", version=f"%(prog)s {pkg_version}"
+        "--version", action="version", version=f"%(prog)s {get_version()}"
     )
     parser.add_argument(
         "-o",

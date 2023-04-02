@@ -11,7 +11,7 @@ from geneagrapher.types import Geneagraph, RecordId
 import json
 import pytest
 from typing import Dict, List
-from unittest.mock import AsyncMock, patch, sentinel as s
+from unittest.mock import AsyncMock, MagicMock, patch, sentinel as s
 from websockets.exceptions import WebSocketException
 
 
@@ -128,8 +128,17 @@ def test_make_payload(start_nodes: List[str], quiet: bool) -> None:
 
 class TestGetGraph:
     @pytest.mark.asyncio
+    @patch("geneagrapher.geneagrapher.get_version", return_value="test")
+    @patch(
+        "geneagrapher.geneagrapher.platform.python_version", return_value="python-test"
+    )
     @patch("geneagrapher.geneagrapher.websockets.client.connect")
-    async def test_good(self, m_ws_connect: AsyncMock) -> None:
+    async def test_good(
+        self,
+        m_ws_connect: AsyncMock,
+        m_python_version: MagicMock,
+        m_get_version: MagicMock,
+    ) -> None:
         request_payload: RequestPayload = {
             "kind": "build-graph",
             "options": {"reportingCallback": True},
@@ -160,13 +169,26 @@ class TestGetGraph:
         with patch("geneagrapher.geneagrapher.GGRAPHER_URI", s.uri):
             assert await get_graph(request_payload) == response_payload["payload"]
 
-        m_ws_connect.assert_called_once_with(s.uri)
+        m_ws_connect.assert_called_once_with(
+            s.uri, user_agent_header="Python/python-test Geneagrapher/test"
+        )
+        m_python_version.assert_called_once_with()
+        m_get_version.assert_called_once_with()
         ws_conn.send.assert_called_once_with(json.dumps(request_payload))
         ws_conn.recv.assert_called_once_with()
 
     @pytest.mark.asyncio
+    @patch("geneagrapher.geneagrapher.get_version", return_value="test")
+    @patch(
+        "geneagrapher.geneagrapher.platform.python_version", return_value="python-test"
+    )
     @patch("geneagrapher.geneagrapher.websockets.client.connect")
-    async def test_bad_request(self, m_ws_connect: AsyncMock) -> None:
+    async def test_bad_request(
+        self,
+        m_ws_connect: AsyncMock,
+        m_python_version: MagicMock,
+        m_get_version: MagicMock,
+    ) -> None:
         request_payload: RequestPayload = {
             "kind": "build-graph",
             "options": {"reportingCallback": True},
@@ -187,13 +209,26 @@ class TestGetGraph:
         assert exc_info.value.msg == "Request to Geneagrapher backend failed."
         assert exc_info.value.extra == {"Response": response_payload_json}
 
-        m_ws_connect.assert_called_once_with(s.uri)
+        m_ws_connect.assert_called_once_with(
+            s.uri, user_agent_header="Python/python-test Geneagrapher/test"
+        )
+        m_python_version.assert_called_once_with()
+        m_get_version.assert_called_once_with()
         ws_conn.send.assert_called_once_with(json.dumps(request_payload))
         ws_conn.recv.assert_called_once_with()
 
     @pytest.mark.asyncio
+    @patch("geneagrapher.geneagrapher.get_version", return_value="test")
+    @patch(
+        "geneagrapher.geneagrapher.platform.python_version", return_value="python-test"
+    )
     @patch("geneagrapher.geneagrapher.websockets.client.connect")
-    async def test_bad_socket(self, m_ws_connect: AsyncMock) -> None:
+    async def test_bad_socket(
+        self,
+        m_ws_connect: AsyncMock,
+        m_python_version: MagicMock,
+        m_get_version: MagicMock,
+    ) -> None:
         request_payload: RequestPayload = {
             "kind": "build-graph",
             "options": {"reportingCallback": True},
@@ -210,4 +245,9 @@ class TestGetGraph:
 
         assert exc_info.value.msg == "Geneagrapher backend is currently unavailable."
 
-        m_ws_connect.assert_called_once_with(s.uri)
+        m_ws_connect.assert_called_once_with(
+            s.uri, user_agent_header="Python/python-test Geneagrapher/test"
+        )
+
+        m_python_version.assert_called_once_with()
+        m_get_version.assert_called_once_with()
