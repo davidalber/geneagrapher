@@ -33,6 +33,7 @@ class DotOutput:
     @property
     def output(self) -> str:
         template = """digraph {{
+    graph [ordering="out"];
     node [shape=plaintext];
     edge [style=bold];
 
@@ -43,7 +44,10 @@ class DotOutput:
         nodes = [make_node_str(record) for record in self.graph["nodes"].values()]
         edges = [
             edge_str
-            for record in self.graph["nodes"].values()
+            for record in sorted(
+                self.graph["nodes"].values(),
+                key=lambda r: (r["year"] or -10000, r["name"]),
+            )
             for edge_str in make_edge_str(record, self.graph)
         ]
         prefix = "\n    "

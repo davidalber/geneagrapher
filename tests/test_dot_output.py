@@ -122,10 +122,16 @@ class TestDotOutput:
 
     @patch(
         "geneagrapher.dot_output.make_edge_str",
-        side_effect=[iter(["edge1"]), iter(["edge2"]), iter(["edge3"])],
+        side_effect=[
+            iter(["edge1"]),
+            iter(["edge2"]),
+            iter(["edge3"]),
+            iter(["edge4"]),
+        ],
     )
     @patch(
-        "geneagrapher.dot_output.make_node_str", side_effect=["node1", "node2", "node3"]
+        "geneagrapher.dot_output.make_node_str",
+        side_effect=["node1", "node2", "node3", "node4"],
     )
     def test_output(
         self, m_make_node_str: MagicMock, m_make_edge_str: MagicMock
@@ -155,6 +161,14 @@ class TestDotOutput:
                     "institution": None,
                     "year": 1800,
                     "descendants": [],
+                    "advisors": [1003],
+                },
+                RecordId(1003): {
+                    "id": RecordId(1002),
+                    "name": "A Fourth Name",
+                    "institution": None,
+                    "year": 1800,
+                    "descendants": [],
                     "advisors": [],
                 },
             },
@@ -165,6 +179,7 @@ class TestDotOutput:
         assert (
             do.output
             == """digraph {{
+    graph [ordering="out"];
     node [shape=plaintext];
     edge [style=bold];
 
@@ -172,8 +187,8 @@ class TestDotOutput:
 
     {edges}
 }}""".format(
-                nodes="\n    ".join(["node1", "node2", "node3"]),
-                edges="\n    ".join(["edge1", "edge2", "edge3"]),
+                nodes="\n    ".join(["node1", "node2", "node3", "node4"]),
+                edges="\n    ".join(["edge1", "edge2", "edge3", "edge4"]),
             )
         )
 
@@ -181,9 +196,11 @@ class TestDotOutput:
             call(graph["nodes"][RecordId(1000)]),
             call(graph["nodes"][RecordId(1001)]),
             call(graph["nodes"][RecordId(1002)]),
+            call(graph["nodes"][RecordId(1003)]),
         ]
         assert m_make_edge_str.call_args_list == [
-            call(graph["nodes"][RecordId(1000)], graph),
             call(graph["nodes"][RecordId(1001)], graph),
+            call(graph["nodes"][RecordId(1003)], graph),
             call(graph["nodes"][RecordId(1002)], graph),
+            call(graph["nodes"][RecordId(1000)], graph),
         ]
