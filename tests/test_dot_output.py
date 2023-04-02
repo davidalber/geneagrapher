@@ -61,7 +61,7 @@ def test_make_node_str(record: Record, expected: str) -> None:
 
 
 @pytest.mark.parametrize(
-    "record,expected",
+    "record,graph_nodes,expected",
     (
         [
             {
@@ -72,6 +72,7 @@ def test_make_node_str(record: Record, expected: str) -> None:
                 "descendants": [],
                 "advisors": [],
             },
+            [1000],
             [],
         ],
         [
@@ -83,12 +84,34 @@ def test_make_node_str(record: Record, expected: str) -> None:
                 "descendants": [],
                 "advisors": [1001, 1002, 1003],
             },
+            [1000, 1001, 1002, 1003],
             ["1001 -> 1000;", "1002 -> 1000;", "1003 -> 1000;"],
+        ],
+        [
+            {
+                "id": RecordId(1000),
+                "name": "The Name",
+                "institution": None,
+                "year": None,
+                "descendants": [],
+                "advisors": [1001, 1002, 1003],
+            },
+            [1000, 1001, 1002],
+            ["1001 -> 1000;", "1002 -> 1000;"],
         ],
     ),
 )
-def test_make_edge_str(record: Record, expected: List[str]) -> None:
-    for edge_str, expected_edge_str in zip_longest(make_edge_str(record), expected):
+def test_make_edge_str(
+    record: Record, graph_nodes: List[int], expected: List[str]
+) -> None:
+    graph: Geneagraph = {
+        "start_nodes": s.start_nodes,
+        "nodes": {RecordId(aid): s.rec for aid in graph_nodes},
+        "status": s.status,
+    }
+    for edge_str, expected_edge_str in zip_longest(
+        make_edge_str(record, graph), expected
+    ):
         assert edge_str == expected_edge_str
 
 
@@ -160,7 +183,7 @@ class TestDotOutput:
             call(graph["nodes"][RecordId(1002)]),
         ]
         assert m_make_edge_str.call_args_list == [
-            call(graph["nodes"][RecordId(1000)]),
-            call(graph["nodes"][RecordId(1001)]),
-            call(graph["nodes"][RecordId(1002)]),
+            call(graph["nodes"][RecordId(1000)], graph),
+            call(graph["nodes"][RecordId(1001)], graph),
+            call(graph["nodes"][RecordId(1002)], graph),
         ]

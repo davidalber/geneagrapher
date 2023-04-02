@@ -15,12 +15,15 @@ def make_node_str(record: Record) -> str:
     return f'{record["id"]} [label="{label}"];'
 
 
-def make_edge_str(record: Record) -> Generator[str, None, None]:
-    for advisor in set(
-        record["advisors"]
-    ):  # using `set` to eliminate the occasional duplicate advisor (e.g., at this
+def make_edge_str(record: Record, graph: Geneagraph) -> Generator[str, None, None]:
+    for advisor_id in filter(
+        lambda aid: aid in graph["nodes"],
+        set(
+            record["advisors"]
+        )  # make `set` to eliminate the occasional duplicate advisor (e.g., at this
         # time, 125886)
-        yield f'{advisor} -> {record["id"]};'
+    ):  # filter out advisors that are not part of the graph
+        yield f'{advisor_id} -> {record["id"]};'
 
 
 class DotOutput:
@@ -41,7 +44,7 @@ class DotOutput:
         edges = [
             edge_str
             for record in self.graph["nodes"].values()
-            for edge_str in make_edge_str(record)
+            for edge_str in make_edge_str(record, self.graph)
         ]
         prefix = "\n    "
         return template.format(nodes=prefix.join(nodes), edges=prefix.join(edges))
