@@ -145,10 +145,10 @@ class TestDotOutput:
                     "institution": "The Institution",
                     "year": 1900,
                     "descendants": [],
-                    "advisors": [1001],
+                    "advisors": [999],
                 },
-                RecordId(1001): {
-                    "id": RecordId(1001),
+                RecordId(999): {
+                    "id": RecordId(999),
                     "name": "The Second Name",
                     "institution": "The Second Institution",
                     "year": None,
@@ -193,13 +193,13 @@ class TestDotOutput:
         )
 
         assert m_make_node_str.call_args_list == [
+            call(graph["nodes"][RecordId(999)]),
             call(graph["nodes"][RecordId(1000)]),
-            call(graph["nodes"][RecordId(1001)]),
             call(graph["nodes"][RecordId(1002)]),
             call(graph["nodes"][RecordId(1003)]),
         ]
         assert m_make_edge_str.call_args_list == [
-            call(graph["nodes"][RecordId(1001)], graph),
+            call(graph["nodes"][RecordId(999)], graph),
             call(graph["nodes"][RecordId(1003)], graph),
             call(graph["nodes"][RecordId(1002)], graph),
             call(graph["nodes"][RecordId(1000)], graph),

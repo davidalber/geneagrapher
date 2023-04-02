@@ -41,7 +41,10 @@ class DotOutput:
 
     {edges}
 }}"""
-        nodes = [make_node_str(record) for record in self.graph["nodes"].values()]
+        nodes = [
+            make_node_str(record)
+            for record in sorted(self.graph["nodes"].values(), key=lambda r: r["id"])
+        ]
         edges = [
             edge_str
             for record in sorted(
