@@ -195,9 +195,6 @@ Project.'
     parser = ArgumentParser(description=description)
 
     parser.add_argument(
-        "--version", action="version", version=f"%(prog)s {get_version()}"
-    )
-    parser.add_argument(
         "-o",
         "--out",
         dest="outfile",
@@ -212,6 +209,9 @@ Project.'
         action="store_true",
         default=False,
         help="do not display the progress bar",
+    )
+    parser.add_argument(
+        "--version", action="version", version=f"%(prog)s {get_version()}"
     )
     parser.add_argument(
         "ids",
