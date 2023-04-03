@@ -1,4 +1,4 @@
-from .dot_output import DotOutput
+from .output.dot import DotOutput
 from .types import Geneagraph
 
 from argparse import ArgumentParser, FileType

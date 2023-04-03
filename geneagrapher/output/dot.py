@@ -1,4 +1,4 @@
-from .types import Geneagraph, Record
+from ..types import Geneagraph, Record
 
 from typing import Generator
 

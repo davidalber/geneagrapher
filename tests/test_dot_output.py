@@ -1,4 +1,4 @@
-from geneagrapher.dot_output import DotOutput, make_edge_str, make_node_str
+from geneagrapher.output.dot import DotOutput, make_edge_str, make_node_str
 from geneagrapher.types import Geneagraph, Record, RecordId
 
 from itertools import zip_longest
@@ -121,7 +121,7 @@ class TestDotOutput:
         assert do.graph == s.graph
 
     @patch(
-        "geneagrapher.dot_output.make_edge_str",
+        "geneagrapher.output.dot.make_edge_str",
         side_effect=[
             iter(["edge1"]),
             iter(["edge2"]),
@@ -130,7 +130,7 @@ class TestDotOutput:
         ],
     )
     @patch(
-        "geneagrapher.dot_output.make_node_str",
+        "geneagrapher.output.dot.make_node_str",
         side_effect=["node1", "node2", "node3", "node4"],
     )
     def test_output(
