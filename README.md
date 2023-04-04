@@ -1,9 +1,8 @@
 # Geneagrapher
 Geneagrapher is a tool for extracting information from the
-[Mathematics Geanealogy
-Project](https://www.genealogy.math.ndsu.nodak.edu/) to form a
-geneagraphy. The output is either a DOT file, which can be used by
-[Graphviz](https://graphviz.org/) to visualize the tree, or a JSON
+[Mathematics Geanealogy Project](https://www.mathgenealogy.org/) to
+form a geneagraphy. The output is either a DOT file, which can be used
+by [Graphviz](https://graphviz.org/) to visualize the tree, or a JSON
 structure that you can consume with other software tools.
 
 ## Basic Concepts
