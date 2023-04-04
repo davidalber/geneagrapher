@@ -250,7 +250,7 @@ and descendant traversal",
             # Output a line break to end the progress bar.
             print(file=sys.stderr)
 
-        outputter: OutputFormatter = DotOutput(graph)
+        outputter: OutputFormatter = get_formatter(args.format, graph)
         print(outputter.output, file=args.outfile)
 
     try:
