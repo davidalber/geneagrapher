@@ -28,6 +28,23 @@ types: mypy
 test:
 	poetry run pytest tests
 
+# Images (for the README)
+image-targets = images/curry-geneagraph.png images/ryff-zwinger-geneagraph.png images/zwinger-geneagraph.png
+images: $(image-targets)
+clean-images:
+	rm -rf curry.dot curry.png ryff-zwinger.dot ryff-zwinger.png zwinger.dot zwinger.png images/*-geneagraph.png.bak
+
+curry.dot: ids = 7398:d
+ryff-zwinger.dot: ids = 125148 130248
+zwinger.dot: ids = 125148
+
+$(image-targets): images/%-geneagraph.png: %.png
+	optipng -o5 $? -clobber -out $@
+%.png: %.dot
+	dot -Tpng -Gdpi=150 $? > $@
+%.dot:
+	poetry run python -m geneagrapher.geneagrapher $(ids) | sed s/‐/-/g > $@
+
 all:
 
 clean:
