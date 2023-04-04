@@ -195,6 +195,13 @@ Project.'
     parser = ArgumentParser(description=description)
 
     parser.add_argument(
+        "-f",
+        "--format",
+        choices=("dot", "json"),
+        default="dot",
+        help="graph output format (default: dot)",
+    )
+    parser.add_argument(
         "-o",
         "--out",
         dest="outfile",
