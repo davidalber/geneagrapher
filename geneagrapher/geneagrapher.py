@@ -1,4 +1,5 @@
 from .output.dot import DotOutput
+from .output.identity import IdentityOutput
 from .types import Geneagraph
 
 from argparse import ArgumentParser, FileType
@@ -13,6 +14,7 @@ from typing import (
     List,
     Literal,
     Protocol,
+    Type,
     TypedDict,
     Union,
     cast,
@@ -179,6 +181,14 @@ Geneagrapher/{get_version()}",
                     )
     except websockets.exceptions.WebSocketException:
         raise GgrapherError("Geneagrapher backend is currently unavailable.")
+
+
+def get_formatter(format: Literal["dot", "json"], graph: Geneagraph) -> OutputFormatter:
+    format_map: Dict[str, Type[OutputFormatter]] = {
+        "dot": DotOutput,
+        "json": IdentityOutput,
+    }
+    return format_map[format](graph)
 
 
 def get_version() -> str:

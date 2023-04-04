@@ -1,16 +1,20 @@
 from geneagrapher.geneagrapher import (
     GgrapherError,
+    OutputFormatter,
     RequestPayload,
     StartNodeArg,
     StartNodeRequest,
+    get_formatter,
     get_graph,
     make_payload,
 )
+from geneagrapher.output.dot import DotOutput
+from geneagrapher.output.identity import IdentityOutput
 from geneagrapher.types import Geneagraph, RecordId
 
 import json
 import pytest
-from typing import Dict, List
+from typing import Dict, List, Literal, Type
 from unittest.mock import AsyncMock, MagicMock, patch, sentinel as s
 from websockets.exceptions import WebSocketException
 
@@ -251,3 +255,13 @@ class TestGetGraph:
 
         m_python_version.assert_called_once_with()
         m_get_version.assert_called_once_with()
+
+
+@pytest.mark.parametrize(
+    "format,formatter_type", [("dot", DotOutput), ("json", IdentityOutput)]
+)
+def test_get_formatter(
+    format: Literal["dot", "json"], formatter_type: Type[OutputFormatter]
+) -> None:
+    formatter = get_formatter(format, s.graph)
+    assert isinstance(formatter, formatter_type)
