@@ -1,3 +1,8 @@
+"""This module implements `IdentityOutput`, a class that outputs a
+Geneagraph JSON structure. This is simply the structure that is
+returned by the Geneagrapher backend.
+"""
+
 from ..types import Geneagraph
 
 import json
