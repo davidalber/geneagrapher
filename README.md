@@ -26,11 +26,11 @@ Project](https://www.mathgenealogy.org/) and gather the identifiers of
 the starting nodes for the graph you want to build.
 
 ### Traversal Directions
-For each starting node, you have the choice of having Geneagrapher
-traverse in the advisor direction, the descendant (i.e., student)
-direction, or both. For example, if you want to build the graph of a
-mathematician and all of their students, you would specify the
-descendant traversal direction for that starting node.
+For each starting node, you instruct Geneagrapher to traverse in the
+advisor direction, the descendant (i.e., student) direction, or
+both. For example, if you want to build the graph of a mathematician
+and all of their students, you would specify the descendant traversal
+direction for that starting node.
 
 ### Syntax
 When running Geneagrapher, you provide starting nodes on the command
