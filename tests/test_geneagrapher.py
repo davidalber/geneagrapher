@@ -6,12 +6,14 @@ from geneagrapher.geneagrapher import (
     StartNodeRequest,
     get_formatter,
     get_graph,
+    get_version,
     make_payload,
 )
 from geneagrapher.output.dot import DotOutput
 from geneagrapher.output.identity import IdentityOutput
 from geneagrapher.types import Geneagraph, RecordId
 
+from importlib.metadata import PackageNotFoundError
 import json
 import pytest
 from typing import Dict, List, Literal, Type
@@ -265,3 +267,13 @@ def test_get_formatter(
 ) -> None:
     formatter = get_formatter(format, s.graph)
     assert isinstance(formatter, formatter_type)
+
+
+@patch("geneagrapher.geneagrapher.version", return_value="the-version")
+def test_get_version(m_version: MagicMock) -> None:
+    assert get_version() == "the-version"
+
+
+@patch("geneagrapher.geneagrapher.version", side_effect=PackageNotFoundError)
+def test_get_version_dev(m_version: MagicMock) -> None:
+    assert get_version() == "dev"
