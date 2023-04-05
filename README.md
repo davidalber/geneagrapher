@@ -1,9 +1,27 @@
 # Geneagrapher
-Geneagrapher is a tool for extracting information from the
-[Mathematics Geanealogy Project](https://www.mathgenealogy.org/) to
-form a geneagraphy. The output is either a DOT file, which can be used
-by [Graphviz](https://graphviz.org/) to visualize the tree, or a JSON
-structure that you can consume with other software tools.
+Geneagrapher is a tool for building mathematician advisor-advisee
+genealogies using information from the [Mathematics Geanealogy
+Project](https://www.mathgenealogy.org/). The output is either a DOT
+file, which can be used by [Graphviz](https://graphviz.org/) to
+visualize the graph, or a JSON structure that you can consume with
+other software tools.
+
+Geneagrapher is part of a family of related tools. Here is an overview
+of the tools available:
+- Geneagrapher: that's this tool. This generally produces visually
+  nicer results than the option below, but you will need to have
+  Python installed and be willing to install this package.
+- [Geneagrapher
+  notebook](https://observablehq.com/@davidalber/geneagrapher): you
+  can create geneagraphs in your browser using this ObservableHQ
+  notebook. This is the easiest way to make a geneagraph.
+- [geneagrapher-core](https://github.com/davidalber/geneagrapher-core):
+  if you want to write your own software that consumes records from
+  the Math Genealogy Project, you might be interested in this
+  package. Geneagrapher and the Geneagrapher notebook both depend on a
+  service that builds on geneagrapher-core.
+
+The remainder of this README is exclusively about Geneagrapher.
 
 ## Basic Concepts
 The input to the Geneagrapher is a set of starting nodes and traversal
@@ -44,9 +62,9 @@ examples:
 - Carl Gauß and his advisor and descendant graphs: `18231:ad`.
 
 ## Installation
-Geneagrapher is installed by pip. If your system does not have pip,
-see the instructions
-[here](https://pip.pypa.io/en/stable/installing/).
+To install Geneagrapher, you must have Python >= 3.8.1. Geneagrapher
+is installed by pip. If your system does not have pip, see the
+instructions [here](https://pip.pypa.io/en/stable/installing/).
 
 Once pip is available on your system, install Geneagrapher with:
 ```
