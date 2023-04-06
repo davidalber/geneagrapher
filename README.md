@@ -15,8 +15,8 @@ your system and install this package. Additionally, if you want to
 generate the graph visualization you will need another tool (e.g.,
 [Graphviz](https://www.graphviz.org/)).
 
-If you want a way to build a math genealogy more easily, you may want
-to look at the [Geneagrapher
+If you want to build a math genealogy more easily, you may want to
+look at the [Geneagrapher
 notebook](https://observablehq.com/@davidalber/geneagrapher). That
 Observable notebook can create geneagraphs in your browser.
 
