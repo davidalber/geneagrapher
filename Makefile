@@ -32,10 +32,10 @@ test:
 image-targets = images/chioniadis-geneagraph.png images/curry-geneagraph.png images/ryff-zwinger-geneagraph.png images/zwinger-geneagraph.png
 images: $(image-targets)
 
-chioniadis.dot: ids = 201288
+chioniadis.dot: ids = 201288:a
 curry.dot: ids = 7398:d
-ryff-zwinger.dot: ids = 125148 130248
-zwinger.dot: ids = 125148
+ryff-zwinger.dot: ids = 125148:a 130248:a
+zwinger.dot: ids = 125148:a
 
 $(image-targets): images/%-geneagraph.png: %.png
 	optipng -o5 $? -clobber -out $@

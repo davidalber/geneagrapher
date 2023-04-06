@@ -95,7 +95,7 @@ the issue body:",
 class StartNodeArg:
     def __init__(self, val: str) -> None:
         # Validate the input.
-        match = re.fullmatch(r"(\d+)(?::(a|d|ad|da))?", val)
+        match = re.fullmatch(r"(\d+)(:(a|d|ad|da))", val)
         if match is None:
             raise ValueError()
         self.record_id = int(match.group(1))
@@ -235,9 +235,9 @@ Project.'
         metavar="ID",
         type=StartNodeArg,
         nargs="+",
-        help="mathematician record ID; valid formats are 'ID' for advisor traversal, \
-'ID:a' for advisor traversal, 'ID:d' for descendant traversal, or 'ID:ad' for advisor \
-and descendant traversal",
+        help="mathematician record ID; valid formats are 'ID:a' for advisor \
+traversal, 'ID:d' for descendant traversal, or 'ID:ad' for advisor and descendant \
+traversal",
     )
 
     args = parser.parse_args()

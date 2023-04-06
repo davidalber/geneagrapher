@@ -35,7 +35,7 @@ class TestStartNodeArg:
     @pytest.mark.parametrize(
         "aux_config,aux_config_valid",
         (
-            ["", True],
+            ["", False],
             [":a", True],
             [":d", True],
             [":ad", True],
@@ -70,7 +70,6 @@ class TestStartNodeArg:
     @pytest.mark.parametrize(
         "arg,expected",
         (
-            ["32", {"recordId": 32, "getAdvisors": True, "getDescendants": False}],
             ["32:a", {"recordId": 32, "getAdvisors": True, "getDescendants": False}],
             ["32:d", {"recordId": 32, "getAdvisors": False, "getDescendants": True}],
             ["32:ad", {"recordId": 32, "getAdvisors": True, "getDescendants": True}],
@@ -121,7 +120,7 @@ following in the issue body:
             assert str(e) == expected_str.format(command=" ".join(command))
 
 
-@pytest.mark.parametrize("start_nodes", ([], ["32"], ["32:a"], ["32:d", "14"]))
+@pytest.mark.parametrize("start_nodes", ([], ["32:a"], ["32:d", "14:a"]))
 @pytest.mark.parametrize("quiet", [True, False])
 def test_make_payload(start_nodes: List[str], quiet: bool) -> None:
     start_node_args = [StartNodeArg(sn) for sn in start_nodes]
