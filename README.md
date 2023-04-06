@@ -4,8 +4,10 @@ genealogies using information from the [Mathematics Geanealogy
 Project](https://www.mathgenealogy.org/). The output is either a DOT
 file, which can be used by [Graphviz](https://graphviz.org/) to
 visualize the graph, or a JSON structure that you can consume with
-other software tools.
+other software tools. Here's an example of a genealogy built by
+Geneagrapher and visualized using Graphviz:
 
+![Chioniadis math genealogy](images/chioniadis-geneagraph.png)
 
 To use this package, you will need to have a Python interpreter on
 your system and install this package. Additionally, if you want to
