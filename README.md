@@ -6,22 +6,20 @@ file, which can be used by [Graphviz](https://graphviz.org/) to
 visualize the graph, or a JSON structure that you can consume with
 other software tools.
 
-Geneagrapher is part of a family of related tools. Here is an overview
-of the tools available:
-- Geneagrapher: that's this tool. This generally produces visually
-  nicer results than the option below, but you will need to have
-  Python installed and be willing to install this package.
-- [Geneagrapher
-  notebook](https://observablehq.com/@davidalber/geneagrapher): you
-  can create geneagraphs in your browser using this ObservableHQ
-  notebook. This is the easiest way to make a geneagraph.
-- [geneagrapher-core](https://github.com/davidalber/geneagrapher-core):
-  if you want to write your own software that consumes records from
-  the Math Genealogy Project, you might be interested in this
-  package. Geneagrapher and the Geneagrapher notebook both depend on a
-  service that builds on geneagrapher-core.
 
-The remainder of this README is exclusively about Geneagrapher.
+To use this package, you will need to have a Python interpreter on
+your system and install this package. Additionally, if you want to
+generate the graph visualization you will need another tool (e.g.,
+[Graphviz](https://www.graphviz.org/)).
+
+If you want a way to build a math genealogy more easily, you may want
+to look at the [Geneagrapher
+notebook](https://observablehq.com/@davidalber/geneagrapher). That
+Observable notebook can create geneagraphs in your browser.
+
+If you want to consume records from the Math Genealogy Project in your
+own software, you may be interested in
+[geneagrapher-core](https://github.com/davidalber/geneagrapher-core).
 
 ## Basic Concepts
 The input to the Geneagrapher is a set of starting nodes and traversal
