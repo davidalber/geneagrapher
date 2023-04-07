@@ -18,7 +18,7 @@ generate the graph visualization you will need another tool (e.g.,
 If you want to build a math genealogy more easily, you may want to
 look at the [Geneagrapher
 notebook](https://observablehq.com/@davidalber/geneagrapher). That
-Observable notebook can create geneagraphs in your browser.
+Observable notebook creates geneagraphs in your browser.
 
 If you want to consume records from the Math Genealogy Project in your
 own software, you may be interested in
