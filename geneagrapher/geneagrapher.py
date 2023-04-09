@@ -25,7 +25,7 @@ import websockets
 import websockets.client
 
 
-GGRAPHER_URI = "wss://placeholder"
+GGRAPHER_URI = "wss://ggrphr.davidalber.net"
 TEXTWRAP_WIDTH = 79
 
 
