@@ -198,7 +198,7 @@ def get_version() -> str:
         return "dev"
 
 
-if __name__ == "__main__":
+def run():
     description = 'Create a Graphviz "dot" file for a mathematics \
 genealogy, where ID is a record identifier from the Mathematics Genealogy \
 Project.'
@@ -257,3 +257,7 @@ traversal",
         asyncio.run(build_graph())
     except GgrapherError as e:
         print(e, file=sys.stderr)
+
+
+if __name__ == "__main__":
+    run()
