@@ -115,7 +115,7 @@ To produce the ancestry DOT file for Theodor Zwinger and save it in
 the file zwinger.dot, run the command
 
 ```
-ggrapher -o zwinger.dot 125148
+ggrapher -o zwinger.dot 125148:a
 ```
 
 ![Zwinger math genealogy](images/zwinger-geneagraph.png)
@@ -126,7 +126,7 @@ Theodor Zwinger and save it in the file ryff_zwinger.dot', run
 the command
 
 ```
-ggrapher -o ryff_zwinger.dot 125148 130248
+ggrapher -o ryff_zwinger.dot 125148:a 130248:a
 ```
 
 ![Ryff-Zwinger math genealogy](images/ryff-zwinger-geneagraph.png)
