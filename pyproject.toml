@@ -10,6 +10,8 @@ readme = "README.md"
 python = "^3.8.1"
 websockets = "^10.4"
 
+[tool.poetry.scripts]
+ggrapher = "geneagrapher.geneagrapher:run"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.1.0"
