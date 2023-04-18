@@ -54,12 +54,12 @@ direction for that starting node.
 
 ### Syntax
 When running Geneagrapher, you provide starting nodes on the command
-line. The syntax for doing this is `NODE_ID` or `NODE_ID:[a|d]`, where
-`a` and `d` indicate advisor or descendant traversal. If the first
-pattern is used, the traversal direction is advisor. Here are some
+line. The syntax for doing this is `NODE_ID:TRAVERSAL_DIRECTION`,
+where `TRAVERSAL_DIRECTION` is `a | d`, and `a` and `d` indicate
+advisor and descendant traversal, respectively. Here are some
 examples:
 
-- Carl Gauß and his advisor graph: `18231` or `18231:a`.
+- Carl Gauß and his advisor graph: `18231:a`.
 - Carl Gauß and his descendant graph: `18231:d`.
 - Carl Gauß and his advisor and descendant graphs: `18231:ad`.
 
