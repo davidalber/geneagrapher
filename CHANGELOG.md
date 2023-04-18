@@ -1,4 +1,4 @@
-# 1.0
+# 1.0.0
 Released 7-Oct-2018
 
 - Redesigned data-grabbing interface to allow for the introduction of
@@ -55,7 +55,7 @@ Released 07-Oct-2008
   file to enable installation on machines running Python 2.6 that have
   not yet installed Python setuptools.
 
-# 0.2
+# 0.2.0
 Released 06-Oct-2008
 
 Here are the most significant changes, from the perspective of the
