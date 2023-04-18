@@ -1,7 +1,7 @@
 # Geneagrapher [![Continuous Integration Status](https://github.com/davidalber/geneagrapher/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/davidalber/geneagrapher/actions/workflows/ci.yaml/badge.svg?branch=main)
 
 Geneagrapher is a tool for building mathematician advisor-advisee
-genealogies using information from the [Mathematics Geanealogy
+genealogies using information from the [Mathematics Genealogy
 Project](https://www.mathgenealogy.org/). The output is either a DOT
 file, which can be used by [Graphviz](https://graphviz.org/) to
 visualize the graph, or a JSON structure that you can consume with
@@ -155,7 +155,7 @@ records.
 While the shared cache substantially reduces the number of requests
 from individuals running Geneagrapher (or the [Geneagrapher
 notebook](https://observablehq.com/@davidalber/geneagrapher)) and
-speeds up the graph-building process, it also creates an opportuntity
+speeds up the graph-building process, it also creates an opportunity
 for inconsistency between information in the Mathematics Genealogy
 Project and the cache. This can happen when records are updated in the
 Mathematics Genealogy Project. Such inconsistencies will automatically
