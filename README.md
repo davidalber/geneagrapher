@@ -1,4 +1,4 @@
-# Geneagrapher [![Continuous Integration Status](https://github.com/davidalber/geneagrapher-core/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/davidalber/geneagrapher/actions/workflows/ci.yaml/badge.svg?branch=main)
+# Geneagrapher [![Continuous Integration Status](https://github.com/davidalber/geneagrapher/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/davidalber/geneagrapher/actions/workflows/ci.yaml/badge.svg?branch=main)
 
 Geneagrapher is a tool for building mathematician advisor-advisee
 genealogies using information from the [Mathematics Geanealogy
