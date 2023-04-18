@@ -86,19 +86,19 @@ To process the generated DOT file,
 several programs for processing DOT files. For the Geneagrapher, use
 the `dot` program. Let's look at an example.
 
-If the Geneagrapher has generated a file named "graph.dot", we can do
+If the Geneagrapher has generated a file named "graph.dot", a PNG file
+containing the graph can be created with the following command.
 
 ```
 dot -Tpng graph.dot > graph.png
 ```
 
-This command produces a PNG file containing the graph. That's really
-all there is to it. Almost.
+That's really all there is to it. Almost.
 
-By default, `dot` renders an image with 96dpi. This can look a little
-blurry at 100% on high-resolution displays. You might want to increase
-the resolution. You can do this with the `-Gdpi` flag. For instance,
-to produce a PNG with 150dpi, you can do
+By default, `dot` renders an image with 96dpi. This may not look great
+on high-resolution displays, so you might want to increase the
+resolution. You can do this with the `-Gdpi` flag. For instance, to
+produce a PNG with 150dpi, you can do
 
 ```
 dot -Tpng -Gdpi=150 graph.dot > graph.png
