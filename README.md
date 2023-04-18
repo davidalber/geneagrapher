@@ -122,9 +122,8 @@ ggrapher -o zwinger.dot 125148:a
 ![Zwinger math genealogy](images/zwinger-geneagraph.png)
 
 ### Multiple Node Ancestry: Petrus Ryff and Theodor Zwinger
-To produce the combined ancestry DOT file for Petrus Ryff and
-Theodor Zwinger and save it in the file ryff_zwinger.dot', run
-the command
+To produce the combined ancestry DOT file for Petrus Ryff and Theodor
+Zwinger and save it in the file ryff_zwinger.dot, run the command
 
 ```
 ggrapher -o ryff_zwinger.dot 125148:a 130248:a
@@ -134,7 +133,7 @@ ggrapher -o ryff_zwinger.dot 125148:a 130248:a
 
 ### Single Node Descendant Graph: Haskell Curry
 To produce the descendant DOT file for Haskell Curry and save it in
-the file 'curry.dot', run the command
+the file curry.dot, run the command
 
 ```
 ggrapher -o curry.dot 7398:d
