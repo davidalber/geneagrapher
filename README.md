@@ -83,7 +83,7 @@ ggrapher --help
 ## Processing the DOT File
 To process the generated DOT file,
 [Graphviz](https://www.graphviz.org/) is needed. Graphviz installs
-several programs for processing DOT files. For the Geneagrapher, I use
+several programs for processing DOT files. For the Geneagrapher, use
 the `dot` program. Let's look at an example.
 
 If the Geneagrapher has generated a file named "graph.dot", we can do
