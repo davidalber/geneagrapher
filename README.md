@@ -107,9 +107,9 @@ dot -Tpng -Gdpi=150 graph.dot > graph.png
 Graphviz can also generate other formats, such as PDF and SVG.
 
 ## Examples
-Note: the Mathematics Genealogy Project data changes over time, so it
-is possible that if the examples below are re-run, the results will
-look different. The commands, however, will be the same.
+Note: the Mathematics Genealogy Project data changes over time, so if
+the examples below are re-run, the results may look different. The
+commands, however, will be the same.
 
 ### Single Node Ancestry: Theodor Zwinger
 To produce the ancestry DOT file for Theodor Zwinger and save it in
