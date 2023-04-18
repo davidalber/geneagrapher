@@ -142,3 +142,21 @@ ggrapher -o curry.dot 7398:d
 ![Curry math genealogy descendants](images/curry-geneagraph.png)
 
 Note that descendant graphs often have a lot of "fan out".
+
+## Technical Details
+Previous versions of Geneagrapher made requests directly to the
+Mathematics Genealogy Project and built the graph in the
+application. The current version of Geneagrapher, however, makes
+requests to an intermediate service that is built using
+[geneagrapher-core](https://github.com/davidalber/geneagrapher-core). This
+backend service assembles requested graphs and maintains a cache of
+records.
+
+While the shared cache substantially reduces the number of requests
+from individuals running Geneagrapher (or the [Geneagrapher
+notebook](https://observablehq.com/@davidalber/geneagrapher)) and
+speeds up the graph-building process, it also creates an opportuntity
+for inconsistency between information in the Mathematics Genealogy
+Project and the cache. This can happen when records are updated in the
+Mathematics Genealogy Project. Such inconsistencies will automatically
+be resolved when cached values expire.
