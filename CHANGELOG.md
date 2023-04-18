@@ -1,5 +1,5 @@
 # 1.0.0
-Released 7-Oct-2018
+Released 07-Oct-2018
 
 - Redesigned data-grabbing interface to allow for the introduction of
   new data grabbers.
