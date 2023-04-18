@@ -74,7 +74,7 @@ pip install geneagrapher
 ```
 
 ## Usage
-You can get syntactic help by doing
+You can get help by doing
 
 ```
 ggrapher --help
