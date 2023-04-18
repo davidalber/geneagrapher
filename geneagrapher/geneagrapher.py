@@ -198,7 +198,7 @@ def get_version() -> str:
         return "dev"
 
 
-def run():
+def run() -> None:
     description = 'Create a Graphviz "dot" file for a mathematics \
 genealogy, where ID is a record identifier from the Mathematics Genealogy \
 Project.'
