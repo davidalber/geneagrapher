@@ -8,7 +8,7 @@ visualize the graph, or a JSON structure that you can consume with
 other software tools. Here's an example of a genealogy built by
 Geneagrapher and visualized using Graphviz:
 
-<img src="/images/chioniadis-geneagraph.png" alt="Chioniadis math
+<img src="https://raw.githubusercontent.com/davidalber/geneagrapher/v2.0.0/images/chioniadis-geneagraph.png" alt="Chioniadis math
 genealogy" width="480px">
 
 To use this package, you will need to have a Python interpreter on
@@ -119,7 +119,7 @@ the file zwinger.dot, run the command
 ggrapher -o zwinger.dot 125148:a
 ```
 
-![Zwinger math genealogy](images/zwinger-geneagraph.png)
+![Zwinger math genealogy](https://raw.githubusercontent.com/davidalber/geneagrapher/v2.0.0/images/zwinger-geneagraph.png)
 
 ### Multiple Node Ancestry: Petrus Ryff and Theodor Zwinger
 To produce the combined ancestry DOT file for Petrus Ryff and Theodor
@@ -129,7 +129,7 @@ Zwinger and save it in the file ryff_zwinger.dot, run the command
 ggrapher -o ryff_zwinger.dot 125148:a 130248:a
 ```
 
-![Ryff-Zwinger math genealogy](images/ryff-zwinger-geneagraph.png)
+![Ryff-Zwinger math genealogy](https://raw.githubusercontent.com/davidalber/geneagrapher/v2.0.0/images/ryff-zwinger-geneagraph.png)
 
 ### Single Node Descendant Graph: Haskell Curry
 To produce the descendant DOT file for Haskell Curry and save it in
@@ -139,7 +139,7 @@ the file curry.dot, run the command
 ggrapher -o curry.dot 7398:d
 ```
 
-![Curry math genealogy descendants](images/curry-geneagraph.png)
+![Curry math genealogy descendants](https://raw.githubusercontent.com/davidalber/geneagrapher/v2.0.0/images/curry-geneagraph.png)
 
 Note that descendant graphs often have a lot of "fan out".
 
