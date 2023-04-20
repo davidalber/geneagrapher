@@ -1,3 +1,24 @@
+# 2.0.0
+Released 20-Apr-2023
+
+- This release introduces major changes to how Geneagrapher works
+  internally. Previously, the logic to retrieve information from the
+  Mathematics Genealogy Project and build graphs was in
+  Geneagrapher. As of this release, that work is done by a service
+  that Geneagrapher makes requests to. That service is built using
+  [geneagrapher-core](https://github.com/davidalber/geneagrapher-core).
+- Graph building is now more flexible. Previously, traversal from the
+  graph's starting nodes was either all in the advisor direction or in
+  the descendant direction. Traversal directions are now specified on
+  a per-node basis. This has led to some syntax changes in the tool's
+  usage, so commands that worked in Geneagrapher 1.0.0 will not work
+  in 2.0.0.
+- This is the first version of Geneagrapher targeted only for Python 3.
+- The test system was completely overhauled and modernized.
+- The source code now uses type hints.
+- A CI workflow has been added to automatically run code formatting,
+  linter, and type hint checks, as well as the test suite.
+
 # 1.0.0
 Released 07-Oct-2018
 
