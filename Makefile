@@ -29,9 +29,10 @@ test:
 	poetry run pytest tests
 
 # Images (for the README)
-image-targets = images/chioniadis-geneagraph.png images/curry-geneagraph.png images/ryff-zwinger-geneagraph.png images/zwinger-geneagraph.png
+image-targets = images/bunder-geneagraph.png images/chioniadis-geneagraph.png images/curry-geneagraph.png images/ryff-zwinger-geneagraph.png images/zwinger-geneagraph.png
 images: $(image-targets)
 
+bunder.dot: ids = 15648:d
 chioniadis.dot: ids = 201288:a
 curry.dot: ids = 7398:d
 ryff-zwinger.dot: ids = 125148:a 130248:a
@@ -45,7 +46,7 @@ $(image-targets): images/%-geneagraph.png: %.png
 	poetry run python -m geneagrapher.geneagrapher $(ids) | sed s/‐/-/g > $@
 
 clean-images:
-	rm -rf chioniadis.dot chioniadis.png curry.dot curry.png ryff-zwinger.dot ryff-zwinger.png zwinger.dot zwinger.png images/*-geneagraph.png.bak
+	rm -rf bunder.dot bunder.png chioniadis.dot chioniadis.png curry.dot curry.png ryff-zwinger.dot ryff-zwinger.png zwinger.dot zwinger.png images/*-geneagraph.png.bak
 
 all:
 
