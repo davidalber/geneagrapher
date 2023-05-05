@@ -148,6 +148,79 @@ ggrapher -o curry.dot 7398:d
 
 Note that descendant graphs often have a lot of "fan out".
 
+### JSON Output
+The examples above output DOT files (the default output
+format). Geneagrapher can also output a JSON structure. To do this for
+the Maarten (Martin) Wicher Visser Bunder descendant graph, for
+example, run the command
+
+```
+ggrapher -f json -o bunder.json 15648:d
+```
+
+Note that the output format is specified by the `-f` flag. The file
+suffix does not impact the output format.
+
+![Bunder math genealogy descendants](images/bunder-geneagraph.png)
+
+Here are the contents of the bunder.json output file:
+```json
+{
+  "start_nodes": [
+    15648
+  ],
+  "status": "complete",
+  "nodes": {
+    "15648": {
+      "id": 15648,
+      "name": "Maarten (Martin) Wicher Visser Bunder",
+      "institution": "Universiteit van Amsterdam",
+      "year": 1969,
+      "descendants": [
+        139651,
+        139649,
+        230734
+      ],
+      "advisors": [
+        7398
+      ]
+    },
+    "230734": {
+      "id": 230734,
+      "name": "Joseph Tonien",
+      "institution": "University of Wollongong",
+      "year": 2018,
+      "descendants": [],
+      "advisors": [
+        47851,
+        15648
+      ]
+    },
+    "139651": {
+      "id": 139651,
+      "name": "Bruce P. Bates",
+      "institution": "University of Wollongong",
+      "year": 2001,
+      "descendants": [],
+      "advisors": [
+        139650,
+        15648
+      ]
+    },
+    "139649": {
+      "id": 139649,
+      "name": "Frank P. Prokop",
+      "institution": "University of Wollongong",
+      "year": 1979,
+      "descendants": [],
+      "advisors": [
+        15648
+      ]
+    }
+  }
+}
+```
+
 ## Technical Details
 Previous versions of Geneagrapher made requests directly to the
 Mathematics Genealogy Project and built the graph in the
