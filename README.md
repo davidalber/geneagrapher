@@ -107,6 +107,11 @@ dot -Tpng -Gdpi=150 graph.dot > graph.png
 Graphviz can also generate other formats, such as PDF and SVG.
 
 ## Examples
+The examples below demonstrate using `ggrapher` to generate DOT and
+JSON files. Graphviz-generated visualizations of the associated graphs
+are also shown without detailing the commands used to create the
+visualizations.
+
 Note: the Mathematics Genealogy Project data changes over time, so if
 the examples below are re-run, the results may look different. The
 commands, however, will be the same.
