@@ -32,8 +32,7 @@ TEXTWRAP_WIDTH = 79
 class OutputFormatter(Protocol):
     """This defines an interface that output classes must implement."""
 
-    def __init__(self, graph: Geneagraph) -> None:
-        ...
+    def __init__(self, graph: Geneagraph) -> None: ...
 
     @property
     def output(self) -> str:
@@ -163,9 +162,9 @@ Geneagrapher/{get_version()}",
             while True:
                 response_json = await ws.recv()
                 response = json.loads(response_json, object_hook=intify_record_keys)
-                response_payload: Union[
-                    Geneagraph, ProgressCallback, None
-                ] = response.get("payload")
+                response_payload: Union[Geneagraph, ProgressCallback, None] = (
+                    response.get("payload")
+                )
 
                 if response["kind"] == "graph":
                     return cast(Geneagraph, response_payload)

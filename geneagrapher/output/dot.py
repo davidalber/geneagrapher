@@ -29,7 +29,7 @@ def make_edge_str(record: Record, graph: Geneagraph) -> Generator[str, None, Non
         lambda aid: aid in graph["nodes"],
         set(
             record["advisors"]
-        )  # make `set` to eliminate the occasional duplicate advisor (e.g., at this
+        ),  # make `set` to eliminate the occasional duplicate advisor (e.g., at this
         # time, 125886)
     ):  # filter out advisors that are not part of the graph
         yield f'{advisor_id} -> {record["id"]};'
